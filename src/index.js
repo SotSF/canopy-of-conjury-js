@@ -1,5 +1,8 @@
 
+import * as dat from 'dat.gui';
 import canopy from './canopy';
+import { RGB } from './colors';
+
 
 const scene = new THREE.Scene();
 
@@ -42,3 +45,24 @@ window.onkeydown = e => {
             break;
     }
 };
+
+const params = {
+    red: 255,
+    green: 0,
+    blue: 0
+};
+
+const updateColors = () => {
+    canopy.strips.forEach((strip) => {
+        strip.updateColors(new RGB(params.red, params.green, params.blue).toHex());
+    });
+};
+
+const gui = new dat.GUI({ width: 300 });
+const colorFolder = gui.addFolder('Color');
+colorFolder.add(params, 'red', 0, 255 ).step(1).onChange(updateColors);
+colorFolder.add(params, 'green', 0, 255 ).step(1).onChange(updateColors);
+colorFolder.add(params, 'blue', 0, 255 ).step(1).onChange(updateColors);
+colorFolder.open();
+
+
