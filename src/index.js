@@ -1,4 +1,5 @@
 
+import canopy from './canopy';
 
 const scene = new THREE.Scene();
 
@@ -13,7 +14,7 @@ scene.add(light2);
 scene.add(ambientLight);
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 50);
-camera.position.y = 30;
+camera.position.z = 11;
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(window.devicePixelRatio);
@@ -21,34 +22,23 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
-
-const material = new THREE.MeshLambertMaterial({ color: 0x555555, side: THREE.DoubleSide });
-const baseGeometry = new THREE.TorusGeometry(20, 0.25, 5, 100);
-const baseMesh = new THREE.Mesh(baseGeometry, material);
-const apexGeometry = new THREE.CylinderGeometry(2, 2, 0.25, 30, 1);
-const apexMesh = new THREE.Mesh(apexGeometry, material);
-apexMesh.rotateX(Math.PI / 2);
-
-const group = new THREE.Group();
-group.add(baseMesh);
-group.add(apexMesh);
-scene.add(group);
+canopy.initialize(scene);
 
 animate();
 
 function animate() {
     requestAnimationFrame( animate );
     controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
-    renderer.render( scene, camera );
+    renderer.render(scene, camera);
 }
 
 window.onkeydown = e => {
     switch (e.key) {
         case 'ArrowUp':
-            apexMesh.position.z -= 1;
+            canopy.adjustHeight(1);
             break;
         case 'ArrowDown':
-            apexMesh.position.z += 1;
+            canopy.adjustHeight(-1);
             break;
     }
 };

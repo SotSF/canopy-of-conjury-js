@@ -1,0 +1,160 @@
+
+import _ from 'lodash';
+import catenary from './catenary';
+
+// Constants. Length units are in feet unless otherwise specified
+const FEET_PER_METER = 3.28084;
+const TOTAL_LEDS = 7200;
+const BASE_RADIUS = 8;
+const APEX_RADIUS = 0.5;
+const STRIP_LENGTH_METERS = 2.5;
+const STRIP_LENGTH = STRIP_LENGTH_METERS * FEET_PER_METER;
+const NUM_STRIPS = 96;
+const NUM_LEDS_PER_STRIP = TOTAL_LEDS / NUM_STRIPS;
+
+/**
+ * Singleton class. Contains much of the state of the physical canopy, including the height of the
+ * apex, the catenary coordinates, and the colors of the LEDs.
+ */
+class Canopy {
+    apexHeight = 0; // Height above the base
+    apexRadius = APEX_RADIUS;
+    baseRadius = BASE_RADIUS;
+    numLedsPerStrip = NUM_LEDS_PER_STRIP;
+    numStrips = NUM_STRIPS;
+    stripLength = STRIP_LENGTH;
+
+    /**
+     * Initializes the components of the canopy. This includes
+     *   - the base
+     *   - the apex
+     *   - the LED strings
+     *   - the LEDs themselves
+     */
+    initialize (scene) {
+        this._initializeBase();
+        this._initializeApex();
+
+        catenary.initialize();
+        this._initializeStrips();
+
+        // Create a group so all the canopy components are relatively positioned
+        const group = new THREE.Group();
+        const ledGroups = _.map(this.strips, 'group');
+        group.add(this.base, this.apex, ...ledGroups);
+        scene.add(group);
+    }
+
+    _initializeBase () {
+        const material = new THREE.MeshLambertMaterial({ color: 0x555555, side: THREE.DoubleSide });
+        const baseGeometry = new THREE.TorusGeometry(BASE_RADIUS, 0.25, 5, 100);
+        this.base = new THREE.Mesh(baseGeometry, material);
+    }
+
+    _initializeApex () {
+        const material = new THREE.MeshLambertMaterial({ color: 0x555555, side: THREE.DoubleSide });
+        const apexGeometry = new THREE.CylinderGeometry(APEX_RADIUS, APEX_RADIUS, 0.25, 30, 1);
+        this.apex = new THREE.Mesh(apexGeometry, material);
+        this.apex.rotateX(Math.PI / 2);
+    }
+
+    _initializeStrips () {
+        const strips = [];
+        const radialInterval = Math.PI * 2 / NUM_STRIPS;
+
+        for (let i = 0; i < NUM_STRIPS; i++) {
+            strips.push(new LedStrip(i * radialInterval));
+        }
+
+        this.strips = strips;
+    }
+
+    /**
+     * Moves the apex up `delta` units.
+     * @param delta
+     */
+    adjustHeight (delta) {
+        this.apex.position.z -= delta;
+        catenary.update();
+        this.strips.forEach(strip => strip.updatePositions());
+    }
+}
+
+
+/**
+ * Contains the state of an LED strip, including the strip's offset, its catenary coordinates and
+ * the colors of the LEDs within it
+ */
+class LedStrip {
+    // Invariant geometry used for all LEDs
+    static sphereGeometry = new THREE.SphereBufferGeometry( 0.03, 16, 8 );
+
+    // The color of the string, NOT the LEDs
+    color = 0xff0000;
+
+    constructor (offset) {
+        this.offset = offset;
+
+        this._initializeString();
+        this._initializeLeds();
+        this.updatePositions();
+
+        // Create a group so all the strip's components are relatively positioned
+        const group = new THREE.Group();
+        group.add(this.string, ...this.leds);
+        
+        // Rotate the group according to the offset
+        group.rotateZ(offset);
+        this.group = group;
+    }
+
+    _initializeString () {
+        const geometry = new THREE.BufferGeometry();
+        const lineMaterial = new THREE.LineBasicMaterial({ color : this.color });
+
+        // Create the final object to add to the scene
+        this.string = new THREE.Line(geometry, lineMaterial);
+    }
+
+    _initializeLeds () {
+        this.leds = catenary.coordinates.map(() =>
+            new THREE.Mesh(
+                LedStrip.sphereGeometry,
+                new THREE.MeshBasicMaterial({ color: 0xff0040 })
+            )
+        );
+
+        this.colors = catenary.coordinates.map(() => 0x000000);
+    }
+
+    /** Updates the positions of the LEDs and the string */
+    updatePositions () {
+        // LEDs
+        for (let i = 0; i < this.leds.length; i++) {
+            const led = this.leds[i];
+            const [x, z] = catenary.coordinates[i];
+            led.position.set(x, 0, -z);
+        }
+
+        // String
+        const curve = new THREE.CatmullRomCurve3(
+            catenary.coordinates.map(([x, z]) => new THREE.Vector3(x, 0, -z))
+        );
+
+        const points = curve.getPoints(NUM_LEDS_PER_STRIP);
+        this.string.geometry.setFromPoints(points);
+    }
+
+    /** Updates the color of a single pixel in the string */
+    updateColor (i, color) {
+        this.colors[i] = color;
+        this.leds[i].material.color.setHex(color);
+    }
+
+    /** Shorthand for updating the color of the entire strip */
+    updateColors (color) {
+        _.range(this.leds.length).forEach(i => this.updateColor(i, color));
+    }
+}
+
+export default new Canopy;
