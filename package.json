@@ -4,12 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "webpack": "webpack"
+    "webpack": "webpack",
+    "serve": "python -m SimpleHTTPServer"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "three": "^0.92.0"
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "dat.gui": "^0.7.2",
+    "lodash": "^4.17.10"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",

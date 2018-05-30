@@ -1,6 +1,4 @@
 
-import * as THREE from 'three';
-import './lib/orbit_controls';
 
 const scene = new THREE.Scene();
 
