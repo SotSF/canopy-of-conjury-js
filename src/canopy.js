@@ -9,8 +9,8 @@ const BASE_RADIUS = 8;
 const APEX_RADIUS = 0.5;
 const STRIP_LENGTH_METERS = 2.5;
 const STRIP_LENGTH = STRIP_LENGTH_METERS * FEET_PER_METER;
-const NUM_STRIPS = 96;
-const NUM_LEDS_PER_STRIP = TOTAL_LEDS / NUM_STRIPS;
+export const NUM_STRIPS = 96;
+export const NUM_LEDS_PER_STRIP = TOTAL_LEDS / NUM_STRIPS;
 
 /**
  * Singleton class. Contains much of the state of the physical canopy, including the height of the
