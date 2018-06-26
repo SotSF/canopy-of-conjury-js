@@ -2,6 +2,7 @@
 import * as dat from 'dat.gui';
 import canopy from './canopy';
 import { RGB } from './colors';
+import GradientPulse from './patterns/gradient_pulse';
 
 
 const scene = new THREE.Scene();
@@ -27,11 +28,14 @@ document.body.appendChild(renderer.domElement);
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
 canopy.initialize(scene);
 
+const pattern = new GradientPulse();
 animate();
 
 function animate() {
     requestAnimationFrame( animate );
     controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
+    pattern.update();
+    pattern.render(canopy);
     renderer.render(scene, camera);
 }
 
@@ -63,6 +67,4 @@ const colorFolder = gui.addFolder('Color');
 colorFolder.add(params, 'red', 0, 255 ).step(1).onChange(updateColors);
 colorFolder.add(params, 'green', 0, 255 ).step(1).onChange(updateColors);
 colorFolder.add(params, 'blue', 0, 255 ).step(1).onChange(updateColors);
-colorFolder.open();
-
-
+//colorFolder.open();
