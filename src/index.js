@@ -3,6 +3,7 @@ import * as dat from 'dat.gui';
 import canopy from './canopy';
 import { RGB } from './colors';
 import GradientPulse from './patterns/gradient_pulse';
+import {RingBrush,RadialBrush} from './brushes/brushes';
 
 
 const scene = new THREE.Scene();
@@ -30,6 +31,7 @@ canopy.initialize(scene);
 
 var pattern; // base pattern
 var filter; // filter overlay
+var drawMode;
 animate();
 
 function animate() {
@@ -68,16 +70,30 @@ for (var name in patterns) {
     patternsFolder.add(patterns, name);
 }
 
-const filtersFolder = gui.addFolder('Filters');
+/*const filtersFolder = gui.addFolder('Filters');
 const filters = {
 
 }
 for (var name in filters) {
     filtersFolder.add(filters, name);
 }
+*/
 
 const freeDrawFolder = gui.addFolder('Free Draw');
-const drawColor = freeDrawFolder.addColor({color: new RGB(0,0,255) }, 'color').onChange(() => { console.log(drawColor.getValue()); });
+const mainColor = freeDrawFolder.addColor({mainColor: new RGB(0,0,255) }, 'mainColor');
+const subColor = freeDrawFolder.addColor({subColor: new RGB(255,255,255)}, 'subColor');
+const brushSize = freeDrawFolder.add({brushSize: 5}, 'brushSize', 1, 10);
+
+const brushes = {
+    ringDrop: () => drawMode = new RingBrush(),
+    radiate: () => drawMode = new RadialBrush()
+}
+let brushNames = [];
+for (var brush in brushes) {
+    brushNames.push(brush);
+}
+const currentBrush = freeDrawFolder.add({currentBrush: 'none'}, 'currentBrush', brushNames);
+currentBrush.onChange(function() { brushes[currentBrush.getValue()](); });
 
 const drawRadius = 5;
 function onDocumentMouseDown( event ) 
@@ -98,13 +114,13 @@ function onDocumentMouseDown( event )
     vector.unproject(camera);
     var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
     // create an array containing all objects in the scene with which the ray intersects
-    var intersects = ray.intersectObjects( canopy.lights );
+    var intersects = ray.intersectObjects( canopy.ledHitBoxes );
     // if there is one (or more) intersections
     if ( intersects.length > 0 )
     {
-        console.log(canopy.lights.indexOf(intersects[0].object));
+        if (drawMode) { drawMode.click(); }
     }
     
 }
 
-document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+document.addEventListener( 'click', onDocumentMouseDown, false );

@@ -24,8 +24,7 @@ class Canopy {
     numStrips = NUM_STRIPS;
     stripLength = STRIP_LENGTH;
 
-    lights = [];
-
+    ledHitBoxes = []; // hit boxes for click interaction
     /**
      * Initializes the components of the canopy. This includes
      *   - the base
@@ -66,8 +65,8 @@ class Canopy {
 
         for (let i = 0; i < NUM_STRIPS; i++) {
             var s = new LedStrip(i * radialInterval);
+            this.ledHitBoxes = this.ledHitBoxes.concat(s.ledHitBoxes);
             strips.push(s);
-            this.lights = this.lights.concat(s.leds)
         }
 
         this.strips = strips;
@@ -105,7 +104,7 @@ class LedStrip {
 
         // Create a group so all the strip's components are relatively positioned
         const group = new THREE.Group();
-        group.add(this.string, ...this.leds);
+        group.add(this.string, ...this.leds, ...this.ledHitBoxes);
         
         // Rotate the group according to the offset
         group.rotateZ(offset);
@@ -127,6 +126,13 @@ class LedStrip {
                 new THREE.MeshBasicMaterial({ color: 0xff0040 })
             )
         );
+
+        this.ledHitBoxes = catenary.coordinates.map(() =>
+            new THREE.Mesh(
+                new THREE.SphereBufferGeometry( 0.15, 16, 8 ),
+                new THREE.MeshBasicMaterial({opacity: 0, transparent: true})
+            )
+        );
         this.colors = catenary.coordinates.map(() => 0x000000);
     }
 
@@ -137,6 +143,7 @@ class LedStrip {
             const led = this.leds[i];
             const [x, z] = catenary.coordinates[i];
             led.position.set(x, 0, -z);
+            this.ledHitBoxes[i].position.set(x, 0, -z);
         }
 
         // String
