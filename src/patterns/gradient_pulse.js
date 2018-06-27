@@ -7,7 +7,7 @@ import { HSV } from '../colors';
 /**
  * Emits pulse rings from center - each ring is a different color, following a gradient color scheme
  */
-export default class GradientPulse {
+export class GradientPulse {
     beatList = [];
     currHue = 0;
 

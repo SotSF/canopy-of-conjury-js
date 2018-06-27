@@ -2,8 +2,8 @@
 import * as dat from 'dat.gui';
 import canopy from './canopy';
 import { RGB } from './colors';
-import GradientPulse from './patterns/gradient_pulse';
-import {RingBrush,RadialBrush} from './brushes/brushes';
+import * as Patterns from './patterns';
+import * as Brushes from './brushes/brushes';
 
 
 const scene = new THREE.Scene();
@@ -31,7 +31,7 @@ canopy.initialize(scene);
 
 var pattern; // base pattern
 var filter; // filter overlay
-var drawMode;
+var drawMode = new Brushes.RingBrush(5); // default brush
 animate();
 
 function animate() {
@@ -63,8 +63,15 @@ const gui = new dat.GUI({ width: 300 });
 
 const patternsFolder = gui.addFolder('Patterns');
 const patterns = {
-    gradientPulse: () => { pattern = new GradientPulse(); },
-    stop: () => { pattern = null; }
+    testLEDs: () => { pattern = new Patterns.TestLEDs(); },
+    testCanvas: () => { pattern = new Patterns.TestCanvas(); },
+    gradientPulse: () => { pattern = new Patterns.GradientPulse(); },
+    stop: () => { 
+        pattern = null; 
+        for (let s in canopy.strips) {
+            canopy.strips[s].updateColors('0x000000');
+        }
+    }
 }
 for (var name in patterns) {
     patternsFolder.add(patterns, name);
@@ -83,19 +90,19 @@ const freeDrawFolder = gui.addFolder('Free Draw');
 const mainColor = freeDrawFolder.addColor({mainColor: new RGB(0,0,255) }, 'mainColor');
 const subColor = freeDrawFolder.addColor({subColor: new RGB(255,255,255)}, 'subColor');
 const brushSize = freeDrawFolder.add({brushSize: 5}, 'brushSize', 1, 10);
+brushSize.onChange(() => { drawMode.brushSize = brushSize.getValue(); });
 
 const brushes = {
-    ringDrop: () => drawMode = new RingBrush(),
-    radiate: () => drawMode = new RadialBrush()
+    ringDrop: () => drawMode = new Brushes.RingBrush(brushSize.getValue()),
+    radiate: () => drawMode = new Brushes.RadialBrush(brushSize.getValue())
 }
 let brushNames = [];
 for (var brush in brushes) {
     brushNames.push(brush);
 }
-const currentBrush = freeDrawFolder.add({currentBrush: 'none'}, 'currentBrush', brushNames);
+const currentBrush = freeDrawFolder.add({currentBrush: brushNames[0]}, 'currentBrush', brushNames);
 currentBrush.onChange(function() { brushes[currentBrush.getValue()](); });
 
-const drawRadius = 5;
 function onDocumentMouseDown( event ) 
 {
     // the following line would stop any other event handler from firing
