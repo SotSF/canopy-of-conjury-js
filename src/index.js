@@ -63,16 +63,26 @@ const gui = new dat.GUI({ width: 300 });
 
 const patternsFolder = gui.addFolder('Patterns');
 const patterns = {
-    testLEDs: () => { pattern = new Patterns.TestLEDs(); },
-    testCanvas: () => { pattern = new Patterns.TestCanvas(); },
-    gradientPulse: () => { pattern = new Patterns.GradientPulse(); },
+    testLEDs: () => { setPattern(new Patterns.TestLEDs()); },
+    testCanvas: () => { setPattern(new Patterns.TestCanvas()); },
+    gradientPulse: () => { setPattern(new Patterns.GradientPulse()); },
     stop: () => { 
-        pattern = null; 
+        setPattern(null);
         for (let s in canopy.strips) {
             canopy.strips[s].updateColors('0x000000');
         }
     }
 }
+
+const setPattern = function(p) {
+    if (pattern && pattern.processing) {
+        pattern.processing.background(0);
+        pattern.processing.exit();
+    }
+    pattern = p;
+}
+
+
 for (var name in patterns) {
     patternsFolder.add(patterns, name);
 }

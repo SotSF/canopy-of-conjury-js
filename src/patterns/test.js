@@ -28,19 +28,23 @@ export class TestLEDs {
 }
 
 export class TestCanvas {
+    processing = new Processing(document.getElementById('idCanvas'), this._sketch);
     canvas = new Canvas();
-    update() {
-        this.canvas.ctx.fillStyle = 'rgb(255,0,0)';        
-        this.canvas.ctx.fillRect(50,50,100,100);
-        this.canvas.ctx.fillStyle = 'rgb(255,255,0)';
-        this.canvas.ctx.fillRect(350,50,100,100);
-        this.canvas.ctx.fillStyle = 'rgb(0,255,0)';
-        this.canvas.ctx.fillRect(50,350,100,100);
-        this.canvas.ctx.fillStyle = 'rgb(0,0,255)';
-        this.canvas.ctx.fillRect(350,350,100,100);
-        this.canvas.ctx.fillStyle = 'rgb(255,255,255)';
-        this.canvas.ctx.fillRect(190,190,120,120);
+    _sketch(processing) {
+        var offset = 0;
+        processing.setup = function() {
+            processing.size(500,500);
+            processing.background(0);
+        }
+        processing.draw = function () {
+            processing.background(0);
+            processing.fill(255,255,255);
+            processing.rect(190,offset,120,120);
+            offset += 10;
+            if (offset > processing.width) { offset = 0; }
+        }
     }
+    update() {}
     render(canopy) {
         this.canvas.render(canopy);
     }

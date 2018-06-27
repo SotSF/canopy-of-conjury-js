@@ -2,14 +2,17 @@ import { RGB } from '../colors';
 
 export { GradientPulse } from './gradient_pulse';
 export { TestLEDs, TestCanvas } from './test';
+
+export function renderCanvas(canopy) {
+
+}
 export class Canvas {
-    el = document.getElementById('idCanvas');
-	ctx = this.el.getContext('2d');
     constructor() {
-        this.ctx.fillStyle = "black";
-        this.ctx.fillRect(0,0,this.el.width,this.el.height);
+        this.el = document.getElementById("idCanvas");
+        this.ctx = this.el.getContext('2d');
     }
 	render(canopy) {
+        this._clearCanopy(canopy);
         // all the pixel info for the canvas, every 4 nums in the U8IntArray is R,G,B,A
         const colorData = this.ctx.getImageData(0,0,this.el.width,this.el.height).data; 
         for(let i = 0; i < colorData.length; i += 4) {
@@ -24,6 +27,11 @@ export class Canvas {
             canopy.strips[co.strip].updateColor(l, c.toHex())
         }
 	}
+    _clearCanopy(canopy) {
+        for (let s = 0; s < canopy.numStrips; s++) {
+            canopy.strips[s].updateColors("0x000000");
+        }
+    }
 
 	_mapToCanopy(x, y, canopy) {
 		const dimension = this.el.height;
