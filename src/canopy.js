@@ -24,6 +24,8 @@ class Canopy {
     numStrips = NUM_STRIPS;
     stripLength = STRIP_LENGTH;
 
+    lights = [];
+
     /**
      * Initializes the components of the canopy. This includes
      *   - the base
@@ -63,7 +65,9 @@ class Canopy {
         const radialInterval = Math.PI * 2 / NUM_STRIPS;
 
         for (let i = 0; i < NUM_STRIPS; i++) {
-            strips.push(new LedStrip(i * radialInterval));
+            var s = new LedStrip(i * radialInterval);
+            strips.push(s);
+            this.lights = this.lights.concat(s.leds)
         }
 
         this.strips = strips;
@@ -90,7 +94,7 @@ class LedStrip {
     static sphereGeometry = new THREE.SphereBufferGeometry( 0.03, 16, 8 );
 
     // The color of the string, NOT the LEDs
-    color = 0xff0000;
+    color = 0xcccccc;
 
     constructor (offset) {
         this.offset = offset;
@@ -123,7 +127,6 @@ class LedStrip {
                 new THREE.MeshBasicMaterial({ color: 0xff0040 })
             )
         );
-
         this.colors = catenary.coordinates.map(() => 0x000000);
     }
 

@@ -28,14 +28,21 @@ document.body.appendChild(renderer.domElement);
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
 canopy.initialize(scene);
 
-const pattern = new GradientPulse();
+var pattern; // base pattern
+var filter; // filter overlay
 animate();
 
 function animate() {
     requestAnimationFrame( animate );
     controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
-    pattern.update();
-    pattern.render(canopy);
+    if (pattern) {
+        pattern.update();
+        pattern.render(canopy);
+    }
+    if (filter) {
+        filter.update();
+        filter.render(canopy);
+    }
     renderer.render(scene, camera);
 }
 
@@ -50,21 +57,54 @@ window.onkeydown = e => {
     }
 };
 
-const params = {
-    red: 255,
-    green: 0,
-    blue: 0
-};
-
-const updateColors = () => {
-    canopy.strips.forEach((strip) => {
-        strip.updateColors(new RGB(params.red, params.green, params.blue).toHex());
-    });
-};
-
 const gui = new dat.GUI({ width: 300 });
-const colorFolder = gui.addFolder('Color');
-colorFolder.add(params, 'red', 0, 255 ).step(1).onChange(updateColors);
-colorFolder.add(params, 'green', 0, 255 ).step(1).onChange(updateColors);
-colorFolder.add(params, 'blue', 0, 255 ).step(1).onChange(updateColors);
-//colorFolder.open();
+
+const patternsFolder = gui.addFolder('Patterns');
+const patterns = {
+    gradientPulse: () => { pattern = new GradientPulse(); },
+    stop: () => { pattern = null; }
+}
+for (var name in patterns) {
+    patternsFolder.add(patterns, name);
+}
+
+const filtersFolder = gui.addFolder('Filters');
+const filters = {
+
+}
+for (var name in filters) {
+    filtersFolder.add(filters, name);
+}
+
+const freeDrawFolder = gui.addFolder('Free Draw');
+const drawColor = freeDrawFolder.addColor({color: new RGB(0,0,255) }, 'color').onChange(() => { console.log(drawColor.getValue()); });
+
+const drawRadius = 5;
+function onDocumentMouseDown( event ) 
+{
+    // the following line would stop any other event handler from firing
+    // (such as the mouse's TrackballControls)
+    // event.preventDefault();
+    
+    // update the mouse variable
+    var x = ( event.clientX / window.innerWidth ) * 2 - 1;
+    var y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+    
+    // find intersections
+    // create a Ray with origin at the mouse position
+    //   and direction into the scene (camera direction)
+    var vector = new THREE.Vector3( x, y, 1 );
+    vector.unproject(camera);
+    var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
+    // create an array containing all objects in the scene with which the ray intersects
+    var intersects = ray.intersectObjects( canopy.lights );
+    // if there is one (or more) intersections
+    if ( intersects.length > 0 )
+    {
+        console.log(canopy.lights.indexOf(intersects[0].object));
+    }
+    
+}
+
+document.addEventListener( 'mousedown', onDocumentMouseDown, false );
