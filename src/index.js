@@ -31,6 +31,14 @@ canopy.initialize(scene);
 
 var pattern; // base pattern
 var filter; // filter overlay
+var processing;
+window.onload = function () {  processing = new Processing(document.getElementById('idCanvas'), setupProcessing);}
+const setupProcessing = function(processing) {
+    processing.setup = () => {
+        processing.size(500,500);
+        processing.background(0);
+    }
+}
 var drawMode = new Brushes.RingBrush(5); // default brush
 animate();
 
@@ -64,7 +72,7 @@ const gui = new dat.GUI({ width: 300 });
 const patternsFolder = gui.addFolder('Patterns');
 const patterns = {
     testLEDs: () => { setPattern(new Patterns.TestLEDs()); },
-    testCanvas: () => { setPattern(new Patterns.TestCanvas()); },
+    testCanvas: () => { setPattern(new Patterns.TestCanvas(processing)); },
     gradientPulse: () => { setPattern(new Patterns.GradientPulse()); },
     stop: () => { 
         setPattern(null);
@@ -75,10 +83,6 @@ const patterns = {
 }
 
 const setPattern = function(p) {
-    if (pattern && pattern.processing) {
-        pattern.processing.background(0);
-        pattern.processing.exit();
-    }
     pattern = p;
 }
 
@@ -96,7 +100,18 @@ for (var name in filters) {
 }
 */
 
+
+var isFreeDrawOn = false;
+const toggleFreeDraw = () => {
+    isFreeDrawOn = freeDrawMode.getValue();
+    if (isFreeDrawOn) {
+        setPattern(null);
+    }
+
+}
+
 const freeDrawFolder = gui.addFolder('Free Draw');
+const freeDrawMode = freeDrawFolder.add({freeDrawOn: false}, 'freeDrawOn').onChange(toggleFreeDraw);
 const mainColor = freeDrawFolder.addColor({mainColor: new RGB(0,0,255) }, 'mainColor');
 const subColor = freeDrawFolder.addColor({subColor: new RGB(255,255,255)}, 'subColor');
 const brushSize = freeDrawFolder.add({brushSize: 5}, 'brushSize', 1, 10);
@@ -115,29 +130,46 @@ currentBrush.onChange(function() { brushes[currentBrush.getValue()](); });
 
 function onDocumentMouseDown( event ) 
 {
-    // the following line would stop any other event handler from firing
-    // (such as the mouse's TrackballControls)
-    // event.preventDefault();
-    
-    // update the mouse variable
-    var x = ( event.clientX / window.innerWidth ) * 2 - 1;
-    var y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+    if (isFreeDrawOn) {
+        // the following line would stop any other event handler from firing
+        // (such as the mouse's TrackballControls)
+        // event.preventDefault();
+        
+        // update the mouse variable
+        var x = ( event.clientX / window.innerWidth ) * 2 - 1;
+        var y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
-    
-    // find intersections
-    // create a Ray with origin at the mouse position
-    //   and direction into the scene (camera direction)
-    var vector = new THREE.Vector3( x, y, 1 );
-    vector.unproject(camera);
-    var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
-    // create an array containing all objects in the scene with which the ray intersects
-    var intersects = ray.intersectObjects( canopy.ledHitBoxes );
-    // if there is one (or more) intersections
-    if ( intersects.length > 0 )
-    {
-        if (drawMode) { drawMode.click(); }
+        
+        // find intersections
+        // create a Ray with origin at the mouse position
+        //   and direction into the scene (camera direction)
+        var vector = new THREE.Vector3( x, y, 1 );
+        vector.unproject(camera);
+        var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
+        // create an array containing all objects in the scene with which the ray intersects
+        var intersects = ray.intersectObjects( canopy.ledHitBoxes );
+        // if there is one (or more) intersections
+        if ( intersects.length > 0 )
+        {
+            if (drawMode) { 
+                let i = canopy.ledHitBoxes.indexOf(intersects[0].object);
+                let coord = mapFromCanopy(Math.ceil(i / canopy.numLedsPerStrip),i % canopy.numLedsPerStrip,canopy.numStrips)
+                drawMode.click(processing,coord); 
+            }
+        }
     }
     
 }
 
 document.addEventListener( 'click', onDocumentMouseDown, false );
+
+function mapFromCanopy(s, l, numStrips) {
+    const dimension = processing.height;
+    let theta = s * 360 / numStrips;
+    let radius = l * 3;
+    let x = radius * Math.cos(theta);
+    let y = radius * Math.sin(theta);
+    let x2 = processing.map(x,-dimension/2,dimension/2,0,dimension);
+    let y2 = processing.map(y,-dimension/2,dimension/2,0,dimension);
+    return {x: x2, y:y2};
+}

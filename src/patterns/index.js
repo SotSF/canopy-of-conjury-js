@@ -6,6 +6,8 @@ export { TestLEDs, TestCanvas } from './test';
 export function renderCanvas(canopy) {
 
 }
+
+/*for interacting with the <canvas> element that will house Processing sketches*/
 export class Canvas {
     constructor() {
         this.el = document.getElementById("idCanvas");
@@ -27,12 +29,14 @@ export class Canvas {
             canopy.strips[co.strip].updateColor(l, c.toHex())
         }
 	}
+
     _clearCanopy(canopy) {
         for (let s = 0; s < canopy.numStrips; s++) {
             canopy.strips[s].updateColors("0x000000");
         }
     }
 
+    // Map 2d cartesian to Canopy strips and leds
 	_mapToCanopy(x, y, canopy) {
 		const dimension = this.el.height;
 		const maxRadius = Math.sqrt(2 * dimension * dimension);
