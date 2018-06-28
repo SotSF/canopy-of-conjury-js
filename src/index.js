@@ -105,7 +105,7 @@ var isFreeDrawOn = false;
 const toggleFreeDraw = () => {
     isFreeDrawOn = freeDrawMode.getValue();
     if (isFreeDrawOn) {
-        setPattern(null);
+        setPattern(new Patterns.PCanvas(processing));
     }
 
 }

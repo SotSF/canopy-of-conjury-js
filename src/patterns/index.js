@@ -1,8 +1,7 @@
 import { RGB } from '../colors';
 
 export { GradientPulse } from './gradient_pulse';
-export { TestLEDs, TestCanvas } from './test';
-
+export { TestLEDs, TestCanvas, PCanvas } from './test';
 export function renderCanvas(canopy) {
 
 }

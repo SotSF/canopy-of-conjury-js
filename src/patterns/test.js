@@ -44,3 +44,17 @@ export class TestCanvas {
         this.canvas.render(canopy);
     }
 }
+
+export class PCanvas {
+    canvas = new Canvas();
+    constructor(processing) {
+        this.processing = processing;
+    }
+    update() {
+        //this.processing.background(0);
+    }
+    render(canopy) {
+        this.canvas.render(canopy);
+    }
+
+}
