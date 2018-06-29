@@ -35,7 +35,7 @@ var processing;
 window.onload = function () {  processing = new Processing(document.getElementById('idCanvas'), setupProcessing);}
 const setupProcessing = function(processing) {
     processing.setup = () => {
-        processing.size(500,500);
+        processing.size(200,200);
         processing.background(0);
     }
 }
@@ -79,6 +79,7 @@ const patterns = {
         for (let s in canopy.strips) {
             canopy.strips[s].updateColors('0x000000');
         }
+        processing.background(0);
     }
 }
 

@@ -31,13 +31,14 @@ export class TestCanvas {
     canvas = new Canvas();
     constructor(processing) {
         this.processing = processing;
+        this.processing.background(0);
         this.offset = 0;
     }
     update() {
         this.processing.background(0);
         this.processing.fill(255,255,255);
-        this.processing.rect(190,this.offset,120,120);
-        this.offset += 10;
+        this.processing.rect(50,this.offset,50,50);
+        this.offset += 3;
         if (this.offset > this.processing.width) { this.offset = 0; }
     }
     render(canopy) {
@@ -45,10 +46,12 @@ export class TestCanvas {
     }
 }
 
+// Pattern Canvas - for Free Drawing
 export class PCanvas {
     canvas = new Canvas();
     constructor(processing) {
         this.processing = processing;
+        this.processing.background(0);
     }
     update() {
         //this.processing.background(0);
