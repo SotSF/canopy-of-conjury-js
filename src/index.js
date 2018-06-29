@@ -4,6 +4,7 @@ import canopy from './canopy';
 import { RGB } from './colors';
 import * as Patterns from './patterns';
 import * as Brushes from './brushes/brushes';
+import { Canvas } from './canvas';
 
 
 const scene = new THREE.Scene();

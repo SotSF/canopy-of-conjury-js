@@ -12,7 +12,7 @@ class RingBrush {
 	click(processing,coord) {
 		console.log('ring');
 		processing.fill(0,255,0);
-		processing.ellipse(coord.x,coord.y,100,100);
+		processing.ellipse(coord.x,coord.y,10,10);
 	}
 	render() {
 

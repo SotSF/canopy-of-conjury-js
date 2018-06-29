@@ -1,6 +1,6 @@
 import { NUM_STRIPS } from '../canopy';
 import { RGB } from '../colors';
-import { Canvas } from '.';
+import { Canvas } from '../canvas';
 
 /**
  * Test pattern to determine order of strips
@@ -44,20 +44,4 @@ export class TestCanvas {
     render(canopy) {
         this.canvas.render(canopy);
     }
-}
-
-// Pattern Canvas - for Free Drawing
-export class PCanvas {
-    canvas = new Canvas();
-    constructor(processing) {
-        this.processing = processing;
-        this.processing.background(0);
-    }
-    update() {
-        //this.processing.background(0);
-    }
-    render(canopy) {
-        this.canvas.render(canopy);
-    }
-
 }
