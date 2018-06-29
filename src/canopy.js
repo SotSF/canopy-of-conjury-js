@@ -90,7 +90,7 @@ class Canopy {
  */
 class LedStrip {
     // Invariant geometry used for all LEDs
-    static sphereGeometry = new THREE.SphereBufferGeometry( 0.03, 16, 8 );
+    static boxGeometry = new THREE.BoxGeometry( 0.05,0.05,0.05);
 
     // The color of the string, NOT the LEDs
     color = 0xcccccc;
@@ -122,7 +122,7 @@ class LedStrip {
     _initializeLeds () {
         this.leds = catenary.coordinates.map(() =>
             new THREE.Mesh(
-                LedStrip.sphereGeometry,
+                LedStrip.boxGeometry,
                 new THREE.MeshBasicMaterial({ color: 0xff0040 })
             )
         );
