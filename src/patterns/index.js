@@ -1,7 +1,7 @@
 import { Canvas } from '../canvas';
 
 export { GradientPulse } from './gradient_pulse';
-export { TestLEDs, TestCanvas } from './test';
+export { TestLEDs, TestCanvas, TestCanvasLayout } from './test';
 
 // Pattern Canvas - for Free Drawing
 export class PCanvas {

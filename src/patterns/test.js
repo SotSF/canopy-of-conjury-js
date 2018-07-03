@@ -45,3 +45,26 @@ export class TestCanvas {
         this.canvas.render(canopy);
     }
 }
+
+export class TestCanvasLayout {
+    canvas = new Canvas();
+     constructor(processing) {
+        this.processing = processing;
+        this.processing.background(0);
+        this.offset = 0;
+    }
+    update() {
+        this.processing.background(255);
+        this.processing.fill(255,0,0);
+        this.processing.rect(40,40,20,20);
+        this.processing.fill(255,255,0);
+        this.processing.rect(140,140,20,20);
+        this.processing.fill(255,0,255);
+        this.processing.rect(40,140,20,20);
+        this.processing.fill(0,0,255);
+        this.processing.rect(140,40,20,20);
+    }
+    render(canopy) {
+        this.canvas.render(canopy);
+    }
+}

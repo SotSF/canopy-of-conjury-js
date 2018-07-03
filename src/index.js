@@ -73,7 +73,7 @@ const gui = new dat.GUI({ width: 300 });
 const patternsFolder = gui.addFolder('Patterns');
 const patterns = {
     testLEDs: () => { setPattern(new Patterns.TestLEDs()); },
-    testCanvas: () => { setPattern(new Patterns.TestCanvas(processing)); },
+    testCanvas: () => { setPattern(new Patterns.TestCanvasLayout(processing)); },
     gradientPulse: () => { setPattern(new Patterns.GradientPulse()); },
     stop: () => { 
         setPattern(null);
@@ -141,21 +141,26 @@ function onDocumentMouseDown( event )
         var x = ( event.clientX / window.innerWidth ) * 2 - 1;
         var y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
+        //var x = event.clientX;
+        //var y = event.clientY;
         
         // find intersections
         // create a Ray with origin at the mouse position
         //   and direction into the scene (camera direction)
-        var vector = new THREE.Vector3( x, y, 1 );
-        vector.unproject(camera);
-        var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
+        var vector = new THREE.Vector2( x, y );
+        
+        var ray = new THREE.Raycaster();
+        ray.setFromCamera(vector, camera);
         // create an array containing all objects in the scene with which the ray intersects
         var intersects = ray.intersectObjects( canopy.ledHitBoxes );
         // if there is one (or more) intersections
         if ( intersects.length > 0 )
         {
             if (drawMode) { 
+                //intersects[0].object.material.opacity = 1;
                 let i = canopy.ledHitBoxes.indexOf(intersects[0].object);
-                let coord = mapFromCanopy(Math.ceil(i / canopy.numLedsPerStrip),i % canopy.numLedsPerStrip,canopy.numStrips)
+                console.log(i);
+                let coord = mapFromCanopy(Math.floor(i / canopy.numLedsPerStrip),i % canopy.numLedsPerStrip,canopy.numStrips)
                 drawMode.click(processing,coord); 
             }
         }
@@ -163,15 +168,17 @@ function onDocumentMouseDown( event )
     
 }
 
-document.addEventListener( 'click', onDocumentMouseDown, false );
+document.getElementsByTagName('canvas')[1].addEventListener( 'click', onDocumentMouseDown, false );
 
 function mapFromCanopy(s, l, numStrips) {
+    console.log(s,l);
     const dimension = processing.height;
-    let theta = s * 360 / numStrips;
-    let radius = l * 3;
+    let theta = s * 2 * Math.PI / numStrips;
+    let radius = l + 20;
     let x = radius * Math.cos(theta);
     let y = radius * Math.sin(theta);
     let x2 = processing.map(x,-dimension/2,dimension/2,0,dimension);
     let y2 = processing.map(y,-dimension/2,dimension/2,0,dimension);
+    console.log(x2,y2);
     return {x: x2, y:y2};
 }
