@@ -40,7 +40,7 @@ const setupProcessing = function(processing) {
         processing.background(0);
     }
 }
-var drawMode = new Brushes.RingBrush(5); // default brush
+
 animate();
 
 function animate() {
@@ -117,18 +117,12 @@ const freeDrawMode = freeDrawFolder.add({freeDrawOn: false}, 'freeDrawOn').onCha
 const mainColor = freeDrawFolder.addColor({mainColor: new RGB(0,0,255) }, 'mainColor');
 const subColor = freeDrawFolder.addColor({subColor: new RGB(255,255,255)}, 'subColor');
 const brushSize = freeDrawFolder.add({brushSize: 5}, 'brushSize', 1, 10);
-brushSize.onChange(() => { drawMode.brushSize = brushSize.getValue(); });
 
-const brushes = {
-    ringDrop: () => drawMode = new Brushes.RingBrush(brushSize.getValue()),
-    radiate: () => drawMode = new Brushes.RadialBrush(brushSize.getValue())
-}
-let brushNames = [];
-for (var brush in brushes) {
-    brushNames.push(brush);
-}
-const currentBrush = freeDrawFolder.add({currentBrush: brushNames[0]}, 'currentBrush', brushNames);
-currentBrush.onChange(function() { brushes[currentBrush.getValue()](); });
+const brushes = [
+    "Ring",
+    "Radial"
+]
+const currentBrush = freeDrawFolder.add({currentBrush: brushes[0]}, 'currentBrush', brushes);
 
 function onDocumentMouseDown( event ) 
 {
@@ -156,13 +150,18 @@ function onDocumentMouseDown( event )
         // if there is one (or more) intersections
         if ( intersects.length > 0 )
         {
-            if (drawMode) { 
-                //intersects[0].object.material.opacity = 1;
-                let i = canopy.ledHitBoxes.indexOf(intersects[0].object);
-                console.log(i);
-                let coord = mapFromCanopy(Math.floor(i / canopy.numLedsPerStrip),i % canopy.numLedsPerStrip,canopy.numStrips)
-                drawMode.click(processing,coord); 
+            //intersects[0].object.material.opacity = 1;
+            let i = canopy.ledHitBoxes.indexOf(intersects[0].object);
+            console.log(i);
+            let coord = mapFromCanopy(Math.floor(i / canopy.numLedsPerStrip),i % canopy.numLedsPerStrip,canopy.numStrips)
+            switch (currentBrush.getValue()) {
+                case "Ring": 
+                    pattern.brushes.push(new Brushes.RingBrush(brushSize.getValue(), mainColor.getValue(), subColor.getValue(), coord));
+                    break;
+                case "Radial":
+                    break;
             }
+            
         }
     }
     

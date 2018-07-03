@@ -133,8 +133,8 @@ class LedStrip {
             let factor = Math.sqrt(catenary.coordinates[i][0] * catenary.coordinates[i][0] + catenary.coordinates[i][1] * catenary.coordinates[i][1]);
             if (factor < 1.5) factor = 1.5;
             this.ledHitBoxes.push(new THREE.Mesh(
-                new THREE.BoxGeometry( 0.08, 0.05 * factor, 0.05 * factor),
-                new THREE.MeshBasicMaterial({opacity: 0.05, transparent: true})
+                new THREE.BoxGeometry( 0.08, 0.07 * factor, 0.07 * factor),
+                new THREE.MeshBasicMaterial({opacity: 0, transparent: true})
             ));
         }
         this.colors = catenary.coordinates.map(() => 0x000000);
