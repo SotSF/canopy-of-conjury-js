@@ -15,8 +15,14 @@ export class PCanvas {
         this.processing.background(0);
         for (let i = this.brushes.length - 1; i >= 0; i--) {
             this.brushes[i].render(this.processing);
-            if (this.brushes[i].done) { this.brushes.splice(i, 1); }
+            this.brushes[i].timer += 1;
+            if (this.brushes[i].timer >= 60) { this.brushes.splice(i, 1); }
         }
     };
     render(canopy) { this.canvas.render(canopy); }
+
+    add(brush) {
+        brush.timer = 0;
+        this.brushes.push(brush);
+    }
 }

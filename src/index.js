@@ -3,7 +3,7 @@ import * as dat from 'dat.gui';
 import canopy from './canopy';
 import { RGB } from './colors';
 import * as Patterns from './patterns';
-import * as Brushes from './brushes/brushes';
+import * as Brushes from './brushes';
 import { Canvas } from './canvas';
 
 
@@ -120,45 +120,47 @@ const brushSize = freeDrawFolder.add({brushSize: 5}, 'brushSize', 1, 10);
 
 const brushes = [
     "Ring",
-    "Radial"
+    "Radial",
+    "Double Click"
 ]
 const currentBrush = freeDrawFolder.add({currentBrush: brushes[0]}, 'currentBrush', brushes);
 
+var waitingOnTarget = false;
+var doubleBrush;
 function onDocumentMouseDown( event ) 
 {
     if (isFreeDrawOn) {
-        // the following line would stop any other event handler from firing
-        // (such as the mouse's TrackballControls)
-        // event.preventDefault();
-        
-        // update the mouse variable
         var x = ( event.clientX / window.innerWidth ) * 2 - 1;
         var y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-
-        //var x = event.clientX;
-        //var y = event.clientY;
-        
-        // find intersections
-        // create a Ray with origin at the mouse position
-        //   and direction into the scene (camera direction)
         var vector = new THREE.Vector2( x, y );
         
         var ray = new THREE.Raycaster();
         ray.setFromCamera(vector, camera);
         // create an array containing all objects in the scene with which the ray intersects
         var intersects = ray.intersectObjects( canopy.ledHitBoxes );
-        // if there is one (or more) intersections
         if ( intersects.length > 0 )
         {
-            //intersects[0].object.material.opacity = 1;
             let i = canopy.ledHitBoxes.indexOf(intersects[0].object);
             console.log(i);
             let coord = mapFromCanopy(Math.floor(i / canopy.numLedsPerStrip),i % canopy.numLedsPerStrip,canopy.numStrips)
+
+            if (waitingOnDouble) {
+                waitingOnDouble = false;
+                doubleBrush.target = coord;
+                pattern.add(doubleBrush);
+                return;    
+            }
+
             switch (currentBrush.getValue()) {
                 case "Ring": 
-                    pattern.brushes.push(new Brushes.RingBrush(brushSize.getValue(), mainColor.getValue(), subColor.getValue(), coord));
+                    pattern.add(new Brushes.RingBrush(brushSize.getValue(), mainColor.getValue(), subColor.getValue(), coord));
                     break;
                 case "Radial":
+                    pattern.add(new Brushes.RadialBrush(brushSize.getValue(), mainColor.getValue(), subColor.getValue(), coord));
+                    break;
+                case "Line":
+                    waitingOnTarget = true;
+                    doubleBrush = new Brushes.LineBrush(brushSize.getValue(), mainColor.getValue(), subColor.getValue(), coord);
                     break;
             }
             
