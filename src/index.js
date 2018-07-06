@@ -80,6 +80,7 @@ const patterns = {
         for (let s in canopy.strips) {
             canopy.strips[s].updateColors('0x000000');
         }
+        freeDrawMode.setValue(false);
         processing.background(0);
     }
 }
@@ -121,7 +122,7 @@ const brushSize = freeDrawFolder.add({brushSize: 5}, 'brushSize', 1, 10);
 const brushes = [
     "Ring",
     "Radial",
-    "Double Click"
+    "Line"
 ]
 const currentBrush = freeDrawFolder.add({currentBrush: brushes[0]}, 'currentBrush', brushes);
 
@@ -144,8 +145,8 @@ function onDocumentMouseDown( event )
             console.log(i);
             let coord = mapFromCanopy(Math.floor(i / canopy.numLedsPerStrip),i % canopy.numLedsPerStrip,canopy.numStrips)
 
-            if (waitingOnDouble) {
-                waitingOnDouble = false;
+            if (waitingOnTarget) {
+                waitingOnTarget = false;
                 doubleBrush.target = coord;
                 pattern.add(doubleBrush);
                 return;    

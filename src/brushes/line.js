@@ -1,6 +1,6 @@
 
 // two clicks one brush
-// take first click as start, second click as end
+// take first click as start, second click as target
 export class LineBrush {
     constructor(brushsize, color1, color2, coord) {
         this.strokeWeight = brushsize;
@@ -20,8 +20,8 @@ export class LineBrush {
         processing.line(
             this.start.x,
             this.start.y,
-            processing.map(this.f,0,1,this.start.x,this.target.x), 
-            processing.map(this.f,0,1,this.start.y,this.target.y)
+            processing.lerp(this.start.x, this.target.x, this.f), 
+            processing.lerp(this.start.y, this.target.y, this.f)
         );
         this.f += 0.1;
         if (this.f >= 1) { 
