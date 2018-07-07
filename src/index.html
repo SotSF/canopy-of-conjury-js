@@ -21,20 +21,21 @@
 		}
 		#idControls {
 			float:left;
-			width:200px;
+			width:300px;
 			background-color: black;
 			height: -webkit-fill-available;
 		}
 		ul {
 			text-align: left;
 		}
-		button{
+		button.brush, button.pattern, button.layer-select{
 			width:120px;
 		}
 		button.active {
-			background: #ea0000;
+			background: #0400d6b0;
 			color: #fff;
 		}
+
 	</style>
 </head>
 <body>
@@ -61,7 +62,10 @@
 	<h3>Active Layers</h3>
 	<ul style="list-style:none;">
 	{{#layers}}
-	<li><button class="layer">{{name}}</button></li>
+	<li class="layer">
+		<button class="layer-select">{{name}}</button>
+		<button class="layer-up">UP</button><button class="layer-down">DN</button><button class="layer-kill">X</button>
+	</li>
 	{{/layers}}
 	</ul>
 </script>

@@ -24,7 +24,7 @@ camera.position.z = 11;
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(window.innerWidth - 200, window.innerHeight);
+renderer.setSize(window.innerWidth - 300, window.innerHeight);
 renderer.domElement.id = "idRenderer";
 document.body.appendChild(renderer.domElement);
 
@@ -105,6 +105,7 @@ $(document).ready(function () {
             switch (i) {
                 case 0:
                     clearCanopy();
+                    renderGUI();
                     break;
                 case 1:
                     addLayer(new Patterns.TestLEDs(), $(this).val()); break;
@@ -120,10 +121,23 @@ $(document).ready(function () {
              $(this).addClass('active');
              brush = brushes[i];
         })
-        .on('click', '.layer', function () {
-            let i = $('.layer').index(this);
+        .on('click', '.layer > .layer-select', function () {
+            let i = $('.layer').index($(this).closest('.layer'));
+            //setOptions();
+
+        })
+        .on('click', '.layer > .layer-kill', function () {
+            let i = $('.layer').index($(this).closest('.layer'));
             layers.splice(i,1);
             if (layers.length == 0) { clearCanopy(); }
+            renderGUI();
+        })
+        .on('click', '.layer > .layer-up', function () {
+            let i = $('.layer').index($(this).closest('.layer'));
+            renderGUI();
+        })
+        .on('click', '.layer > .layer-down', function () {
+            let i = $('.layer').index($(this).closest('.layer'));
             renderGUI();
         });
 });
@@ -135,19 +149,22 @@ const freeDrawFolder = gui.addFolder('Free Draw');
 const mainColor = freeDrawFolder.addColor({mainColor: new RGB(0,0,255) }, 'mainColor');
 const subColor = freeDrawFolder.addColor({subColor: new RGB(255,255,255)}, 'subColor');
 const brushSize = freeDrawFolder.add({brushSize: 5}, 'brushSize', 1, 10);
+freeDrawFolder.open();
+
+var activeLayerOptions = gui.addFolder('Layer Tuning');
 
 var waitingOnTarget = false;
 var doubleBrush;
 function onDocumentMouseDown( event ) 
 {
     if (brush) {
-
-        if (layers.length == 0 || layers[0].name != "Drawing Canvas") {
-            layers.unshift({pattern: new Patterns.PCanvas(processing), name: "Drawing Canvas"});
-            renderGUI();
+        var pLayer = layers.find(p => p.name == "Drawing Canvas");
+        if (pLayer == null) {
+            addLayer(new Patterns.PCanvas(processing), "Drawing Canvas");
+            pLayer = layers[layers.length - 1];
         }
-        var pattern = layers[0].pattern;
-        var x = ((event.clientX - 100) / window.innerWidth ) * 2 - 1;
+        var pattern = pLayer.pattern;
+        var x = ((event.clientX - 150) / window.innerWidth ) * 2 - 1;
         var y = - ( event.clientY / window.innerHeight ) * 2 + 1;
         var vector = new THREE.Vector2( x, y );
         

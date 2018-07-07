@@ -7,7 +7,6 @@ export class Canvas {
         this.ctx = this.el.getContext('2d');
     }
 	render(canopy) {
-        this._clearCanopy(canopy);
         // all the pixel info for the canvas, every 4 nums in the U8IntArray is R,G,B,A
         const colorData = this.ctx.getImageData(0,0,this.el.width,this.el.height).data;
         
@@ -18,8 +17,8 @@ export class Canvas {
             const co = this._mapToCanopy(x,y,canopy);
             let l = co.led - 20;
             if (l < 0 || l >= canopy.numLedsPerStrip) { continue; }
+            if (colorData[i] == 0 && colorData[i + 1] == 0 && colorData[i + 2] == 0) continue;
             const c = new RGB(colorData[i], colorData[i+1], colorData[i+2]);
-            if (c.toHex() == '0x000000') { continue; }
             canopy.strips[co.strip].updateColor(l, c.toHex())
         }
         
