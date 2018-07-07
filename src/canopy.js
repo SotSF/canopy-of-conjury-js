@@ -24,6 +24,7 @@ class Canopy {
     numStrips = NUM_STRIPS;
     stripLength = STRIP_LENGTH;
 
+    ledParticles = [];
     ledHitBoxes = []; // hit boxes for click interaction
     /**
      * Initializes the components of the canopy. This includes
@@ -38,12 +39,16 @@ class Canopy {
 
         catenary.initialize();
         this._initializeStrips();
-
+        
         // Create a group so all the canopy components are relatively positioned
         const group = new THREE.Group();
         const ledGroups = _.map(this.strips, 'group');
+
+
         group.add(this.base, this.apex, ...ledGroups);
         scene.add(group);
+
+       
     }
 
     _initializeBase () {
@@ -66,6 +71,7 @@ class Canopy {
         for (let i = 0; i < NUM_STRIPS; i++) {
             var s = new LedStrip(i * radialInterval);
             this.ledHitBoxes = this.ledHitBoxes.concat(s.ledHitBoxes);
+            this.ledParticles = this.ledParticles.concat(s.leds);
             strips.push(s);
         }
 
@@ -104,8 +110,23 @@ class LedStrip {
 
         // Create a group so all the strip's components are relatively positioned
         const group = new THREE.Group();
-        group.add(this.string, ...this.leds, ...this.ledHitBoxes);
+       
         
+        var particleSystemGeometry = new THREE.Geometry();
+        this.leds.forEach(function(val) {
+            particleSystemGeometry.vertices.push(val);
+        });
+        var particleSystemMat = new THREE.PointsMaterial( { 
+            color: 0xffffff,
+            size: 0.1 
+        } );
+        this.particleSystem = new THREE.Points(
+            particleSystemGeometry,
+            particleSystemMat
+        );
+        this.particleSystem.geometry.colors = this.leds.map(() => 0xffffff);
+        
+        group.add(this.string, this.particleSystem, ...this.ledHitBoxes);
         // Rotate the group according to the offset
         group.rotateZ(offset);
         this.group = group;
@@ -120,13 +141,14 @@ class LedStrip {
     }
 
     _initializeLeds () {
-        this.leds = catenary.coordinates.map(() =>
+        /*this.leds = catenary.coordinates.map(() =>
             new THREE.Mesh(
                 LedStrip.boxGeometry,
                 new THREE.MeshBasicMaterial({ color: 0xff0040 })
             )
         );
-
+        */
+        this.leds = catenary.coordinates.map(() => new THREE.Vector3(0,0,0));
         this.ledHitBoxes = [];
 
         for (let i = 0; i < catenary.coordinates.length; i++) {
@@ -146,7 +168,7 @@ class LedStrip {
         for (let i = 0; i < this.leds.length; i++) {
             const led = this.leds[i];
             const [x, z] = catenary.coordinates[i];
-            led.position.set(x, 0, -z);
+            [led.x, led.z] = [x,-z];
             this.ledHitBoxes[i].position.set(x, 0, -z);
         }
 
@@ -162,7 +184,8 @@ class LedStrip {
     /** Updates the color of a single pixel in the string */
     updateColor (i, color) {
         this.colors[i] = color;
-        this.leds[i].material.color.setHex(color);
+        this.particleSystem.geometry.colors[i] = color;
+        this.particleSystem.geometry.colorsNeedUpdate = true;
     }
 
     /** Shorthand for updating the color of the entire strip */
