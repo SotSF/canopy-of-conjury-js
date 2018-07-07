@@ -116,16 +116,16 @@ class LedStrip {
         this.leds.forEach(function(val) {
             particleSystemGeometry.vertices.push(val);
         });
-        var particleSystemMat = new THREE.PointsMaterial( { 
-            color: 0xffffff,
-            size: 0.1 
-        } );
+        
+        var particleSystemMat = new THREE.PointsMaterial({
+            size: 0.1,
+            vertexColors: THREE.VertexColors
+          });
         this.particleSystem = new THREE.Points(
             particleSystemGeometry,
             particleSystemMat
         );
-        this.particleSystem.geometry.colors = this.leds.map(() => 0xffffff);
-        
+       
         group.add(this.string, this.particleSystem, ...this.ledHitBoxes);
         // Rotate the group according to the offset
         group.rotateZ(offset);
@@ -141,13 +141,6 @@ class LedStrip {
     }
 
     _initializeLeds () {
-        /*this.leds = catenary.coordinates.map(() =>
-            new THREE.Mesh(
-                LedStrip.boxGeometry,
-                new THREE.MeshBasicMaterial({ color: 0xff0040 })
-            )
-        );
-        */
         this.leds = catenary.coordinates.map(() => new THREE.Vector3(0,0,0));
         this.ledHitBoxes = [];
 
@@ -184,7 +177,7 @@ class LedStrip {
     /** Updates the color of a single pixel in the string */
     updateColor (i, color) {
         this.colors[i] = color;
-        this.particleSystem.geometry.colors[i] = color;
+        this.particleSystem.geometry.colors[i] = new THREE.Color(color);
         this.particleSystem.geometry.colorsNeedUpdate = true;
     }
 

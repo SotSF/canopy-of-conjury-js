@@ -49,7 +49,7 @@ const setupProcessing = function(processing) {
 
 const clearCanopy = () => {
     for (let s in canopy.strips) {
-        canopy.strips[s].updateColors('0x000000');
+        canopy.strips[s].updateColors(0x000000);
     }
 }
 
