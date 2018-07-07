@@ -24,16 +24,21 @@ camera.position.z = 11;
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setSize(window.innerWidth - 200, window.innerHeight);
+renderer.domElement.id = "idRenderer";
 document.body.appendChild(renderer.domElement);
 
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
 canopy.initialize(scene);
 
-var pattern; // base pattern
+var brush; // active freedraw brush
+var layers = []; // attempt #1, layers
 var filter; // filter overlay
 var processing;
-window.onload = function () {  processing = new Processing(document.getElementById('idCanvas'), setupProcessing);}
+window.onload = function () {  
+    processing = new Processing(document.getElementById('idCanvas'), setupProcessing);
+    renderGUI();
+}
 const setupProcessing = function(processing) {
     processing.setup = () => {
         processing.size(200,200);
@@ -46,14 +51,11 @@ animate();
 function animate() {
     requestAnimationFrame( animate );
     controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
-    if (pattern) {
-        pattern.update();
-        pattern.render(canopy);
-    }
-    if (filter) {
-        filter.update();
-        filter.render(canopy);
-    }
+
+    layers.forEach((layer, i) => {
+        layer.pattern.update();
+        layer.pattern.render(canopy);
+    });
     renderer.render(scene, camera);
 }
 
@@ -68,70 +70,84 @@ window.onkeydown = e => {
     }
 };
 
+function renderGUI() {
+    let t = $('#idGuiTemplate').html();
+    let r = Mustache.render(t, {
+        patterns: patterns,
+        brushes: brushes,
+        layers: layers
+    });
+    $('#idControls').html(r);
+}
+
+const patterns = ["CLEAR LEDS", "Test LEDs", "Test Canvas", "Gradient Pulse"];
+const addLayer = function(pattern, displayName) {
+    layers.push({
+        pattern: pattern,
+        name: displayName
+    });
+    renderGUI();
+}
+
+const clearCanopy = () => {
+    layers = [];
+    for (let s in canopy.strips) {
+        canopy.strips[s].updateColors('0x000000');
+    }
+    processing.background(0);
+}
+
+const brushes = ["Ring", "Radial", "Line"];
+$(document).ready(function () {
+    $(document)
+        .on('click', '.pattern', function () {
+            let i = patterns.indexOf($(this).val());
+            switch (i) {
+                case 0:
+                    clearCanopy();
+                    break;
+                case 1:
+                    addLayer(new Patterns.TestLEDs(), $(this).val()); break;
+                case 2:
+                    addLayer(new Patterns.TestCanvasLayout(processing), $(this).val()); break;
+                case 3:
+                    addLayer(new Patterns.GradientPulse(), $(this).val()); break;
+            }
+        })
+        .on('click', '.brush', function () {
+             let i = brushes.indexOf($(this).val());
+             $('.brush').removeClass('active');
+             $(this).addClass('active');
+             brush = brushes[i];
+        })
+        .on('click', '.layer', function () {
+            let i = $('.layer').index(this);
+            layers.splice(i,1);
+            if (layers.length == 0) { clearCanopy(); }
+            renderGUI();
+        });
+});
+
+
 const gui = new dat.GUI({ width: 300 });
 
-const patternsFolder = gui.addFolder('Patterns');
-const patterns = {
-    testLEDs: () => { setPattern(new Patterns.TestLEDs()); },
-    testCanvas: () => { setPattern(new Patterns.TestCanvasLayout(processing)); },
-    gradientPulse: () => { setPattern(new Patterns.GradientPulse()); },
-    stop: () => { 
-        setPattern(null);
-        for (let s in canopy.strips) {
-            canopy.strips[s].updateColors('0x000000');
-        }
-        freeDrawMode.setValue(false);
-        processing.background(0);
-    }
-}
-
-const setPattern = function(p) {
-    pattern = p;
-}
-
-
-for (var name in patterns) {
-    patternsFolder.add(patterns, name);
-}
-
-/*const filtersFolder = gui.addFolder('Filters');
-const filters = {
-
-}
-for (var name in filters) {
-    filtersFolder.add(filters, name);
-}
-*/
-
-
-var isFreeDrawOn = false;
-const toggleFreeDraw = () => {
-    isFreeDrawOn = freeDrawMode.getValue();
-    if (isFreeDrawOn) {
-        setPattern(new Patterns.PCanvas(processing));
-    }
-
-}
-
 const freeDrawFolder = gui.addFolder('Free Draw');
-const freeDrawMode = freeDrawFolder.add({freeDrawOn: false}, 'freeDrawOn').onChange(toggleFreeDraw);
 const mainColor = freeDrawFolder.addColor({mainColor: new RGB(0,0,255) }, 'mainColor');
 const subColor = freeDrawFolder.addColor({subColor: new RGB(255,255,255)}, 'subColor');
 const brushSize = freeDrawFolder.add({brushSize: 5}, 'brushSize', 1, 10);
-
-const brushes = [
-    "Ring",
-    "Radial",
-    "Line"
-]
-const currentBrush = freeDrawFolder.add({currentBrush: brushes[0]}, 'currentBrush', brushes);
 
 var waitingOnTarget = false;
 var doubleBrush;
 function onDocumentMouseDown( event ) 
 {
-    if (isFreeDrawOn) {
-        var x = ( event.clientX / window.innerWidth ) * 2 - 1;
+    if (brush) {
+
+        if (layers.length == 0 || layers[0].name != "Drawing Canvas") {
+            layers.unshift({pattern: new Patterns.PCanvas(processing), name: "Drawing Canvas"});
+            renderGUI();
+        }
+        var pattern = layers[0].pattern;
+        var x = ((event.clientX - 100) / window.innerWidth ) * 2 - 1;
         var y = - ( event.clientY / window.innerHeight ) * 2 + 1;
         var vector = new THREE.Vector2( x, y );
         
@@ -152,7 +168,7 @@ function onDocumentMouseDown( event )
                 return;    
             }
 
-            switch (currentBrush.getValue()) {
+            switch (brush) {
                 case "Ring": 
                     pattern.add(new Brushes.RingBrush(brushSize.getValue(), mainColor.getValue(), subColor.getValue(), coord));
                     break;

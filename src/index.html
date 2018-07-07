@@ -16,15 +16,63 @@
 			width: 100%;
 			height: 100%;
 		}
+		#idRenderer {
+			float:right;
+		}
+		#idControls {
+			float:left;
+			width:200px;
+			background-color: black;
+			height: -webkit-fill-available;
+		}
+		ul {
+			text-align: left;
+		}
+		button{
+			width:120px;
+		}
+		button.active {
+			background: #ea0000;
+			color: #fff;
+		}
 	</style>
 </head>
 <body>
-<canvas id="idCanvas" style="display: none;" height="500" width="500"></canvas>
+<canvas id="idCanvas" style="display: none;" height="200" width="200"></canvas>
+<div id="idControls">
+</div>
+
+<script id="idGuiTemplate" type="text/template">
+	<h3>Preset Patterns</h3>
+	<ul style="list-style:none;">
+	{{#patterns}}
+	<li><button class="pattern" value="{{.}}">{{.}}</button></li>
+	{{/patterns}}
+	</ul>
+
+	<h3>Free Draw</h3>
+	<h4>Brush</h4>
+	<ul style="list-style:none;">
+	{{#brushes}}
+	<li><button class="brush" value="{{.}}">{{.}}</button></li>
+	{{/brushes}}
+	</ul>
+
+	<h3>Active Layers</h3>
+	<ul style="list-style:none;">
+	{{#layers}}
+	<li><button class="layer">{{name}}</button></li>
+	{{/layers}}
+	</ul>
+</script>
+
 <!-- Library code -->
 <script src="/lib/three.js"></script>
 <script src="/lib/orbit_controls.js"></script>
 <script src="/lib/canvas_renderer.js"></script>
 <script src="/lib/processing.js"></script>
+<script src="/lib/jquery-3.3.1.min.js"></script>
+<script src="/lib/mustache.min.js"></script>
 
 <!-- Our source -->
 <script src="/dist/main.js"></script>
