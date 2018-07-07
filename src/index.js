@@ -4,7 +4,7 @@ import canopy from './canopy';
 import { RGB } from './colors';
 import * as Patterns from './patterns';
 import * as Brushes from './brushes';
-import { Canvas } from './canvas';
+import { Canvas } from './patterns/canvas';
 
 
 const scene = new THREE.Scene();
@@ -42,16 +42,24 @@ window.onload = function () {
 const setupProcessing = function(processing) {
     processing.setup = () => {
         processing.size(200,200);
-        processing.background(0);
+        processing.pg = processing.createGraphics(200,200, "P2D");
+        processing.pg.background(0);
+    }
+}
+
+const clearCanopy = () => {
+    for (let s in canopy.strips) {
+        canopy.strips[s].updateColors('0x000000');
     }
 }
 
 animate();
 
 function animate() {
+    
     requestAnimationFrame( animate );
     controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
-
+    clearCanopy();
     layers.forEach((layer, i) => {
         layer.pattern.update();
         layer.pattern.render(canopy);
@@ -89,14 +97,6 @@ const addLayer = function(pattern, displayName) {
     renderGUI();
 }
 
-const clearCanopy = () => {
-    layers = [];
-    for (let s in canopy.strips) {
-        canopy.strips[s].updateColors('0x000000');
-    }
-    processing.background(0);
-}
-
 const brushes = ["Ring", "Radial", "Line"];
 $(document).ready(function () {
     $(document)
@@ -104,13 +104,15 @@ $(document).ready(function () {
             let i = patterns.indexOf($(this).val());
             switch (i) {
                 case 0:
+                    layers = [];
                     clearCanopy();
+                    processing.pg.background(0);
                     renderGUI();
                     break;
                 case 1:
                     addLayer(new Patterns.TestLEDs(), $(this).val()); break;
                 case 2:
-                    addLayer(new Patterns.TestCanvasLayout(processing), $(this).val()); break;
+                    addLayer(new Patterns.TestCanvas(processing), $(this).val()); break;
                 case 3:
                     addLayer(new Patterns.GradientPulse(), $(this).val()); break;
             }
@@ -122,22 +124,29 @@ $(document).ready(function () {
              brush = brushes[i];
         })
         .on('click', '.layer > .layer-select', function () {
-            let i = $('.layer').index($(this).closest('.layer'));
+            let layerItem = $(this).closest('.layer');
+            let i = $('.layer').index(layerItem);
+            $('.layer').removeClass('active');
+            layerItem.addClass('active');
             //setOptions();
 
         })
         .on('click', '.layer > .layer-kill', function () {
             let i = $('.layer').index($(this).closest('.layer'));
             layers.splice(i,1);
-            if (layers.length == 0) { clearCanopy(); }
+            if (layers.length == 0) { clearCanopy(); processing.pg.background(0); }
             renderGUI();
         })
         .on('click', '.layer > .layer-up', function () {
             let i = $('.layer').index($(this).closest('.layer'));
+            if (i == 0) return;
+            [layers[i - 1], layers[i]] = [layers[i], layers[i-1]];
             renderGUI();
         })
         .on('click', '.layer > .layer-down', function () {
             let i = $('.layer').index($(this).closest('.layer'));
+            if (i == layers.length - 1) return;
+            [layers[i], layers[i+1]] = [layers[i+1], layers[i]];
             renderGUI();
         });
 });

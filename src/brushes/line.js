@@ -11,18 +11,20 @@ export class LineBrush {
         this.f = 0;
     }
     render(processing) {
-        processing.strokeWeight(this.strokeWeight);
-        processing.stroke(
+        processing.pg.beginDraw();
+        processing.pg.strokeWeight(this.strokeWeight);
+        processing.pg.stroke(
             processing.lerp(this.color1.r, this.color2.r, this.f),
             processing.lerp(this.color1.g, this.color2.g, this.f),
             processing.lerp(this.color1.b, this.color2.b, this.f)
         );
-        processing.line(
+        processing.pg.line(
             this.start.x,
             this.start.y,
             processing.lerp(this.start.x, this.target.x, this.f), 
             processing.lerp(this.start.y, this.target.y, this.f)
         );
+        processing.pg.endDraw();
         this.f += 0.1;
         if (this.f >= 1) { 
             [this.start,this.target] = [this.target,this.start];
