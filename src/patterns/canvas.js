@@ -25,32 +25,32 @@ export class PCanvas {
     }
 }
 
+var mapMemo = {};
+var worker = new Worker('worker.js');
+worker.addEventListener('message', function(e) {
+    mapMemo[e.data.carte[0] + "-" + e.data.carte[1]] = { strip: e.data.rad[0], led: e.data.rad[1] };
+}, false);
+(function(){
+    for(let x = -100;x <= 100;x++) {
+        for(let y = -100;y <= 100;y++) {
+            worker.postMessage({coord: [x,y]});
+        }
+    }
+})();
+
 export function renderProcessing(canopy, processing) {
     const colorData = processing.pg.get();
     const pixels = colorData.imageData.data;
     const mapToCanopy = (x,y,processing,canopy) => {
-        const x2 = Math.floor(processing.map(x,0,processing.width,-processing.width/2,processing.width/2));
-        const y2 = Math.floor(processing.map(y,0,processing.height,-processing.height/2,processing.height/2));
-        let theta = 0;
-        if (x2 == 0) {
-            if (y2 > 0) theta = Math.PI / 2;
-            if (y2 < 0) theta = -Math.PI / 2;
-            if (y2 == 0) theta = 0;
-        } else {
-            theta = Math.atan2(y2,x2);
-        }
-        const radius = Math.sqrt(x2 * x2 + y2 * y2) * 3;
-        let thetaDegrees = theta * 180 / Math.PI;
-        if (thetaDegrees < 0) { thetaDegrees += 360; }
-        const s = Math.floor(thetaDegrees * canopy.numStrips / 360);
-        const l = Math.floor(radius / 3);
-        return { strip: s, led: l };
+        const x2 = Math.floor(processing.map(x,0,200,-100,100));
+        const y2 = Math.floor(processing.map(y,0,200,-100,100));
+        return mapMemo[x2 + "-" + y2];
     }
         
     for(let i = 0; i < pixels.length; i += 4) {
         const pixel = Math.floor((i + 1) / 4);
-        const x = pixel % processing.width;
-        const y = Math.floor(pixel / processing.height);
+        const x = pixel % 200;
+        const y = Math.floor(pixel / 200);
         const co = mapToCanopy(x,y,processing,canopy);
         let l = co.led - 20;
         if (l < 0 || l >= canopy.numLedsPerStrip) { continue; }

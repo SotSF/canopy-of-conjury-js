@@ -4,10 +4,9 @@ import canopy from './canopy';
 import { RGB } from './colors';
 import * as Patterns from './patterns';
 import * as Brushes from './brushes';
-import { Canvas } from './patterns/canvas';
-
 
 const scene = new THREE.Scene();
+
 
 // Lights
 const light1 = new THREE.DirectionalLight(0xffffff);
@@ -35,10 +34,32 @@ var brush; // active freedraw brush
 var layers = []; // attempt #1, layers
 var filter; // filter overlay
 var processing;
+var mapFromCanopyMemo = {};
 window.onload = function () {  
     processing = new Processing(document.getElementById('idCanvas'), setupProcessing);
+    (function(processing){
+        const dimension = processing.height;
+        let _mapFromCanopy = (s, l, numStrips) => {
+            let theta = s * 2 * Math.PI / numStrips;
+            let radius = l + 20;
+            let x = radius * Math.cos(theta);
+            let y = radius * Math.sin(theta);
+            let x2 = processing.map(x,-dimension/2,dimension/2,0,dimension);
+            let y2 = processing.map(y,-dimension/2,dimension/2,0,dimension);
+            return {x: x2, y:y2};
+        }
+        canopy.strips.forEach((strip, s) => {
+            strip.leds.forEach((led, l) => {
+                mapFromCanopyMemo[s + "-" + l] = _mapFromCanopy(s, l, canopy.numStrips);
+            });
+        });
+    })(processing);
     renderGUI();
 }
+const mapFromCanopy = (s, l) => { 
+    return mapFromCanopyMemo[s + "-" + l];
+ }
+
 const setupProcessing = function(processing) {
     processing.setup = () => {
         processing.size(200,200);
@@ -56,16 +77,17 @@ const clearCanopy = () => {
 animate();
 
 function animate() {
-    
     requestAnimationFrame( animate );
     controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
     clearCanopy();
-    layers.forEach((layer, i) => {
+    layers.forEach((layer) => {
         layer.pattern.update();
         layer.pattern.render(canopy);
     });
     renderer.render(scene, camera);
 }
+
+
 
 window.onkeydown = e => {
     switch (e.key) {
@@ -148,7 +170,8 @@ $(document).ready(function () {
             if (i == layers.length - 1) return;
             [layers[i], layers[i+1]] = [layers[i+1], layers[i]];
             renderGUI();
-        });
+        })
+        .on('click', '#idRenderer', canopyClick);
 });
 
 
@@ -164,7 +187,7 @@ var activeLayerOptions = gui.addFolder('Layer Tuning');
 
 var waitingOnTarget = false;
 var doubleBrush;
-function onDocumentMouseDown( event ) 
+function canopyClick( event ) 
 {
     if (brush) {
         var pLayer = layers.find(p => p.name == "Drawing Canvas");
@@ -184,7 +207,6 @@ function onDocumentMouseDown( event )
         if ( intersects.length > 0 )
         {
             let i = canopy.ledHitBoxes.indexOf(intersects[0].object);
-            console.log(i);
             let coord = mapFromCanopy(Math.floor(i / canopy.numLedsPerStrip),i % canopy.numLedsPerStrip,canopy.numStrips)
 
             if (waitingOnTarget) {
@@ -210,19 +232,4 @@ function onDocumentMouseDown( event )
         }
     }
     
-}
-
-document.getElementsByTagName('canvas')[1].addEventListener( 'click', onDocumentMouseDown, false );
-
-function mapFromCanopy(s, l, numStrips) {
-    console.log(s,l);
-    const dimension = processing.height;
-    let theta = s * 2 * Math.PI / numStrips;
-    let radius = l + 20;
-    let x = radius * Math.cos(theta);
-    let y = radius * Math.sin(theta);
-    let x2 = processing.map(x,-dimension/2,dimension/2,0,dimension);
-    let y2 = processing.map(y,-dimension/2,dimension/2,0,dimension);
-    console.log(x2,y2);
-    return {x: x2, y:y2};
 }

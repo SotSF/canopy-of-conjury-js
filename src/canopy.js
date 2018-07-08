@@ -9,6 +9,7 @@ const BASE_RADIUS = 8;
 const APEX_RADIUS = 0.5;
 const STRIP_LENGTH_METERS = 2.5;
 const STRIP_LENGTH = STRIP_LENGTH_METERS * FEET_PER_METER;
+var COLOR_MEMO = {};
 export const NUM_STRIPS = 96;
 export const NUM_LEDS_PER_STRIP = TOTAL_LEDS / NUM_STRIPS;
 
@@ -44,7 +45,6 @@ class Canopy {
         const group = new THREE.Group();
         const ledGroups = _.map(this.strips, 'group');
 
-
         group.add(this.base, this.apex, ...ledGroups);
         scene.add(group);
 
@@ -53,7 +53,7 @@ class Canopy {
 
     _initializeBase () {
         const material = new THREE.MeshLambertMaterial({ color: 0x555555, side: THREE.DoubleSide });
-        const baseGeometry = new THREE.TorusGeometry(BASE_RADIUS, 0.25, 5, 100);
+        const baseGeometry = new THREE.TorusGeometry(BASE_RADIUS, 0.25, 4, 75);
         this.base = new THREE.Mesh(baseGeometry, material);
     }
 
@@ -177,7 +177,8 @@ class LedStrip {
     /** Updates the color of a single pixel in the string */
     updateColor (i, color) {
         this.colors[i] = color;
-        this.particleSystem.geometry.colors[i] = new THREE.Color(color);
+        if (!COLOR_MEMO[color]) { COLOR_MEMO[color] = new THREE.Color(color); }
+        this.particleSystem.geometry.colors[i] = COLOR_MEMO[color];
         this.particleSystem.geometry.colorsNeedUpdate = true;
     }
 
