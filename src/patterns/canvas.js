@@ -1,4 +1,5 @@
 import { RGB } from '../colors';
+import { NUM_STRIPS } from '../canopy';
 
 // Pattern Canvas - for Free Drawing
 export class PCanvas {
@@ -26,14 +27,10 @@ export class PCanvas {
 }
 
 var mapMemo = {};
-var worker = new Worker('worker.js');
-worker.addEventListener('message', function(e) {
-    mapMemo[e.data.carte[0] + "-" + e.data.carte[1]] = { strip: e.data.rad[0], led: e.data.rad[1] };
-}, false);
 (function(){
     for(let x = -100;x <= 100;x++) {
         for(let y = -100;y <= 100;y++) {
-            worker.postMessage({coord: [x,y]});
+            mapMemo[x + "-" + y] = _mapToCanopy(x,y);
         }
     }
 })();
@@ -58,4 +55,21 @@ export function renderProcessing(canopy, processing) {
         const c = new RGB(pixels[i], pixels[i+1], pixels[i+2]);
         canopy.strips[co.strip].updateColor(l, c.toHex())
     }
+}
+
+function _mapToCanopy(x,y) {
+    let theta = 0;
+    if (x == 0) {
+        if (y > 0) theta = Math.PI / 2;
+        if (y < 0) theta = -Math.PI / 2;
+        if (y == 0) theta = 0;
+    } else {
+        theta = Math.atan2(y,x);
+    }
+    const radius = Math.sqrt(x * x + y * y) * 3;
+    let thetaDegrees = theta * 180 / Math.PI;
+    if (thetaDegrees < 0) { thetaDegrees += 360; }
+    const s = Math.floor(thetaDegrees * NUM_STRIPS / 360);
+    const l = Math.floor(radius / 3);
+    return { strip: s, led: l};
 }

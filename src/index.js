@@ -196,7 +196,7 @@ function canopyClick( event )
             pLayer = layers[layers.length - 1];
         }
         var pattern = pLayer.pattern;
-        var x = ((event.clientX - 150) / window.innerWidth ) * 2 - 1;
+        var x = ((event.clientX - 300) / (window.innerWidth - 300) ) * 2 - 1;
         var y = - ( event.clientY / window.innerHeight ) * 2 + 1;
         var vector = new THREE.Vector2( x, y );
         
