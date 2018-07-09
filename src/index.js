@@ -4,6 +4,7 @@ import canopy from './canopy';
 import { RGB } from './colors';
 import * as Patterns from './patterns';
 import * as Brushes from './brushes';
+import * as Menu from './menu';
 
 const scene = new THREE.Scene();
 
@@ -54,7 +55,7 @@ window.onload = function () {
             });
         });
     })(processing);
-    renderGUI();
+    //renderGUI();
 }
 const mapFromCanopy = (s, l) => { 
     return mapFromCanopyMemo[s + "-" + l];
@@ -121,6 +122,8 @@ const addLayer = function(pattern, displayName) {
 
 const brushes = ["Ring", "Radial", "Line"];
 $(document).ready(function () {
+    Menu.initialize(layers);
+
     $(document)
         .on('click', '.pattern', function () {
             let i = patterns.indexOf($(this).val());

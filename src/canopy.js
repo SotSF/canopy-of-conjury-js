@@ -78,6 +78,11 @@ class Canopy {
         this.strips = strips;
     }
 
+    /** Clears all the LEDs */
+    clear () {
+        this.strips.forEach(strip => strip.updateColors(0x000000));
+    }
+
     /**
      * Moves the apex up `delta` units.
      * @param delta
