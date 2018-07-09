@@ -106,7 +106,8 @@ function renderGUI() {
     let r = Mustache.render(t, {
         patterns: patterns,
         brushes: brushes,
-        layers: layers
+        layers: layers,
+        blocks: blocks
     });
     $('#idControls').html(r);
 }
@@ -119,6 +120,8 @@ const addLayer = function(pattern, displayName) {
     });
     renderGUI();
 }
+
+const blocks = ["Sine Ring"];
 
 const brushes = ["Ring", "Radial", "Line"];
 $(document).ready(function () {
@@ -142,6 +145,13 @@ $(document).ready(function () {
                     addLayer(new Patterns.GradientPulse(), $(this).val()); break;
             }
         })
+        .on('click', '.block', function () {
+            let i = blocks.indexOf($(this).val());
+            switch (i) {
+                case 0: 
+                    addLayer(new SineRing(processing, mainColor, subColor), $(this).val()); break;
+            }
+        })
         .on('click', '.brush', function () {
              let i = brushes.indexOf($(this).val());
              $('.brush').removeClass('active');
@@ -153,7 +163,7 @@ $(document).ready(function () {
             let i = $('.layer').index(layerItem);
             $('.layer').removeClass('active');
             layerItem.addClass('active');
-            //setOptions();
+            setOptions(layers[i]);
 
         })
         .on('click', '.layer > .layer-kill', function () {
@@ -177,6 +187,20 @@ $(document).ready(function () {
         .on('click', '#idRenderer', canopyClick);
 });
 
+const clearCurrentOptions = function() {
+    for (var control in activeLayerOptions.__controllers) {
+        activeLayerOptions.remove(control);
+    }
+}
+
+const setOptions = function (layer) {
+    clearCurrentOptions();
+    let p = layer.pattern;
+    for (var key in layer.pattern.optionVals) {
+        console.log(key);
+        activeLayerOptions.add(p.optionVals, key, p.optionParams[key].min, p.optionParams[key].max, 1);
+    }
+}
 
 const gui = new dat.GUI({ width: 300 });
 
