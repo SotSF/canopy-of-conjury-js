@@ -18,6 +18,7 @@ import * as Patterns from '../patterns';
 
 import ActiveLayers from './ActiveLayers';
 import Brushes from './Brushes';
+import RenderSelection from './RenderSelection';
 
 
 const styles = theme => ({
@@ -101,6 +102,8 @@ class Menu extends React.Component {
 
                 <Brushes activateBrush={() => { alert('Implement me!'); }} />
                 <ActiveLayers layers={layers} />
+
+                <RenderSelection />
             </Drawer>
         );
     }
