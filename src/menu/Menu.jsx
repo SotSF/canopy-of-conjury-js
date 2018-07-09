@@ -47,10 +47,12 @@ class Menu extends React.Component {
         { pattern: Patterns.TestLEDs, name: 'Test LEDs' },
         { pattern: Patterns.TestCanvas, name: 'Test Canvas' },
         { pattern: Patterns.GradientPulse, name: 'Gradient Pulse' },
+        { pattern: Patterns.PCanvas, name: 'Add Canvas'}
     ];
 
     state = {
-        abcd: true
+        abcd: true,
+        layers: []
     };
 
     clear = () => {
@@ -58,11 +60,25 @@ class Menu extends React.Component {
 
         // FIXME: mutating props is a total anti-pattern
         this.props.layers.splice(0, this.props.layers.length);
+        this.setState({layers: this.props.layers});
     };
 
     addLayer = (pattern, name) => {
         this.props.layers.push({ pattern: new pattern(), name });
+        this.setState({layers: this.props.layers});
     };
+
+    removeLayer = () => {
+
+    }
+
+    moveLayerUp = () => {
+
+    }
+
+    moveLayerDown = () => {
+        
+    }
 
     render () {
         const { classes, layers } = this.props;
@@ -101,7 +117,10 @@ class Menu extends React.Component {
                 </ExpansionPanel>
 
                 <Brushes activateBrush={() => { alert('Implement me!'); }} />
-                <ActiveLayers layers={layers} />
+                <ActiveLayers layers={this.state.layers} 
+                    moveLayerUp={this.moveLayerUp} 
+                    moveLayerDown={this.moveLayerDown} 
+                    removeLayer={this.removeLayer}/>
 
                 <RenderSelection />
             </Drawer>
