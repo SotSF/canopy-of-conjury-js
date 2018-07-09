@@ -64,20 +64,23 @@ class Menu extends React.Component {
     };
 
     addLayer = (pattern, name) => {
-        this.props.layers.push({ pattern: new pattern(), name });
+        this.props.layers.splice(0,0,{ pattern: new pattern(), name });
         this.setState({layers: this.props.layers});
     };
 
-    removeLayer = () => {
-
+    removeLayer = (i) => {
+        this.props.layers.splice(i, 1);
+        this.setState({layers: this.props.layers});
     }
 
-    moveLayerUp = () => {
-
+    moveLayerUp = (i) => {
+        [this.props.layers[i], this.props.layers[i-1]] =   [this.props.layers[i-1], this.props.layers[i]];
+        this.setState({layers: this.props.layers});
     }
 
-    moveLayerDown = () => {
-        
+    moveLayerDown = (i) => {
+        [this.props.layers[i], this.props.layers[i+1]] =   [this.props.layers[i+1], this.props.layers[i]];
+        this.setState({layers: this.props.layers});
     }
 
     render () {

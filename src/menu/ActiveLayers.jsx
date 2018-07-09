@@ -57,9 +57,9 @@ class Layer extends React.Component {
 
         const buttons = [];
 
-        if (index !== 0) buttons.push(<KeyboardArrowUp key="up" />);
-        if (index !== layers.length - 1) buttons.push(<KeyboardArrowDown key="down" />);
-        buttons.push(<DeleteIcon key="delete" />);
+        if (index !== 0) buttons.push(<KeyboardArrowUp key="up" onClick={() => this.props.moveLayerUp(index)}/>);
+        if (index !== layers.length - 1) buttons.push(<KeyboardArrowDown key="down" onClick={() => this.props.moveLayerDown(index)}/>);
+        buttons.push(<DeleteIcon key="delete" onClick={() => this.props.removeLayer(index)}/>);
 
         return (
             <div>
@@ -109,7 +109,13 @@ export default class ActiveLayers extends React.Component {
                         <List classes={{
                             root: classes.list
                         }}>
-                            {layers.map(layer => <Layer layer={layer} layers={layers} />)}
+                            {layers.map(layer => <Layer 
+                                layer={layer} 
+                                layers={layers} 
+                                moveLayerUp={this.props.moveLayerUp} 
+                                moveLayerDown={this.props.moveLayerDown} 
+                                removeLayer={this.props.removeLayer}
+                            />)}
                         </List>
                     </ExpansionPanelDetails>
             </ExpansionPanel>

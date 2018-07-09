@@ -81,10 +81,10 @@ function animate() {
     requestAnimationFrame( animate );
     controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
     clearCanopy();
-    layers.forEach((layer) => {
+    for (let layer of Array.from(layers).reverse()) {
         layer.pattern.update();
         layer.pattern.render(canopy);
-    });
+    }
     renderer.render(scene, camera);
 }
 
@@ -217,11 +217,6 @@ var doubleBrush;
 function canopyClick( event ) 
 {
     if (brush) {
-        var pLayer = layers.find(p => p.name == "Drawing Canvas");
-        if (pLayer == null) {
-            addLayer(new Patterns.PCanvas(processing), "Drawing Canvas");
-            pLayer = layers[layers.length - 1];
-        }
         var pattern = pLayer.pattern;
         var x = ((event.clientX - 300) / (window.innerWidth - 300) ) * 2 - 1;
         var y = - ( event.clientY / window.innerHeight ) * 2 + 1;
