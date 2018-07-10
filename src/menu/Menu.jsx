@@ -14,11 +14,12 @@ import Typography from '@material-ui/core/Typography';
 import { MuiThemeProvider, withStyles } from '@material-ui/core/styles';
 
 import canopy from '../canopy';
-import * as Patterns from '../patterns';
+import * as patterns from '../patterns';
 import theme from '../theme';
 
 import ActiveLayers from './ActiveLayers';
 import Brushes from './Brushes';
+import Patterns from './Patterns';
 import RenderSelection from './RenderSelection';
 
 
@@ -45,10 +46,10 @@ const styles = theme => ({
 @withStyles(styles)
 class Menu extends React.Component {
     static presets = [
-        { pattern: Patterns.TestLEDs, name: 'Test LEDs' },
-        { pattern: Patterns.TestCanvas, name: 'Test Canvas' },
-        { pattern: Patterns.GradientPulse, name: 'Gradient Pulse' },
-        { pattern: Patterns.PCanvas, name: 'Draw Canvas'}
+        { pattern: patterns.TestLEDs, name: 'Test LEDs' },
+        { pattern: patterns.TestCanvas, name: 'Test Canvas' },
+        { pattern: patterns.GradientPulse, name: 'Gradient Pulse' },
+        { pattern: patterns.PCanvas, name: 'Draw Canvas'}
     ];
 
     state = {
@@ -143,6 +144,8 @@ class Menu extends React.Component {
                           this.props.setBrush(name)
                       }}
                     />
+
+                    <Patterns addLayer={this.addLayer} />
 
                     <ActiveLayers
                       layers={this.state.layers}
