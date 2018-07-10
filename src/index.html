@@ -26,19 +26,6 @@
 			background-color: black;
 			height: -webkit-fill-available;
 		}
-		ul {
-			text-align: left;
-		}
-		button.brush, button.pattern, button.layer-select{
-			width:120px;
-		}
-		button.active {
-			background: #0400d6b0;
-			color: #fff;
-		}
-		.layer {
-			padding: 5px;
-		}
 		.layer.active {
 			background-color: lightgray;
 		}
@@ -50,47 +37,12 @@
 <div id="idControls">
 </div>
 
-<script id="idGuiTemplate" type="text/template">
-	<h3>Preset Patterns</h3>
-	<ul style="list-style:none;">
-	{{#patterns}}
-	<li><button class="pattern" value="{{.}}">{{.}}</button></li>
-	{{/patterns}}
-	</ul>
-
-	<h3>Pattern Builder</h3>
-	<ul style="list-style:none;">
-	{{#blocks}}
-	<li><button class="block" value="{{.}}">{{.}}</button></li>
-	{{/blocks}}
-	</ul>
-
-	<h3>Free Draw</h3>
-	<h4>Brush</h4>
-	<ul style="list-style:none;">
-	{{#brushes}}
-	<li><button class="brush" value="{{.}}">{{.}}</button></li>
-	{{/brushes}}
-	</ul>
-
-	<h3>Active Layers</h3>
-	<ul style="list-style:none;">
-	{{#layers}}
-	<li class="layer">
-		<button class="layer-select">{{name}}</button>
-		<button class="layer-up">UP</button><button class="layer-down">DN</button><button class="layer-kill">X</button>
-	</li>
-	{{/layers}}
-	</ul>
-</script>
-
 <!-- Library code -->
 <script src="/lib/three.js"></script>
 <script src="/lib/orbit_controls.js"></script>
 <script src="/lib/canvas_renderer.js"></script>
 <script src="/lib/processing.js"></script>
 <script src="/lib/jquery-3.3.1.min.js"></script>
-<script src="/lib/mustache.min.js"></script>
 
 <!-- Our source -->
 <script src="/dist/main.js"></script>

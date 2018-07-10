@@ -38,7 +38,7 @@ const styles = theme => ({
     },
     summaryHeader: {
         flexGrow: 1
-    },
+    }
 });
 
 class Layer extends React.Component {
@@ -50,6 +50,7 @@ class Layer extends React.Component {
             name: PropTypes.string
         }))
     };
+
 
     renderButtons () {
         const { layer, layers } = this.props;
@@ -74,8 +75,9 @@ class Layer extends React.Component {
 
     render () {
         const { name } = this.props.layer;
+        var i = this.props.layers.indexOf(this.props.layer);
         return (
-            <ListItem>
+            <ListItem className={this.props.isActive ? "layer active" : "layer"} onClick={() => this.props.setLayer(i)}>
                 <ListItemText primary={name} />
                 <ListItemSecondaryAction>
                     {this.renderButtons()}
@@ -109,13 +111,17 @@ export default class ActiveLayers extends React.Component {
                         <List classes={{
                             root: classes.list
                         }}>
-                            {layers.map(layer => <Layer 
-                                layer={layer} 
-                                layers={layers} 
-                                moveLayerUp={this.props.moveLayerUp} 
-                                moveLayerDown={this.props.moveLayerDown} 
-                                removeLayer={this.props.removeLayer}
-                            />)}
+                            {layers.map((layer,i) => 
+                                <Layer 
+                                    layer={layer} 
+                                    layers={layers} 
+                                    isActive={this.props.activeLayer == i}
+                                    moveLayerUp={this.props.moveLayerUp} 
+                                    moveLayerDown={this.props.moveLayerDown} 
+                                    removeLayer={this.props.removeLayer}
+                                    setLayer={this.props.setLayer}
+                                />
+                            )}
                         </List>
                     </ExpansionPanelDetails>
             </ExpansionPanel>

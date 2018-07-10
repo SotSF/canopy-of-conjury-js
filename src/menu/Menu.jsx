@@ -47,44 +47,55 @@ class Menu extends React.Component {
         { pattern: Patterns.TestLEDs, name: 'Test LEDs' },
         { pattern: Patterns.TestCanvas, name: 'Test Canvas' },
         { pattern: Patterns.GradientPulse, name: 'Gradient Pulse' },
-        { pattern: Patterns.PCanvas, name: 'Add Canvas'}
+        { pattern: Patterns.PCanvas, name: 'Draw Canvas'}
     ];
 
     state = {
-        abcd: true,
-        layers: []
+        layers: [],
+        activeLayer: {},
+        activeBrush: ''
     };
 
     clear = () => {
         canopy.clear();
-
-        // FIXME: mutating props is a total anti-pattern
-        this.props.layers.splice(0, this.props.layers.length);
-        this.setState({layers: this.props.layers});
+        this.state.layers.splice(0, this.state.layers.length);
+        this.setState({layers: this.state.layers});
+        this.props.updateLayers(this.state.layers);
     };
 
     addLayer = (pattern, name) => {
-        this.props.layers.splice(0,0,{ pattern: new pattern(), name });
-        this.setState({layers: this.props.layers});
+        this.state.layers.splice(0,0,{ pattern: new pattern(), name });
+        this.setState({layers: this.state.layers});
+        this.props.updateLayers(this.state.layers);
     };
 
     removeLayer = (i) => {
-        this.props.layers.splice(i, 1);
-        this.setState({layers: this.props.layers});
+        this.state.layers.splice(i, 1);
+        this.setState({layers: this.state.layers});
+        this.props.updateLayers(this.state.layers);
     }
 
     moveLayerUp = (i) => {
-        [this.props.layers[i], this.props.layers[i-1]] =   [this.props.layers[i-1], this.props.layers[i]];
-        this.setState({layers: this.props.layers});
+        [this.state.layers[i], this.state.layers[i-1]] = [this.state.layers[i-1], this.state.layers[i]];
+        this.setState({layers: this.state.layers});
+        this.props.updateLayers(this.state.layers);
     }
 
     moveLayerDown = (i) => {
-        [this.props.layers[i], this.props.layers[i+1]] =   [this.props.layers[i+1], this.props.layers[i]];
-        this.setState({layers: this.props.layers});
+        [this.state.layers[i], this.state.layers[i+1]] =   [this.state.layers[i+1], this.state.layers[i]];
+        this.setState({layers: this.state.layers});
+        this.props.updateLayers(this.state.layers);
     }
 
+    setActiveLayer = (i) => {
+        this.setState({activeLayer: this.state.layers[i]});
+        this.props.setActiveLayer(i);
+    }
+
+    getActiveLayer = () => { return this.state.layers.indexOf(this.state.activeLayer); }
+
     render () {
-        const { classes, layers } = this.props;
+        const { classes } = this.props;
         return (
             <Drawer
               variant="permanent"
@@ -119,21 +130,23 @@ class Menu extends React.Component {
                     </ExpansionPanelDetails>
                 </ExpansionPanel>
 
-                <Brushes activateBrush={() => { alert('Implement me!'); }} />
+                <Brushes activateBrush={(name) => { this.setState({activeBrush: name}); this.props.setBrush(name) }} />
                 <ActiveLayers layers={this.state.layers} 
                     moveLayerUp={this.moveLayerUp} 
                     moveLayerDown={this.moveLayerDown} 
-                    removeLayer={this.removeLayer}/>
-
+                    removeLayer={this.removeLayer}
+                    setLayer={this.setActiveLayer}
+                    activeLayer={this.getActiveLayer()}
+                />
                 <RenderSelection />
             </Drawer>
         );
     }
 }
 
-export const initialize = (layers) => {
+export const initialize = (updateLayers, setBrush, setActiveLayer) => {
     ReactDOM.render(
-        <Menu layers={layers} />,
+        <Menu updateLayers={updateLayers} setBrush={setBrush} setActiveLayer={setActiveLayer}/>,
         document.getElementById('idControls')
     );
 };
