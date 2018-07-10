@@ -98,7 +98,7 @@ class Menu extends React.Component {
         this.props.setActiveLayer(i);
     };
 
-    getActiveLayer = () => { return this.state.layers.indexOf(this.state.activeLayer); }
+    getActiveLayer = () => this.state.layers.indexOf(this.state.activeLayer);
 
     render () {
         const { classes } = this.props;
