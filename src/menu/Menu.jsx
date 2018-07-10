@@ -116,7 +116,7 @@ class Menu extends React.Component {
                     <ExpansionPanelDetails classes={{
                         root: classes.panelDetails
                     }}>
-                        <List classes={{
+                        <List dense classes={{
                             root: classes.list
                         }}>
                             <ListItem button>
