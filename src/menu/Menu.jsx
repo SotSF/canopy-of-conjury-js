@@ -11,10 +11,11 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
-import { withStyles } from '@material-ui/core/styles';
+import { MuiThemeProvider, withStyles } from '@material-ui/core/styles';
 
 import canopy from '../canopy';
 import * as Patterns from '../patterns';
+import theme from '../theme';
 
 import ActiveLayers from './ActiveLayers';
 import Brushes from './Brushes';
@@ -102,57 +103,59 @@ class Menu extends React.Component {
     render () {
         const { classes } = this.props;
         return (
-            <Drawer
-              variant="permanent"
-              classes={{
-                  paper: classes.drawerPaper
-              }}
-              anchor="left"
-            >
-                <ExpansionPanel>
-                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                        <Typography className={classes.heading}>Presets</Typography>
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails classes={{
-                        root: classes.panelDetails
-                    }}>
-                        <List dense classes={{
-                            root: classes.list
-                        }}>
-                            <ListItem button>
-                                <ListItemText primary="Clear" onClick={this.clear} />
-                            </ListItem>
-
-                            {Menu.presets.map(({ pattern, name }) =>
-                                <ListItem button key={name}>
-                                    <ListItemText
-                                      primary={name}
-                                      onClick={() => this.addLayer(pattern, name)}
-                                    />
-                                </ListItem>
-                            )}
-                        </List>
-                    </ExpansionPanelDetails>
-                </ExpansionPanel>
-
-                <Brushes
-                  activateBrush={(name) => {
-                      this.setState({ activeBrush: name });
-                      this.props.setBrush(name)
+            <MuiThemeProvider theme={theme}>
+                <Drawer
+                  variant="permanent"
+                  classes={{
+                      paper: classes.drawerPaper
                   }}
-                />
+                  anchor="left"
+                >
+                    <ExpansionPanel>
+                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                            <Typography className={classes.heading}>Presets</Typography>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails classes={{
+                            root: classes.panelDetails
+                        }}>
+                            <List dense classes={{
+                                root: classes.list
+                            }}>
+                                <ListItem button>
+                                    <ListItemText primary="Clear" onClick={this.clear} />
+                                </ListItem>
 
-                <ActiveLayers
-                  layers={this.state.layers}
-                  moveLayerUp={this.moveLayerUp}
-                  moveLayerDown={this.moveLayerDown}
-                  removeLayer={this.removeLayer}
-                  setLayer={this.setActiveLayer}
-                  activeLayer={this.getActiveLayer()}
-                />
+                                {Menu.presets.map(({ pattern, name }) =>
+                                    <ListItem button key={name}>
+                                        <ListItemText
+                                          primary={name}
+                                          onClick={() => this.addLayer(pattern, name)}
+                                        />
+                                    </ListItem>
+                                )}
+                            </List>
+                        </ExpansionPanelDetails>
+                    </ExpansionPanel>
 
-                <RenderSelection />
-            </Drawer>
+                    <Brushes
+                      activateBrush={(name) => {
+                          this.setState({ activeBrush: name });
+                          this.props.setBrush(name)
+                      }}
+                    />
+
+                    <ActiveLayers
+                      layers={this.state.layers}
+                      moveLayerUp={this.moveLayerUp}
+                      moveLayerDown={this.moveLayerDown}
+                      removeLayer={this.removeLayer}
+                      setLayer={this.setActiveLayer}
+                      activeLayer={this.getActiveLayer()}
+                    />
+
+                    <RenderSelection />
+                </Drawer>
+            </MuiThemeProvider>
         );
     }
 }
