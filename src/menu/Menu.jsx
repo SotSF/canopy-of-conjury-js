@@ -58,34 +58,39 @@ class Menu extends React.Component {
 
     clear = () => {
         canopy.clear();
-        this.state.layers.splice(0, this.state.layers.length);
-        this.setState({layers: this.state.layers});
-        this.props.updateLayers(this.state.layers);
+        this.setState({ layers: [] });
+        this.props.updateLayers([]);
     };
 
     addLayer = (pattern, name) => {
-        this.state.layers.splice(0,0,{ pattern: new pattern(), name });
-        this.setState({layers: this.state.layers});
-        this.props.updateLayers(this.state.layers);
+        const newLayers = [{ pattern: new pattern(), name }, ...this.state.layers];
+        this.setState({ layers: newLayers });
+        this.props.updateLayers(newLayers);
     };
 
     removeLayer = (i) => {
-        this.state.layers.splice(i, 1);
-        this.setState({layers: this.state.layers});
-        this.props.updateLayers(this.state.layers);
-    }
+        const newLayers = [...this.state.layers];
+        newLayers.splice(i, 1);
+
+        this.setState({ layers: newLayers });
+        this.props.updateLayers(newLayers);
+    };
 
     moveLayerUp = (i) => {
-        [this.state.layers[i], this.state.layers[i-1]] = [this.state.layers[i-1], this.state.layers[i]];
-        this.setState({layers: this.state.layers});
-        this.props.updateLayers(this.state.layers);
-    }
+        const newLayers = [...this.state.layers];
+        [newLayers[i], newLayers[i - 1]] = [newLayers[i - 1], newLayers[i]];
+
+        this.setState({ layers: newLayers });
+        this.props.updateLayers(newLayers);
+    };
 
     moveLayerDown = (i) => {
-        [this.state.layers[i], this.state.layers[i+1]] =   [this.state.layers[i+1], this.state.layers[i]];
-        this.setState({layers: this.state.layers});
-        this.props.updateLayers(this.state.layers);
-    }
+        const newLayers = [...this.state.layers];
+        [newLayers[i], newLayers[i + 1]] = [newLayers[i + 1], newLayers[i]];
+
+        this.setState({ layers: newLayers });
+        this.props.updateLayers(newLayers);
+    };
 
     setActiveLayer = (i) => {
         this.setState({activeLayer: this.state.layers[i]});
