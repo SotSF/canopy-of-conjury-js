@@ -108,7 +108,7 @@ export default class ActiveLayers extends React.Component {
                 <ExpansionPanelDetails classes={{
                         root: classes.panelDetails
                     }}>
-                        <List dense classes={{
+                        <List dense disablePadding classes={{
                             root: classes.list
                         }}>
                             {layers.map((layer,i) => 
