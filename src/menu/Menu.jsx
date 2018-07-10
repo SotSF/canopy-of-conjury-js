@@ -93,9 +93,9 @@ class Menu extends React.Component {
     };
 
     setActiveLayer = (i) => {
-        this.setState({activeLayer: this.state.layers[i]});
+        this.setState({ activeLayer: this.state.layers[i] });
         this.props.setActiveLayer(i);
-    }
+    };
 
     getActiveLayer = () => { return this.state.layers.indexOf(this.state.activeLayer); }
 
@@ -135,14 +135,22 @@ class Menu extends React.Component {
                     </ExpansionPanelDetails>
                 </ExpansionPanel>
 
-                <Brushes activateBrush={(name) => { this.setState({activeBrush: name}); this.props.setBrush(name) }} />
-                <ActiveLayers layers={this.state.layers} 
-                    moveLayerUp={this.moveLayerUp} 
-                    moveLayerDown={this.moveLayerDown} 
-                    removeLayer={this.removeLayer}
-                    setLayer={this.setActiveLayer}
-                    activeLayer={this.getActiveLayer()}
+                <Brushes
+                  activateBrush={(name) => {
+                      this.setState({ activeBrush: name });
+                      this.props.setBrush(name)
+                  }}
                 />
+
+                <ActiveLayers
+                  layers={this.state.layers}
+                  moveLayerUp={this.moveLayerUp}
+                  moveLayerDown={this.moveLayerDown}
+                  removeLayer={this.removeLayer}
+                  setLayer={this.setActiveLayer}
+                  activeLayer={this.getActiveLayer()}
+                />
+
                 <RenderSelection />
             </Drawer>
         );
