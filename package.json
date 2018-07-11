@@ -17,6 +17,7 @@
     "babel-plugin-transform-export-default": "^7.0.0-alpha.20",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-react": "^6.24.1",
+    "classnames": "^2.2.6",
     "dat.gui": "^0.7.2",
     "lodash": "^4.17.10",
     "prop-types": "^15.6.2",

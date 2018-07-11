@@ -1,6 +1,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
@@ -15,17 +16,38 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
+
+import AddIcon from '@material-ui/icons/Add';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
+import Canopy from '../canopy/Canopy';
 import { ColorPicker } from './components';
 
 //import { ConcentricCircles } from '../patterns';
 
 
 const concentricCirclesStyles = {
+    canopy: {
+        marginLeft: '0.2rem',
+    },
     card: {
         backgroundColor: '#626262',
-        minWidth: 275,
+    },
+    fab: {
+        position: 'absolute',
+        right: '-20px',
+        top: '10px',
+    },
+    parameters: {
+        padding: '1rem'
+    },
+    patternWrapper: {
+        display: 'flex',
+        alignItems: 'flex-start',
+    },
+    popover: {
+        backgroundColor: 'transparent',
+        overflow: 'visible',
     },
     title: {
         marginBottom: 16,
@@ -60,6 +82,7 @@ class ConcentricCircles extends React.Component {
                 <Popover
                   open={!!anchorEl}
                   anchorEl={anchorEl}
+                  elevation={0}
                   onClose={this.handleClose}
                   anchorOrigin={{
                       vertical: 'center',
@@ -69,15 +92,21 @@ class ConcentricCircles extends React.Component {
                       vertical: 'top',
                       horizontal: 'left',
                   }}
+                  PaperProps={{
+                      classes: { root: classes.popover }
+                  }}
                 >
-                    <Card className={classes.card}>
-                        <CardContent>
+                    <div className={classes.patternWrapper}>
+                        <Card className={classNames(classes.card, classes.parameters)} raised>
                             <ColorPicker />
-                        </CardContent>
-                        <CardActions>
-                            <Button variant="contained" size="small" color="primary">Add</Button>
-                        </CardActions>
-                    </Card>
+                        </Card>
+                        <Card className={classNames(classes.card, classes.canopy)} raised>
+                            <Canopy mini />
+                        </Card>
+                        <Button variant="fab" color="primary" mini className={classes.fab}>
+                            <AddIcon />
+                        </Button>
+                    </div>
                 </Popover>
             </ListItem>
         )
