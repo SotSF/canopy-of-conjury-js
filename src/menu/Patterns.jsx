@@ -164,13 +164,7 @@ export default class Patterns extends React.Component {
                             root: classes.list
                         }}>
                             <PatternMenu pattern={patterns.ConcentricCircles} name="Circles" addLayer={this.props.addLayer} 
-                                controls={[
-                                    {name: "Color", defaultVal: "#fff"},
-                                    {name: "Qty", defaultVal: 1, min: 1, max: 10},
-                                    {name: "Width", defaultVal: 1, min: 1, max: 5},
-                                    {name: "Velocity", defaultVal: 1, min: 1, max: 5},
-                                    {name: "GrowOut", defaultVal: true}
-                                ]}
+                                controls={patterns.ConcentricCircles.params}
                             />
                         </List>
                     </ExpansionPanelDetails>

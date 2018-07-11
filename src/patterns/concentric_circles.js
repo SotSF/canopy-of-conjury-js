@@ -5,6 +5,13 @@ import { RGB } from '../colors';
 
 
 export class ConcentricCircles {
+    static params = [
+        {name: "Color", defaultVal: "#fff"},
+        {name: "Qty", defaultVal: 1, min: 1, max: 10},
+        {name: "Width", defaultVal: 1, min: 1, max: 5},
+        {name: "Velocity", defaultVal: 1, min: 1, max: 5},
+        {name: "GrowOut", defaultVal: true}
+    ]
     constructor(params) {
         this.circles = [];
         let step = Math.floor(NUM_LEDS_PER_STRIP / params.Qty);
