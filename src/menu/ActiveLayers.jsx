@@ -135,37 +135,45 @@ class Layer extends React.Component {
         }
     }
 
-    render () {
-        const { pattern, menuParams, key, name } = this.props.layer;
+    renderPopover() {
+        const { menuParams } = this.props.layer;
         const { anchorEl } = this.state;
-        const i = this.props.layers.indexOf(this.props.layer);
+        if (menuParams == null) return;
+
+        return (<Popover
+                open={!!anchorEl}
+                anchorEl={anchorEl}
+                onClose={this.handleClose}
+                anchorOrigin={{
+                    vertical: 'center',
+                    horizontal: 'right',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                }}
+            >
+                <Card>
+                    <CardContent>
+                        {menuParams.map(control =>
+                            this.renderControls(control)
+                        )}
+                    </CardContent>
+                </Card>
+            </Popover>
+        )
+    }
+
+    render () {
+        const { key, name } = this.props.layer;
+        const i = this.getIndex();
         return (
             <ListItem className={this.props.isActive ? "layer active" : "layer"} onClick={() => this.props.setLayer(i)}>
                 <ListItemText primary={name + ":" + key} onClick={this.handleClick} />
                 <ListItemSecondaryAction>
                     {this.renderButtons()}
                 </ListItemSecondaryAction>
-                <Popover
-                  open={!!anchorEl}
-                  anchorEl={anchorEl}
-                  onClose={this.handleClose}
-                  anchorOrigin={{
-                      vertical: 'center',
-                      horizontal: 'right',
-                  }}
-                  transformOrigin={{
-                      vertical: 'top',
-                      horizontal: 'left',
-                  }}
-                >
-                    <Card>
-                        <CardContent>
-                            {menuParams.map(control =>
-                                this.renderControls(control)
-                            )}
-                        </CardContent>
-                    </Card>
-                </Popover>
+                {this.renderPopover()}
             </ListItem>
         );
     }
