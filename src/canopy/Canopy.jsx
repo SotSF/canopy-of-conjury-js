@@ -7,8 +7,8 @@ import { rgbToHexString } from '../colors';
 
 
 // Rendering constants
-const LED_RADIUS = 3;
-const LED_GAP = 2;
+const LED_RADIUS = 2;
+const LED_GAP = 3;
 const NUM_STRIPS = 96;
 const NUM_LEDS_PER_STRIP = 75;
 
@@ -16,7 +16,7 @@ const Strip = ({ leds, length, rotation }) => {
     const interval = LED_RADIUS * 2 + LED_GAP;
 
     //
-    const numToRender = length / interval - 1;
+    const numToRender = Math.floor(length / interval) - 1;
 
     // The strip is rotated a specified amount, then translated along its radial path as though
     // there was an invisible LED at the center of the canopy
@@ -55,9 +55,11 @@ export default class Canopy extends React.Component {
         super(props);
         const { mini, width } = props;
 
+        const numStrips = mini ? 48 : NUM_STRIPS;
+
         this.state = {
             width: mini ? 200 : width,
-            strips: _.range(NUM_STRIPS).map(() =>
+            strips: _.range(numStrips).map(() =>
                 _.range(NUM_LEDS_PER_STRIP).map(() => ({ r: 0, g: 0, b: 0 }))
             ),
         };
