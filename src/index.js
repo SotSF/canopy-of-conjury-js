@@ -100,13 +100,11 @@ window.onkeydown = e => {
     }
 };
 
-        blocks: blocks
 const addLayer = function(pattern, displayName) {
     layers.push({
         pattern: pattern,
         name: displayName
     });
-    renderGUI();
 }
 
 const setBrush = function(val) {
@@ -123,21 +121,6 @@ $(document).ready(function () {
     $(document).on('click', '#idRenderer', canopyClick);
 });
 
-const clearCurrentOptions = function() {
-    for (var control in activeLayerOptions.__controllers) {
-        activeLayerOptions.remove(control);
-    }
-}
-
-const setOptions = function (layer) {
-    clearCurrentOptions();
-    let p = layer.pattern;
-    for (var key in layer.pattern.optionVals) {
-        console.log(key);
-        activeLayerOptions.add(p.optionVals, key, p.optionParams[key].min, p.optionParams[key].max, 1);
-    }
-}
-
 const gui = new dat.GUI({ width: 300 });
 
 const freeDrawFolder = gui.addFolder('Free Draw');
@@ -145,8 +128,6 @@ const mainColor = freeDrawFolder.addColor({mainColor: new RGB(0,0,255) }, 'mainC
 const subColor = freeDrawFolder.addColor({subColor: new RGB(255,255,255)}, 'subColor');
 const brushSize = freeDrawFolder.add({brushSize: 5}, 'brushSize', 1, 10);
 freeDrawFolder.open();
-
-var activeLayerOptions = gui.addFolder('Layer Tuning');
 
 var waitingOnTarget = false;
 var doubleBrush;
