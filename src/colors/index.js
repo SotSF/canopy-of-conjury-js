@@ -1,9 +1,8 @@
 
-const rgbToHex = (r, g, b) => (
-    r * (16 ** 4) +
-    g * (16 ** 2) +
-    b
-);
+import { rgbToHex } from './util';
+
+
+export * from './util';
 
 export class RGB {
     constructor (r, g, b) {
@@ -18,7 +17,7 @@ export class RGB {
      * left-shifted by 2, and adding the `b` value unchanged. The shifting is done in base 16.
      */
     toHex () {
-        return rgbToHex(this.r, this.g, this.b);
+        return rgbToHex({ r: this.r, g: this.g, b: this.b });
     }
 }
 
@@ -36,8 +35,7 @@ export class HSV {
      * left-shifted by 2, and adding the `b` value unchanged. The shifting is done in base 16.
      */
     toHex () {
-        const { r, g, b } = this.toRgb();
-        return rgbToHex(r, g, b);
+        return rgbToHex(this.toRgb());
     }
 
     toRgb () {
