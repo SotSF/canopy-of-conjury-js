@@ -1,22 +1,41 @@
 
 import _ from 'lodash';
 import { NUM_LEDS_PER_STRIP } from '../canopy';
-import { HSV } from '../colors';
-
+import { RGB, hexToRgb } from '../colors';
 
 /**
  * Emits pulse rings from center - each ring is a different color, following a gradient color scheme
  */
 export class GradientPulse {
-    beatList = [];
-    currHue = 0;
+    static menuParams = [
+        {name: "Color1", defaultVal: "#ff0000"},
+        {name: "Color2", defaultVal: "#0000ff"}
+    ];
+    static displayName = "Gradient Pulse";
+
+    constructor(params) {
+        this.processing = new Processing(document.getElementById('idCanvas'), this._setupProcessing);
+        this.params = params;
+        this.beatList = [];
+        this.offset = 0;
+        this.dir = 1;
+        
+    }
 
     update () {
+        const color1 = hexToRgb(this.params.Color1);
+        const color2 = hexToRgb(this.params.Color2);
         const r = Math.floor(Math.random() * 100);
         if (r > 50 && this.beatList.length < 25) {
-            const c = new HSV(this.currHue, 100, r * 2);
-            this.currHue = (this.currHue + 1) % 360;
+            const c = new RGB(
+                this.processing.lerp(color1.r, color2.r, this.offset),
+                this.processing.lerp(color1.g, color2.g, this.offset),
+                this.processing.lerp(color1.b, color2.b, this.offset)
+            ).toHex();
             this.beatList.push({ pos: 0, c });
+            this.offset += 0.05 * this.dir;
+            if (this.offset >= 1) { this.dir = -1; }
+            else if (this.offset < 0) { this.dir = 1; }
         }
 
         // go through every position in beatList, and light up the corresponding LED in all strips
@@ -34,7 +53,7 @@ export class GradientPulse {
     render (canopy) {
         this.beatList.forEach((beat) => {
             canopy.strips.forEach((strip) => {
-                strip.updateColor(beat.pos, beat.c.toHex());
+                strip.updateColor(beat.pos, beat.c);
             });
         });
     }

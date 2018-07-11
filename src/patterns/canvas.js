@@ -3,6 +3,7 @@ import { NUM_STRIPS } from '../canopy';
 
 // Pattern Canvas - for Free Drawing
 export class PCanvas {
+    static displayName = "Canvas";
     constructor() {
         this.processing = new Processing(document.getElementById('idCanvas'), this._setupProcessing);
         this.brushes = [];

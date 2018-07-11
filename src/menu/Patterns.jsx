@@ -164,6 +164,11 @@ export default class Patterns extends React.Component {
                         <List dense disablePadding classes={{
                             root: classes.list
                         }}>
+                            <PatternMenu key={patterns.GradientPulse.displayName} 
+                                pattern={patterns.GradientPulse} 
+                                addLayer={this.props.addLayer} 
+                                controls={patterns.GradientPulse.menuParams}
+                            />
                             <PatternMenu key={patterns.ConcentricCircles.displayName} 
                                 pattern={patterns.ConcentricCircles} 
                                 addLayer={this.props.addLayer} 
