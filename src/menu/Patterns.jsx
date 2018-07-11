@@ -17,6 +17,8 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
+import { ColorPicker } from './components';
+
 //import { ConcentricCircles } from '../patterns';
 
 
@@ -70,7 +72,7 @@ class ConcentricCircles extends React.Component {
                 >
                     <Card className={classes.card}>
                         <CardContent>
-                            <Typography>Color</Typography>
+                            <ColorPicker />
                         </CardContent>
                         <CardActions>
                             <Button variant="contained" size="small" color="primary">Add</Button>
