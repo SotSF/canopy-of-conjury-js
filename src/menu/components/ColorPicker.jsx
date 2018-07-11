@@ -25,12 +25,12 @@ export default class ColorPicker extends React.Component {
 
     static defaultProps = {
         anchorOrigin: {
-            vertical: 'center',
-            horizontal: 'right',
+            vertical: 'top',
+            horizontal: 'center',
         },
         transformOrigin: {
-            vertical: 'top',
-            horizontal: 'left',
+            vertical: 'bottom',
+            horizontal: 'center',
         }
     };
 
