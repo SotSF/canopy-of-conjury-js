@@ -4,14 +4,15 @@
 	<title>three.js webgl - multiple canvases - circle</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 	<style type="text/css" media="screen">
 		body {
 			background-color: #555;
 			color: white;
 			font-family:Monospace;
 			font-size:13px;
-			text-align:center;
-			margin: 0px;
+			margin: 0;
 			overflow: hidden;
 			width: 100%;
 			height: 100%;
@@ -25,19 +26,6 @@
 			background-color: black;
 			height: -webkit-fill-available;
 		}
-		ul {
-			text-align: left;
-		}
-		button.brush, button.pattern, button.layer-select{
-			width:120px;
-		}
-		button.active {
-			background: #0400d6b0;
-			color: #fff;
-		}
-		.layer {
-			padding: 5px;
-		}
 		.layer.active {
 			background-color: lightgray;
 		}
@@ -49,14 +37,6 @@
 <div id="idControls">
 </div>
 
-<script id="idGuiTemplate" type="text/template">
-	<h3>Preset Patterns</h3>
-	<ul style="list-style:none;">
-	{{#patterns}}
-	<li><button class="pattern" value="{{.}}">{{.}}</button></li>
-	{{/patterns}}
-	</ul>
-
 	<h3>Pattern Builder</h3>
 	<ul style="list-style:none;">
 	{{#blocks}}
@@ -64,35 +44,12 @@
 	{{/blocks}}
 	</ul>
 
-	<h3>Free Draw</h3>
-	<h4>Brush</h4>
-	<ul style="list-style:none;">
-	{{#brushes}}
-	<li><button class="brush" value="{{.}}">{{.}}</button></li>
-	{{/brushes}}
-	</ul>
-
-	<h3>Active Layers</h3>
-	<ul style="list-style:none;">
-	{{#layers}}
-	<li class="layer">
-		<button class="layer-select">{{name}}</button>
-		<button class="layer-up">UP</button><button class="layer-down">DN</button><button class="layer-kill">X</button>
-	</li>
-	{{/layers}}
-	</ul>
-</script>
-
 <!-- Library code -->
 <script src="/lib/three.js"></script>
 <script src="/lib/orbit_controls.js"></script>
 <script src="/lib/canvas_renderer.js"></script>
 <script src="/lib/processing.js"></script>
 <script src="/lib/jquery-3.3.1.min.js"></script>
-<script src="/lib/mustache.min.js"></script>
-<script type="text/javascript">
-	(function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='//rawgit.com/mrdoob/stats.js/master/build/stats.min.js';document.head.appendChild(script);})()
-</script>
 
 <!-- Our source -->
 <script src="/dist/main.js"></script>

@@ -3,9 +3,8 @@ import { NUM_STRIPS } from '../canopy';
 
 // Pattern Canvas - for Free Drawing
 export class PCanvas {
-    constructor(processing) {
-        this.processing = processing;
-        this.processing.pg.background(0);
+    constructor() {
+        this.processing = new Processing(document.getElementById('idCanvas'), this._setupProcessing);
         this.brushes = [];
     }
     update() {
@@ -24,6 +23,14 @@ export class PCanvas {
         brush.timer = 0;
         this.brushes.push(brush);
     }
+
+    _setupProcessing(processing) {
+        processing.setup = () => {
+            processing.size(200,200);
+            processing.pg = processing.createGraphics(200,200, "P2D");
+            processing.pg.background(0);
+        }
+    }
 }
 
 var mapMemo = {};
@@ -35,7 +42,7 @@ var mapMemo = {};
     }
 })();
 
-export function renderProcessing(canopy, processing) {
+function renderProcessing(canopy, processing) {
     const colorData = processing.pg.get();
     const pixels = colorData.imageData.data;
     const mapToCanopy = (x,y,processing,canopy) => {

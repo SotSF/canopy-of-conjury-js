@@ -1,6 +1,6 @@
 import { NUM_STRIPS } from '../canopy';
 import { RGB } from '../colors';
-import { renderProcessing } from '.';
+import { PCanvas } from '.';
 
 /**
  * Test pattern to determine order of strips
@@ -28,45 +28,43 @@ export class TestLEDs {
 }
 
 export class TestCanvas {
-    constructor(processing) {
-        this.processing = processing;
-        this.processing.background(0);
+    constructor() {
+        this.canvas = new PCanvas();
         this.offset = 0;
     }
     update() {
-        this.processing.pg.beginDraw();
-        this.processing.pg.background(0);
-        this.processing.pg.fill(255,255,255);
-        this.processing.pg.rect(50,this.offset,50,50);
+        this.canvas.processing.pg.beginDraw();
+        this.canvas.processing.pg.background(0);
+        this.canvas.processing.pg.fill(255);
+        this.canvas.processing.pg.rect(50,this.offset,50,50);
         this.offset += 3;
-        if (this.offset > this.processing.width) { this.offset = 0; }
-        this.processing.pg.endDraw();
+        if (this.offset > this.canvas.processing.width) { this.offset = 0; }
+        this.canvas.processing.pg.endDraw();
     }
     render(canopy) {
-        renderProcessing(canopy, this.processing);
+        this.canvas.render(canopy);
     }
 }
 
 export class TestCanvasLayout {
      constructor(processing) {
-        this.processing = processing;
-        this.processing.background(0);
+        this.canvas = new PCanvas();
         this.offset = 0;
     }
     update() {
-        this.processing.pg.beginDraw();
-        this.processing.pg.background(255);
-        this.processing.pg.fill(255,0,0);
-        this.processing.pg.rect(40,40,20,20);
-        this.processing.pg.fill(255,255,0);
-        this.processing.pg.rect(140,140,20,20);
-        this.processing.pg.fill(255,0,255);
-        this.processing.pg.rect(40,140,20,20);
-        this.processing.pg.fill(0,0,255);
-        this.processing.pg.rect(140,40,20,20);
-        this.processing.pg.endDraw();
+        this.canvas.processing.pg.beginDraw();
+        this.canvas.processing.pg.background(255);
+        this.canvas.processing.pg.fill(255,0,0);
+        this.canvas.processing.pg.rect(40,40,20,20);
+        this.canvas.processing.pg.fill(255,255,0);
+        this.canvas.processing.pg.rect(140,140,20,20);
+        this.canvas.processing.pg.fill(255,0,255);
+        this.canvas.processing.pg.rect(40,140,20,20);
+        this.canvas.processing.pg.fill(0,0,255);
+        this.canvas.processing.pg.rect(140,40,20,20);
+        this.canvas.processing.pg.endDraw();
     }
     render(canopy) {
-        renderProcessing(canopy, this.processing);
+        this.canvas.render(canopy);
     }
 }

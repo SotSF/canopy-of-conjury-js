@@ -4,7 +4,7 @@ import canopy from './canopy';
 import { RGB } from './colors';
 import * as Patterns from './patterns';
 import * as Brushes from './brushes';
-import { SineRing } from './blocks/sine_ring';
+import * as Menu from './menu';
 
 const scene = new THREE.Scene();
 
@@ -32,6 +32,7 @@ const controls = new THREE.OrbitControls(camera, renderer.domElement);
 canopy.initialize(scene);
 
 var brush; // active freedraw brush
+var activeLayer;
 var layers = []; // attempt #1, layers
 var filter; // filter overlay
 var processing;
@@ -55,7 +56,7 @@ window.onload = function () {
             });
         });
     })(processing);
-    renderGUI();
+    //renderGUI();
 }
 const mapFromCanopy = (s, l) => { 
     return mapFromCanopyMemo[s + "-" + l];
@@ -81,14 +82,12 @@ function animate() {
     requestAnimationFrame( animate );
     controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
     clearCanopy();
-    layers.forEach((layer) => {
+    for (let layer of Array.from(layers).reverse()) {
         layer.pattern.update();
         layer.pattern.render(canopy);
-    });
+    }
     renderer.render(scene, camera);
 }
-
-
 
 window.onkeydown = e => {
     switch (e.key) {
@@ -101,18 +100,7 @@ window.onkeydown = e => {
     }
 };
 
-function renderGUI() {
-    let t = $('#idGuiTemplate').html();
-    let r = Mustache.render(t, {
-        patterns: patterns,
-        brushes: brushes,
-        layers: layers,
         blocks: blocks
-    });
-    $('#idControls').html(r);
-}
-
-const patterns = ["CLEAR LEDS", "Test LEDs", "Test Canvas", "Gradient Pulse"];
 const addLayer = function(pattern, displayName) {
     layers.push({
         pattern: pattern,
@@ -121,68 +109,18 @@ const addLayer = function(pattern, displayName) {
     renderGUI();
 }
 
-const blocks = ["Sine Ring"];
-
-const brushes = ["Ring", "Radial", "Line"];
+const setBrush = function(val) {
+    brush = val;
+}
+const updateLayers = function(val) {
+    layers = val;
+}
+const setActiveLayer = function(val) {
+    activeLayer = layers[val];
+}
 $(document).ready(function () {
-    $(document)
-        .on('click', '.pattern', function () {
-            let i = patterns.indexOf($(this).val());
-            switch (i) {
-                case 0:
-                    layers = [];
-                    clearCanopy();
-                    processing.pg.background(0);
-                    renderGUI();
-                    break;
-                case 1:
-                    addLayer(new Patterns.TestLEDs(), $(this).val()); break;
-                case 2:
-                    addLayer(new Patterns.TestCanvas(processing), $(this).val()); break;
-                case 3:
-                    addLayer(new Patterns.GradientPulse(), $(this).val()); break;
-            }
-        })
-        .on('click', '.block', function () {
-            let i = blocks.indexOf($(this).val());
-            switch (i) {
-                case 0: 
-                    addLayer(new SineRing(processing, mainColor, subColor), $(this).val()); break;
-            }
-        })
-        .on('click', '.brush', function () {
-             let i = brushes.indexOf($(this).val());
-             $('.brush').removeClass('active');
-             $(this).addClass('active');
-             brush = brushes[i];
-        })
-        .on('click', '.layer > .layer-select', function () {
-            let layerItem = $(this).closest('.layer');
-            let i = $('.layer').index(layerItem);
-            $('.layer').removeClass('active');
-            layerItem.addClass('active');
-            setOptions(layers[i]);
-
-        })
-        .on('click', '.layer > .layer-kill', function () {
-            let i = $('.layer').index($(this).closest('.layer'));
-            layers.splice(i,1);
-            if (layers.length == 0) { clearCanopy(); processing.pg.background(0); }
-            renderGUI();
-        })
-        .on('click', '.layer > .layer-up', function () {
-            let i = $('.layer').index($(this).closest('.layer'));
-            if (i == 0) return;
-            [layers[i - 1], layers[i]] = [layers[i], layers[i-1]];
-            renderGUI();
-        })
-        .on('click', '.layer > .layer-down', function () {
-            let i = $('.layer').index($(this).closest('.layer'));
-            if (i == layers.length - 1) return;
-            [layers[i], layers[i+1]] = [layers[i+1], layers[i]];
-            renderGUI();
-        })
-        .on('click', '#idRenderer', canopyClick);
+    Menu.initialize(updateLayers, setBrush, setActiveLayer);
+    $(document).on('click', '#idRenderer', canopyClick);
 });
 
 const clearCurrentOptions = function() {
@@ -214,13 +152,8 @@ var waitingOnTarget = false;
 var doubleBrush;
 function canopyClick( event ) 
 {
-    if (brush) {
-        var pLayer = layers.find(p => p.name == "Drawing Canvas");
-        if (pLayer == null) {
-            addLayer(new Patterns.PCanvas(processing), "Drawing Canvas");
-            pLayer = layers[layers.length - 1];
-        }
-        var pattern = pLayer.pattern;
+    if (brush && activeLayer && activeLayer.pattern instanceof Patterns.PCanvas) {
+        var pattern = activeLayer.pattern;
         var x = ((event.clientX - 300) / (window.innerWidth - 300) ) * 2 - 1;
         var y = - ( event.clientY / window.innerHeight ) * 2 + 1;
         var vector = new THREE.Vector2( x, y );
@@ -242,13 +175,13 @@ function canopyClick( event )
             }
 
             switch (brush) {
-                case "Ring": 
+                case "ring": 
                     pattern.add(new Brushes.RingBrush(brushSize.getValue(), mainColor.getValue(), subColor.getValue(), coord));
                     break;
-                case "Radial":
+                case "radial":
                     pattern.add(new Brushes.RadialBrush(brushSize.getValue(), mainColor.getValue(), subColor.getValue(), coord));
                     break;
-                case "Line":
+                case "line":
                     waitingOnTarget = true;
                     doubleBrush = new Brushes.LineBrush(brushSize.getValue(), mainColor.getValue(), subColor.getValue(), coord);
                     break;
