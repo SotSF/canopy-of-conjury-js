@@ -1,6 +1,6 @@
 
 import _ from 'lodash';
-import catenary from './catenary';
+import catenary from '../catenary';
 
 // Constants. Length units are in feet unless otherwise specified
 const FEET_PER_METER = 3.28084;
@@ -17,7 +17,7 @@ export const NUM_LEDS_PER_STRIP = TOTAL_LEDS / NUM_STRIPS;
  * Singleton class. Contains much of the state of the physical canopy, including the height of the
  * apex, the catenary coordinates, and the colors of the LEDs.
  */
-class Canopy {
+class Index {
     apexHeight = 0; // Height above the base
     apexRadius = APEX_RADIUS;
     baseRadius = BASE_RADIUS;
@@ -193,4 +193,4 @@ class LedStrip {
     }
 }
 
-export default new Canopy;
+export default new Index;
