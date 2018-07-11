@@ -1,34 +1,33 @@
-
 import { NUM_LEDS_PER_STRIP } from '../canopy';
 import { RGB } from '../colors';
 
-
-
 export class ConcentricCircles {
-    static params = [
+    static menuParams = [
         {name: "Color", defaultVal: "#fff"},
         {name: "Qty", defaultVal: 1, min: 1, max: 10},
         {name: "Width", defaultVal: 1, min: 1, max: 5},
         {name: "Velocity", defaultVal: 1, min: 1, max: 5},
         {name: "GrowOut", defaultVal: true}
     ]
+
+    static displayName = "Concentric Circles";
+
     constructor(params) {
         this.circles = [];
-        let step = Math.floor(NUM_LEDS_PER_STRIP / params.Qty);
-        let i = 1;
-        while (i <= params.Qty) {
-            this.circles.push(step * i);
-            i++;
-        }
-        this.color = params.Color;
-        this.width = params.Width;
-        this.growOut = params.GrowOut;
-        this.velocity = params.Velocity;
+        this.params = params;
         this.offset = 0;
+        
     }
 
     update () {
-        this.offset += this.growOut ? this.velocity : -this.velocity;
+        let step = Math.floor(NUM_LEDS_PER_STRIP / this.params.Qty);
+        let i = 1;
+        this.circles = [];
+        while (i <= this.params.Qty) {
+            this.circles.push(step * i);
+            i++;
+        }
+        this.offset += this.params.GrowOut ? this.params.Velocity : -this.params.Velocity;
         if (this.offset <= 0) this.offset = NUM_LEDS_PER_STRIP;
     }
 
@@ -36,8 +35,8 @@ export class ConcentricCircles {
         this.circles.forEach((circle) => {
             canopy.strips.forEach((strip) => {
                 let i = 0;
-                while (i < this.width) {
-                    strip.updateColor((circle + this.offset + i) % NUM_LEDS_PER_STRIP, this.color);
+                while (i < this.params.Width) {
+                    strip.updateColor((circle + this.offset + i) % NUM_LEDS_PER_STRIP, this.params.Color);
                     i++;
                 }
             });

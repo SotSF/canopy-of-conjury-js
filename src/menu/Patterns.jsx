@@ -72,7 +72,7 @@ class PatternMenu extends React.Component {
     };
 
     addPattern = () => {
-        this.props.addLayer(this.props.pattern, this.props.name, this.state.params);
+        this.props.addLayer(this.props.pattern, this.state.params);
     }
 
     updateParam = (name, val) => {
@@ -83,13 +83,14 @@ class PatternMenu extends React.Component {
     }
 
     renderControls(control) {
+        const { key } = this.props;
         if (typeof control.defaultVal == "string") {
-            return (<ChromePicker disableAlpha={true} color={this.state.params[control.name]} 
+            return (<ChromePicker key={key + "-" + control.name} disableAlpha={true} color={this.state.params[control.name]} 
                 onChange={(val) => this.updateParam(control.name,val.hex)} />)
         }
         else if (typeof control.defaultVal == "number") {
             return (
-            <div>
+            <div key={key + "-" + control.name}>
                 <Typography variant="caption">{control.name}: {this.state.params[control.name]}</Typography>
                 <Slider value={this.state.params[control.name]} min={control.min} max={control.max} step={1} 
                     onChange={(e,val)=>this.updateParam(control.name, val)}/>
@@ -98,7 +99,7 @@ class PatternMenu extends React.Component {
         }
         else if (typeof control.defaultVal == "boolean") {
             return (
-                <FormControlLabel label={control.name} control={
+                <FormControlLabel key={key + "-" + control.name} label={control.name} control={
                     <Checkbox label={control.name} checked={this.state.params[control.name]} color="primary" 
                     onChange={() => this.updateParam(control.name,!this.state.params[control.name])} />} 
                 />
@@ -106,13 +107,13 @@ class PatternMenu extends React.Component {
         }
     }
     render () {
-        const { classes, pattern, name } = this.props;
+        const { classes, pattern, key } = this.props;
         const { anchorEl } = this.state;
 
         return (
-            <ListItem key={name} button>
+            <ListItem key={pattern.displayName} button>
                 <ListItemText
-                  primary="Concentric Circles"
+                  primary={pattern.displayName}
                   onClick={this.handleClick}
                 />
                 <Popover
@@ -163,8 +164,10 @@ export default class Patterns extends React.Component {
                         <List dense disablePadding classes={{
                             root: classes.list
                         }}>
-                            <PatternMenu pattern={patterns.ConcentricCircles} name="Circles" addLayer={this.props.addLayer} 
-                                controls={patterns.ConcentricCircles.params}
+                            <PatternMenu key={patterns.ConcentricCircles.displayName} 
+                                pattern={patterns.ConcentricCircles} 
+                                addLayer={this.props.addLayer} 
+                                controls={patterns.ConcentricCircles.menuParams}
                             />
                         </List>
                     </ExpansionPanelDetails>
