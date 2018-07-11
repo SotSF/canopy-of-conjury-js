@@ -10,13 +10,13 @@ const scene = new THREE.Scene();
 
 
 // Lights
-const light1 = new THREE.DirectionalLight(0xffffff);
-const light2 = new THREE.DirectionalLight(0xffffff);
+//const light1 = new THREE.DirectionalLight(0xffffff);
+//const light2 = new THREE.DirectionalLight(0xffffff);
 const ambientLight = new THREE.AmbientLight(0x777777);
-light1.position.set(0, 0,  1).normalize();
-light2.position.set(0, 0, -1).normalize();
-scene.add(light1);
-scene.add(light2);
+//light1.position.set(0, 0,  1).normalize();
+//light2.position.set(0, 0, -1).normalize();
+//scene.add(light1);
+//scene.add(light2);
 scene.add(ambientLight);
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 50);
@@ -56,7 +56,6 @@ window.onload = function () {
             });
         });
     })(processing);
-    //renderGUI();
 }
 const mapFromCanopy = (s, l) => { 
     return mapFromCanopyMemo[s + "-" + l];
