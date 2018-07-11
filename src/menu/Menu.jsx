@@ -47,8 +47,6 @@ const styles = theme => ({
 class Menu extends React.Component {
     static presets = [
         { pattern: patterns.TestLEDs, name: 'Test LEDs' },
-        { pattern: patterns.TestCanvas, name: 'Test Canvas' },
-        { pattern: patterns.GradientPulse, name: 'Gradient Pulse' },
         { pattern: patterns.PCanvas, name: 'Draw Canvas'}
     ];
 
@@ -64,9 +62,21 @@ class Menu extends React.Component {
         this.props.updateLayers([]);
     };
 
-    addLayer = (pattern, name) => {
-        const newLayers = [{ pattern: new pattern(), name }, ...this.state.layers];
-        this.setState({ layers: newLayers });
+    activateBrush = (name) => {
+        this.setState({ activeBrush: name });
+        this.props.setBrush(name)
+        var drawLayer = this.state.layers.find((layer) => {return layer.pattern instanceof patterns.PCanvas});
+        if (drawLayer == null) {
+            this.addLayer(patterns.PCanvas, "Draw Canvas");
+        }
+        else {
+            this.setActiveLayer(this.state.layers.indexOf(drawLayer));
+        }
+    }
+
+    addLayer = (pattern, name, params) => {
+        const newLayers = [{ pattern: new pattern(params), name }, ...this.state.layers];
+        this.setState({ layers: newLayers }, () => this.setActiveLayer(0));
         this.props.updateLayers(newLayers);
     };
 
@@ -139,10 +149,7 @@ class Menu extends React.Component {
                     </ExpansionPanel>
 
                     <Brushes
-                      activateBrush={(name) => {
-                          this.setState({ activeBrush: name });
-                          this.props.setBrush(name)
-                      }}
+                      activateBrush={this.activateBrush}
                     />
 
                     <Patterns addLayer={this.addLayer} />

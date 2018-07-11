@@ -1,14 +1,17 @@
 
 import React from 'react';
+import { ChromePicker } from 'react-color';
 import PropTypes from 'prop-types';
 
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions'
 import CardContent from '@material-ui/core/CardContent';
+import Checkbox from '@material-ui/core/Checkbox';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -17,10 +20,25 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-//import { ConcentricCircles } from '../patterns';
+import Slider from '@material-ui/lab/Slider';
+
+import * as patterns from '../patterns';
 
 
-const concentricCirclesStyles = {
+
+const styles = theme => ({
+    heading: {
+        fontSize: theme.typography.pxToRem(15),
+    },
+    list: {
+        width: '100%',
+    },
+    panelDetails: {
+        padding: 0,
+    },
+});
+
+const patternMenustyles = {
     card: {
         backgroundColor: '#626262',
         minWidth: 275,
@@ -31,11 +49,19 @@ const concentricCirclesStyles = {
     },
 };
 
-@withStyles(concentricCirclesStyles)
-class ConcentricCircles extends React.Component {
+@withStyles(patternMenustyles)
+class PatternMenu extends React.Component {
     state = {
-        anchorEl: null
+        anchorEl: null,
+        params: {}
     };
+
+    constructor(props) {
+        super(props);
+        props.controls.forEach((control) => {
+            this.state.params[control.name] = control.defaultVal
+        });
+    }
 
     handleClick = event => {
         this.setState({ anchorEl: event.currentTarget });
@@ -45,8 +71,42 @@ class ConcentricCircles extends React.Component {
         this.setState({ anchorEl: null });
     };
 
+    addPattern = () => {
+        this.props.addLayer(this.props.pattern, this.props.name, this.state.params);
+    }
+
+    updateParam = (name, val) => {
+        this.setState((prevState) => {
+            prevState.params[name] = val;
+            return { params: prevState.params }
+        });
+    }
+
+    renderControls(control) {
+        if (typeof control.defaultVal == "string") {
+            return (<ChromePicker disableAlpha={true} color={this.state.params[control.name]} 
+                onChange={(val) => this.updateParam(control.name,val.hex)} />)
+        }
+        else if (typeof control.defaultVal == "number") {
+            return (
+            <div>
+                <Typography variant="caption">{control.name}: {this.state.params[control.name]}</Typography>
+                <Slider value={this.state.params[control.name]} min={control.min} max={control.max} step={1} 
+                    onChange={(e,val)=>this.updateParam(control.name, val)}/>
+            </div>
+            )
+        }
+        else if (typeof control.defaultVal == "boolean") {
+            return (
+                <FormControlLabel label={control.name} control={
+                    <Checkbox label={control.name} checked={this.state.params[control.name]} color="primary" 
+                    onChange={() => this.updateParam(control.name,!this.state.params[control.name])} />} 
+                />
+            )
+        }
+    }
     render () {
-        const { classes } = this.props;
+        const { classes, pattern, name } = this.props;
         const { anchorEl } = this.state;
 
         return (
@@ -70,10 +130,12 @@ class ConcentricCircles extends React.Component {
                 >
                     <Card className={classes.card}>
                         <CardContent>
-                            <Typography>Color</Typography>
+                           {this.props.controls.map(control =>
+                                this.renderControls(control)
+                           )}
                         </CardContent>
                         <CardActions>
-                            <Button variant="contained" size="small" color="primary">Add</Button>
+                            <Button variant="contained" size="small" color="primary" onClick={this.addPattern}>Add</Button>
                         </CardActions>
                     </Card>
                 </Popover>
@@ -81,18 +143,6 @@ class ConcentricCircles extends React.Component {
         )
     }
 }
-
-const styles = theme => ({
-    heading: {
-        fontSize: theme.typography.pxToRem(15),
-    },
-    list: {
-        width: '100%',
-    },
-    panelDetails: {
-        padding: 0,
-    },
-});
 
 @withStyles(styles)
 export default class Patterns extends React.Component {
@@ -113,7 +163,15 @@ export default class Patterns extends React.Component {
                         <List dense disablePadding classes={{
                             root: classes.list
                         }}>
-                            <ConcentricCircles />
+                            <PatternMenu pattern={patterns.ConcentricCircles} name="Circles" addLayer={this.props.addLayer} 
+                                controls={[
+                                    {name: "Color", defaultVal: "#fff"},
+                                    {name: "Qty", defaultVal: 1, min: 1, max: 10},
+                                    {name: "Width", defaultVal: 1, min: 1, max: 5},
+                                    {name: "Velocity", defaultVal: 1, min: 1, max: 5},
+                                    {name: "GrowOut", defaultVal: true}
+                                ]}
+                            />
                         </List>
                     </ExpansionPanelDetails>
             </ExpansionPanel>
