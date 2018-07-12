@@ -1,7 +1,7 @@
 
 import _ from 'lodash';
 import {PCanvas} from '.';
-import {hexToRgb} from '../colors';
+import {hexStringToRgb} from '../colors';
 
 export class Fireflies {
     static menuParams = [
@@ -36,7 +36,7 @@ export class Fireflies {
     }
 
     renderFirefly(firefly) {
-        const c = hexToRgb(this.params.BaseColor);
+        const c = hexStringToRgb(this.params.BaseColor);
         this.processing.pg.pushMatrix();
         this.processing.pg.translate(firefly.x, firefly.y);
         this.processing.pg.noStroke();

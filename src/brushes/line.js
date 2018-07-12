@@ -1,4 +1,4 @@
-import { hexToRgb } from '../colors';
+import { hexStringToRgb } from '../colors';
 // two clicks one brush
 // take first click as start, second click as target
 export class LineBrush {
@@ -18,8 +18,8 @@ export class LineBrush {
     
     constructor(params, coord) {
         this.params = params;
-        this.color1 = hexToRgb(params.Color1);
-        this.color2 = hexToRgb(params.Color2);
+        this.color1 = hexStringToRgb(params.Color1);
+        this.color2 = hexStringToRgb(params.Color2);
         this.start = coord;
 
         this.f = 0;

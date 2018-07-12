@@ -1,7 +1,7 @@
 
 import _ from 'lodash';
 import { NUM_LEDS_PER_STRIP } from '../canopy';
-import { hexToRgb, rgbToHexString, modifyBrightness } from '../colors';
+import { hexStringToRgb, rgbToHexString, modifyBrightness } from '../colors';
 
 /**
  * Emits pulse rings from center - each ring is a different color, following a gradient color scheme
@@ -29,8 +29,8 @@ export class GradientPulse {
     update () {
         // any consts dependent on tunable params need to be set here
         // to account for dynamic changes
-        const color1 = hexToRgb(this.params.Color1);
-        const color2 = hexToRgb(this.params.Color2);
+        const color1 = hexStringToRgb(this.params.Color1);
+        const color2 = hexStringToRgb(this.params.Color2);
 
         // pattern-logic: randomly add new ring is <25 rings total
         const r = Math.floor(Math.random() * 100);
@@ -60,6 +60,7 @@ export class GradientPulse {
 
     render (canopy) {
         this.beatList.forEach((beat) => {
+            // apply brightness mod
             const color = modifyBrightness(this.params.Brightness, rgbToHexString(beat.c));
             canopy.strips.forEach((strip) => {
                 strip.updateColor(beat.pos, color);

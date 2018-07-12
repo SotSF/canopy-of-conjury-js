@@ -1,4 +1,4 @@
-import { hexToRgb } from '../colors';
+import { hexStringToRgb } from '../colors';
 
 export class RingBrush {
 	static menuParams = [
@@ -17,8 +17,8 @@ export class RingBrush {
 
 	constructor(params,coord) {	
 		this.params = params;
-		this.startColor = hexToRgb(params.Color1);
-		this.targetColor = hexToRgb(params.Color2);
+		this.startColor = hexStringToRgb(params.Color1);
+		this.targetColor = hexStringToRgb(params.Color2);
 
 		this.maxRad = params.Size * 10;
 		this.x = coord.x;

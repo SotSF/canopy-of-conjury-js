@@ -5,15 +5,6 @@ export const rgbToHex = ({ r, g, b }) => (
     b
 );
 
-export const hexToRgb = (hexString) => {
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hexString);
-    return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
-    } : null;
-}
-
 /** Given an integer in the range [0, 255], this will return the hex string */
 const convertIntToHex = (int) => {
     const hexAlphabet = '0123456789ABCDEF';
@@ -31,6 +22,17 @@ export const rgbToHexString = ({ r, g, b }) => {
 
 	return `#${rHex}${gHex}${bHex}`;
 };
+
+/** Given a hex triplet, will return corresponding RGB object */
+export const hexStringToRgb = (hexString) => {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hexString);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
+}
+
 
 /* RGB 255 to HSV 100 */
 export const rgbToHsv = ({r, g, b}) => {
@@ -57,12 +59,12 @@ export const rgbToHsv = ({r, g, b}) => {
     return { h, s, v };
 }
 
-const hexToHsv = (hexString) => {
-    return rgbToHsv(hexToRgb(hexString));
+const hexStringToHsv = (hexString) => {
+    return rgbToHsv(hexStringToRgb(hexString));
 }
 
-const hsvToHex = ({h,s,v}) => {
-    return rgbToHex(hsvToRgb({h,s,v}));
+const hsvToHexString = ({h,s,v}) => {
+    return rgbToHexString(hsvToRgb({h,s,v}));
 }
 
 export const hsvToRgb = ({h,s,v}) => {
@@ -122,7 +124,7 @@ export const hsvToRgb = ({h,s,v}) => {
 }
 
 export const modifyBrightness = (b, hex) => {
-    let hsv = hexToHsv(hex); 
+    let hsv = hexStringToHsv(hex); 
     hsv.v *= b / 100;
-    return hsvToHex(hsv);
+    return hsvToHexString(hsv);
 }

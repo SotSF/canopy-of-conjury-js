@@ -1,4 +1,4 @@
-import { hexToRgb } from '../colors';
+import { hexStringToRgb } from '../colors';
 
 export class RadialBrush {
     static menuParams = [
@@ -16,8 +16,8 @@ export class RadialBrush {
     constructor(params, coord) {
         this.params = params;
         this.target = coord;
-        this.innerColor = hexToRgb(params.Color1);
-        this.outerColor = hexToRgb(params.Color2);
+        this.innerColor = hexStringToRgb(params.Color1);
+        this.outerColor = hexStringToRgb(params.Color2);
         this.f = 0;
     }
     render(processing) {

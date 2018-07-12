@@ -51,7 +51,7 @@ window.onload = function () {
                 mapFromCanopyMemo[s + "-" + l] = _mapFromCanopy(s, l, canopy.numStrips);
             });
         });
-    })(processing);
+    })();
 }
 const mapFromCanopy = (s, l) => { 
     return mapFromCanopyMemo[s + "-" + l];
