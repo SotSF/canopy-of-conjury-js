@@ -4,16 +4,20 @@ import { NUM_STRIPS } from '../canopy';
 // Pattern Canvas - for Free Drawing
 export class PCanvas {
     static displayName = "Canvas";
+    brushLife = 200;
     constructor() {
         this.processing = new Processing(document.getElementById('idCanvas'), this._setupProcessing);
         this.brushes = [];
+        this.params = {
+            Brightness: 100
+        }
     }
     update() {
         this.processing.pg.background(0);
         for (let i = this.brushes.length - 1; i >= 0; i--) {
             this.brushes[i].render(this.processing);
             this.brushes[i].timer += 1;
-            if (this.brushes[i].timer >= 60) { this.brushes.splice(i, 1); }
+            if (this.brushes[i].timer >= this.brushLife) { this.brushes.splice(i, 1); }
         }
     };
     render(canopy) { 

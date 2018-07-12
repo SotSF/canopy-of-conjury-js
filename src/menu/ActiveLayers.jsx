@@ -136,7 +136,7 @@ class Layer extends React.Component {
     }
 
     renderPopover() {
-        const { menuParams } = this.props.layer;
+        const { menuParams, pattern } = this.props.layer;
         const { anchorEl } = this.state;
         if (menuParams == null) return;
 
@@ -158,6 +158,9 @@ class Layer extends React.Component {
                         {menuParams.map(control =>
                             this.renderControls(control)
                         )}
+                        <Typography variant="caption">Brightness: {pattern.params.Brightness}</Typography>
+                        <Slider value={pattern.params.Brightness} min={1} max={100} step={1} 
+                            onChange={(e,val)=>this.updateParam("Brightness", val)}/>
                     </CardContent>
                 </Card>
             </Popover>
@@ -174,6 +177,7 @@ class Layer extends React.Component {
                     {this.renderButtons()}
                 </ListItemSecondaryAction>
                 {this.renderPopover()}
+                
             </ListItem>
         );
     }

@@ -15,6 +15,7 @@ export class Fireflies {
 
     constructor(params) {
         this.params = params;
+        this.params.Brightness = 100;
         this.canvas = new PCanvas();
         this.processing = this.canvas.processing;
         this.fireflies = [];
@@ -39,7 +40,7 @@ export class Fireflies {
         this.processing.pg.pushMatrix();
         this.processing.pg.translate(firefly.x, firefly.y);
         this.processing.pg.noStroke();
-        this.processing.pg.fill(c.r + firefly.offset, c.g + firefly.offset, c.b + firefly.offset, firefly.brightness);
+        this.processing.pg.fill(c.r + firefly.offset, c.g + firefly.offset, c.b + firefly.offset, firefly.brightness * this.params.Brightness/100);
         const x = firefly.radius * Math.cos(firefly.theta);
         const y = firefly.radius * Math.sin(firefly.theta);
         this.processing.pg.ellipse(x,y,firefly.size,firefly.size);

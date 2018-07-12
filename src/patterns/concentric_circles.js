@@ -14,6 +14,7 @@ export class ConcentricCircles {
 
     constructor(params) {
         this.params = params;
+        this.params.Brightness = 100;
         this.circles = [];
         this.offset = 0;
         
