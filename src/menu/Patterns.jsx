@@ -22,6 +22,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import Slider from '@material-ui/lab/Slider';
 
+
 import * as patterns from '../patterns';
 
 
