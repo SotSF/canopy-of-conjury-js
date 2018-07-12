@@ -24,14 +24,10 @@ export class RadialBrush {
         const { innerColor, outerColor } = this;
         processing.pg.beginDraw();
         processing.pg.strokeWeight(this.params.Size * 2);
-        processing.pg.stroke(outerColor.r, outerColor.g, outerColor.b, this.f * 255);
-        processing.pg.line(processing.width / 2,
-            processing.height / 2, 
-            processing.lerp(processing.width/2,this.target.x,this.f), 
-            processing.lerp(processing.height/2, this.target.y, this.f)
-        );
-        processing.pg.strokeWeight(this.params.Size);
-        processing.pg.stroke(innerColor.r, innerColor.g, innerColor.b, this.f * 255);
+        processing.pg.stroke(processing.lerp(innerColor.r, outerColor.r, this.f), 
+            processing.lerp(innerColor.g, outerColor.g, this.f), 
+            processing.lerp(innerColor.b, outerColor.b, this.f), 
+            this.f * 255);
         processing.pg.line(processing.width / 2,
             processing.height / 2, 
             processing.lerp(processing.width/2,this.target.x,this.f), 

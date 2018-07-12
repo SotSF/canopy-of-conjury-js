@@ -3,7 +3,7 @@ import { modifyBrightness } from '../colors';
 
 export class ConcentricCircles {
     static menuParams = [
-        {name: "Color", defaultVal: "#ffffff"},
+        {name: "Color", defaultVal: "#ff0000"},
         {name: "Qty", defaultVal: 1, min: 1, max: 10},
         {name: "Width", defaultVal: 1, min: 1, max: 5},
         {name: "Velocity", defaultVal: 1, min: 1, max: 5},
