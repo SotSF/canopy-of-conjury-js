@@ -17,12 +17,34 @@ export class PCanvas {
         }
     };
     render(canopy) { 
-        renderProcessing(canopy, this.processing);
+        this._renderProcessing(canopy, this.processing);
     }
 
     add(brush) {
         brush.timer = 0;
         this.brushes.push(brush);
+    }
+
+    _renderProcessing(canopy, processing) {
+        const colorData = processing.pg.get();
+        const pixels = colorData.imageData.data;
+        const mapToCanopy = (x,y,processing,canopy) => {
+            const x2 = Math.floor(processing.map(x,0,200,-100,100));
+            const y2 = Math.floor(processing.map(y,0,200,-100,100));
+            return mapMemo[x2 + "-" + y2];
+        }
+            
+        for(let i = 0; i < pixels.length; i += 4) {
+            const pixel = Math.floor((i + 1) / 4);
+            const x = pixel % 200;
+            const y = Math.floor(pixel / 200);
+            const co = mapToCanopy(x,y,processing,canopy);
+            let l = co.led - 20;
+            if (l < 0 || l >= canopy.numLedsPerStrip) { continue; }
+            if (pixels[i] == 0 && pixels[i + 1] == 0 && pixels[i + 2] == 0) continue;
+            const c = new RGB(pixels[i], pixels[i+1], pixels[i+2]);
+            canopy.strips[co.strip].updateColor(l, c.toHex())
+        }
     }
 
     _setupProcessing(processing) {
@@ -43,27 +65,7 @@ var mapMemo = {};
     }
 })();
 
-function renderProcessing(canopy, processing) {
-    const colorData = processing.pg.get();
-    const pixels = colorData.imageData.data;
-    const mapToCanopy = (x,y,processing,canopy) => {
-        const x2 = Math.floor(processing.map(x,0,200,-100,100));
-        const y2 = Math.floor(processing.map(y,0,200,-100,100));
-        return mapMemo[x2 + "-" + y2];
-    }
-        
-    for(let i = 0; i < pixels.length; i += 4) {
-        const pixel = Math.floor((i + 1) / 4);
-        const x = pixel % 200;
-        const y = Math.floor(pixel / 200);
-        const co = mapToCanopy(x,y,processing,canopy);
-        let l = co.led - 20;
-        if (l < 0 || l >= canopy.numLedsPerStrip) { continue; }
-        if (pixels[i] == 0 && pixels[i + 1] == 0 && pixels[i + 2] == 0) continue;
-        const c = new RGB(pixels[i], pixels[i+1], pixels[i+2]);
-        canopy.strips[co.strip].updateColor(l, c.toHex())
-    }
-}
+
 
 function _mapToCanopy(x,y) {
     let theta = 0;

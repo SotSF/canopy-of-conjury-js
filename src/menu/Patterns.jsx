@@ -174,6 +174,11 @@ export default class Patterns extends React.Component {
                                 addLayer={this.props.addLayer} 
                                 controls={patterns.ConcentricCircles.menuParams}
                             />
+                            <PatternMenu key={patterns.Fireflies.displayName} 
+                                pattern={patterns.Fireflies} 
+                                addLayer={this.props.addLayer} 
+                                controls={patterns.Fireflies.menuParams}
+                            />
                         </List>
                     </ExpansionPanelDetails>
             </ExpansionPanel>

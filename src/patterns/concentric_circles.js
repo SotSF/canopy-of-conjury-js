@@ -13,8 +13,8 @@ export class ConcentricCircles {
     static displayName = "Concentric Circles";
 
     constructor(params) {
-        this.circles = [];
         this.params = params;
+        this.circles = [];
         this.offset = 0;
         
     }

@@ -7,15 +7,19 @@ import { RGB, hexToRgb } from '../colors';
  * Emits pulse rings from center - each ring is a different color, following a gradient color scheme
  */
 export class GradientPulse {
+    // define tuning params
     static menuParams = [
         {name: "Color1", defaultVal: "#ff0000"},
         {name: "Color2", defaultVal: "#0000ff"}
     ];
+    // define display name
     static displayName = "Gradient Pulse";
 
     constructor(params) {
-        this.processing = new Processing(document.getElementById('idCanvas'), this._setupProcessing);
+        // set instance params
         this.params = params;
+
+        this.processing = new Processing(document.getElementById('idCanvas'), this._setupProcessing);
         this.beatList = [];
         this.offset = 0;
         this.dir = 1;
@@ -23,8 +27,12 @@ export class GradientPulse {
     }
 
     update () {
+        // any consts dependent on tunable params need to be set here
+        // to account for dynamic changes
         const color1 = hexToRgb(this.params.Color1);
         const color2 = hexToRgb(this.params.Color2);
+
+        // pattern-logic: randomly add new ring is <25 rings total
         const r = Math.floor(Math.random() * 100);
         if (r > 50 && this.beatList.length < 25) {
             const c = new RGB(
