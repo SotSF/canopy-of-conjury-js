@@ -35,20 +35,16 @@ var brush; // active freedraw brush
 var activeLayer;
 var layers = []; // attempt #1, layers
 var filter; // filter overlay
-var processing;
 var mapFromCanopyMemo = {};
 window.onload = function () {  
-    processing = new Processing(document.getElementById('idCanvas'), setupProcessing);
-    (function(processing){
-        const dimension = processing.height;
+    (function(){
+        const dimension = 200;
         let _mapFromCanopy = (s, l, numStrips) => {
             let theta = s * 2 * Math.PI / numStrips;
             let radius = l + 20;
-            let x = radius * Math.cos(theta);
-            let y = radius * Math.sin(theta);
-            let x2 = processing.map(x,-dimension/2,dimension/2,0,dimension);
-            let y2 = processing.map(y,-dimension/2,dimension/2,0,dimension);
-            return {x: x2, y:y2};
+            let x = radius * Math.cos(theta) + 100;
+            let y = radius * Math.sin(theta) + 100;
+            return {x,y};
         }
         canopy.strips.forEach((strip, s) => {
             strip.leds.forEach((led, l) => {
@@ -61,13 +57,6 @@ const mapFromCanopy = (s, l) => {
     return mapFromCanopyMemo[s + "-" + l];
  }
 
-const setupProcessing = function(processing) {
-    processing.setup = () => {
-        processing.size(200,200);
-        processing.pg = processing.createGraphics(200,200, "P2D");
-        processing.pg.background(0);
-    }
-}
 const clearCanopy = () => {
     for (let s in canopy.strips) {
         canopy.strips[s].updateColors(0x000000);
