@@ -1,17 +1,7 @@
 
-import { rgbToHex } from './util';
-
+import { rgbToHex, rgbToHsv } from './util';
 
 export * from './util';
-
-export function hexToRgb(hexString) {
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hexString);
-    return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
-    } : null;
-}
 
 export class RGB {
     constructor (r, g, b) {
@@ -27,6 +17,10 @@ export class RGB {
      */
     toHex () {
         return rgbToHex({ r: this.r, g: this.g, b: this.b });
+    }
+
+    toHSV () {
+        return rgbToHsv({r: this.r, g: this.g, b: this.b});
     }
 }
 
