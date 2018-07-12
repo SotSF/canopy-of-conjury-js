@@ -1,9 +1,9 @@
 import { NUM_LEDS_PER_STRIP } from '../canopy';
-import { RGB } from '../colors';
+import { modifyBrightness } from '../colors';
 
 export class ConcentricCircles {
     static menuParams = [
-        {name: "Color", defaultVal: "#fff"},
+        {name: "Color", defaultVal: "#ffffff"},
         {name: "Qty", defaultVal: 1, min: 1, max: 10},
         {name: "Width", defaultVal: 1, min: 1, max: 5},
         {name: "Velocity", defaultVal: 1, min: 1, max: 5},
@@ -33,11 +33,12 @@ export class ConcentricCircles {
     }
 
     render (canopy) {
+        const color = modifyBrightness(this.params.Brightness, this.params.Color);
         this.circles.forEach((circle) => {
             canopy.strips.forEach((strip) => {
                 let i = 0;
                 while (i < this.params.Width) {
-                    strip.updateColor((circle + this.offset + i) % NUM_LEDS_PER_STRIP, this.params.Color);
+                    strip.updateColor((circle + this.offset + i) % NUM_LEDS_PER_STRIP, color);
                     i++;
                 }
             });

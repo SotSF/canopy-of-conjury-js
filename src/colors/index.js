@@ -42,58 +42,6 @@ export class HSV {
     }
 
     toRgb () {
-        const i = Math.floor(this.h * 6);
-        const f = this.h * 6 - i;
-        const p = this.v * (1 - this.s);
-        const q = this.v * (1 - f * this.s);
-        const t = this.v * (1 - (1 - f) * this.s);
-
-        let r = 0;
-        let g = 0;
-        let b = 0;
-
-        switch (i % 6) {
-            case 0:
-                r = this.v;
-                g = t;
-                b = p;
-                break;
-
-            case 1:
-                r = q;
-                g = this.v;
-                b = p;
-                break;
-
-            case 2:
-                r = p;
-                g = this.v;
-                b = t;
-                break;
-
-            case 3:
-                r = p;
-                g = q;
-                b = this.v;
-                break;
-
-            case 4:
-                r = t;
-                g = p;
-                b = this.v;
-                break;
-
-            case 5:
-                r = this.v;
-                g = p;
-                b = q;
-                break;
-        }
-
-        return {
-            r: r * 255,
-            g: g * 255,
-            b: b * 255
-        };
+        return hsvToRgb({h:this.h, s:this.s, v:this.v});
     }
 }
