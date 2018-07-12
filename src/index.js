@@ -68,7 +68,6 @@ const setupProcessing = function(processing) {
         processing.pg.background(0);
     }
 }
-
 const clearCanopy = () => {
     for (let s in canopy.strips) {
         canopy.strips[s].updateColors(0x000000);
@@ -120,13 +119,6 @@ $(document).ready(function () {
     $(document).on('click', '#idRenderer', canopyClick);
 });
 
-const gui = new dat.GUI({ width: 300 });
-
-const freeDrawFolder = gui.addFolder('Free Draw');
-const mainColor = freeDrawFolder.addColor({mainColor: new RGB(0,0,255) }, 'mainColor');
-const subColor = freeDrawFolder.addColor({subColor: new RGB(255,255,255)}, 'subColor');
-const brushSize = freeDrawFolder.add({brushSize: 5}, 'brushSize', 1, 10);
-freeDrawFolder.open();
 
 var waitingOnTarget = false;
 var doubleBrush;
@@ -156,14 +148,14 @@ function canopyClick( event )
 
             switch (brush) {
                 case "ring": 
-                    pattern.add(new Brushes.RingBrush(brushSize.getValue(), mainColor.getValue(), subColor.getValue(), coord));
+                    pattern.add(new Brushes.RingBrush(Object.assign({}, Brushes.RingBrush.setParams), coord));
                     break;
                 case "radial":
-                    pattern.add(new Brushes.RadialBrush(brushSize.getValue(), mainColor.getValue(), subColor.getValue(), coord));
+                    pattern.add(new Brushes.RadialBrush(Object.assign({}, Brushes.RadialBrush.setParams), coord));
                     break;
                 case "line":
                     waitingOnTarget = true;
-                    doubleBrush = new Brushes.LineBrush(brushSize.getValue(), mainColor.getValue(), subColor.getValue(), coord);
+                    doubleBrush = new Brushes.LineBrush(Object.assign({}, Brushes.LineBrush.setParams), coord);
                     break;
             }
             

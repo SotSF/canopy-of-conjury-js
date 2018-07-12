@@ -1,18 +1,32 @@
-
+import { hexToRgb } from '../colors';
 // two clicks one brush
 // take first click as start, second click as target
 export class LineBrush {
-    constructor(brushsize, color1, color2, coord) {
-        this.strokeWeight = brushsize;
-        this.color1 = color1;
-        this.color2 = color2;
+    static menuParams = [
+		{name: "Color1", defaultVal: "#0000ff"},
+		{name: "Color2", defaultVal: "#ffffff"},
+		{name: "Size", defaultVal: 5, min: 1, max: 10}
+	]
+
+	static displayName = "Line";
+
+	static setParams = {
+		Color1: "#0000ff",
+		Color2: "#ffffff",
+		Size: 5
+    }
+    
+    constructor(params, coord) {
+        this.params = params;
+        this.color1 = hexToRgb(params.Color1);
+        this.color2 = hexToRgb(params.Color2);
         this.start = coord;
 
         this.f = 0;
     }
     render(processing) {
         processing.pg.beginDraw();
-        processing.pg.strokeWeight(this.strokeWeight);
+        processing.pg.strokeWeight(this.params.Size);
         processing.pg.stroke(
             processing.lerp(this.color1.r, this.color2.r, this.f),
             processing.lerp(this.color1.g, this.color2.g, this.f),
