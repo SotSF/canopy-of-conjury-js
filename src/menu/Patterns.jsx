@@ -66,6 +66,12 @@ export default class Patterns extends React.Component {
                                 controls={patterns.Fireflies.menuParams}
                                 isBrush={false}
                             />
+                            <PatternItem key={patterns.SineRing.displayName} 
+                                pattern={patterns.SineRing} 
+                                addLayer={this.props.addLayer} 
+                                controls={patterns.SineRing.menuParams}
+                                isBrush={false}
+                            />
                         </List>
                     </ExpansionPanelDetails>
             </ExpansionPanel>
