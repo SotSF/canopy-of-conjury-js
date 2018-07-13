@@ -8,8 +8,8 @@ export class Fireflies {
         {name: "BaseColor", defaultVal: "#ffff00"},
         {name: "Qty", defaultVal: 50, min: 10, max: 100},
         {name: "Velocity", defaultVal: 0, min: 0, max: 10},
-        {name: "Lifespan", defaultVal: 60, min: 30, max: 120},
         {name: "Size", defaultVal: 5, min: 1, max: 10},
+        {name: "Rotate", defaultVal: 0, min: -10, max: 10},
         {name: "Brightness", defaultVal: 100, min: 0, max: 100}
     ]
     static displayName = "Fireflies";
@@ -19,7 +19,7 @@ export class Fireflies {
         this.canvas = new PCanvas();
         this.fireflies = [];
         this.filters = [];
-        
+        this.r = 1;
         for (let i = 0;i <= 10; i++) {
             this.addFirefly()
         }
@@ -39,7 +39,7 @@ export class Fireflies {
         const c = hexStringToRgb(this.params.BaseColor);
         const { processing } = this.canvas;
         processing.pg.pushMatrix();
-        processing.pg.translate(firefly.x, firefly.y);
+        processing.pg.translate(firefly.x-100, firefly.y-100);
         processing.pg.noStroke();
         processing.pg.fill(c.r + firefly.offset, c.g + firefly.offset, c.b + firefly.offset, firefly.brightness * this.params.Brightness/100);
         const x = firefly.radius * Math.cos(firefly.theta);
@@ -66,12 +66,16 @@ export class Fireflies {
         const { processing } = this.canvas;
         processing.pg.beginDraw();
         processing.pg.background(0);
+        processing.pg.pushMatrix();
+        processing.pg.translate(100,100);
+        processing.pg.rotate(processing.radians(this.r * this.params.Rotate));
         this.fireflies.forEach((firefly) => {
             this.renderFirefly(firefly);
             this.updateFirefly(firefly);
         });
+        processing.pg.popMatrix();
         processing.pg.endDraw();
-
+        this.r++;
         if (this.fireflies.length < this.params.Qty) { this.addFirefly(); }
         if (this.fireflies.length > this.params.Qty) { this.fireflies.splice(0, this.fireflies.length - this.params.Qty); }
     }
