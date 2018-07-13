@@ -152,7 +152,7 @@ class Layer extends React.Component {
         }});
         return controls;
     }
-
+/*
     renderFilters() {
         const {pattern} = this.props.layer;
         if (pattern.filters.length == 0) return;
@@ -167,6 +167,7 @@ class Layer extends React.Component {
             </CardContent>
         </Card>);
     }
+*/
 
     renderPopover() {
         const { pattern } = this.props.layer;
@@ -192,7 +193,6 @@ class Layer extends React.Component {
                             onChange={(e,val)=>this.updateParam("Brightness", val)}/>
                     </CardContent>
                 </Card>
-                {this.renderFilters()}
             </Popover>
         )
     }

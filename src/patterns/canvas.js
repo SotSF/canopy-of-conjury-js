@@ -3,6 +3,7 @@ import { NUM_STRIPS } from '../canopy';
 
 // Pattern Canvas - for Free Drawing
 export class PCanvas {
+    static menuParams = [];
     static displayName = "Canvas";
     brushLife = 200;
     constructor() {
