@@ -50,6 +50,15 @@ const styles = theme => ({
     }
 });
 
+const LayerStyles = theme => ({
+    topText: {
+        verticalAlign: "top"
+    },
+    card: {
+        display: "inline-block"
+    }
+})
+@withStyles(LayerStyles)
 class Layer extends React.Component {
     state = {
         anchorEl: null
@@ -153,7 +162,7 @@ class Layer extends React.Component {
                     horizontal: 'left',
                 }}
             >
-                <Card>
+                <Card className={this.props.classes.card}>
                     <CardContent>
                         {menuParams.map(control =>
                             this.renderControls(control)
@@ -161,6 +170,11 @@ class Layer extends React.Component {
                         <Typography variant="caption">Brightness: {pattern.params.Brightness}</Typography>
                         <Slider value={pattern.params.Brightness} min={1} max={100} step={1} 
                             onChange={(e,val)=>this.updateParam("Brightness", val)}/>
+                    </CardContent>
+                </Card>
+                <Card className={[this.props.classes.card, this.props.classes.topText]}>
+                    <CardContent>
+                        {pattern.filters.map(filter => <Typography>{filter.constructor.displayName}</Typography>)}
                     </CardContent>
                 </Card>
             </Popover>

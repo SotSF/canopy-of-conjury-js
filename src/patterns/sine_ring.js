@@ -15,6 +15,7 @@ export class SineRing {
     constructor(params) {
         this.params = params;
         this.params.Brightness = 100;
+        this.filters = [];
         this.canvas = new PCanvas();
         this.angleStep = 0.01;
 
@@ -50,5 +51,6 @@ export class SineRing {
 
     render(canopy) {
         this.canvas.render(canopy);
+        this.filters.forEach(filter => filter.apply(canopy));
     }
 }

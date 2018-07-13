@@ -20,6 +20,7 @@ import theme from '../theme';
 import ActiveLayers from './ActiveLayers';
 import Brushes from './Brushes';
 import Patterns from './Patterns';
+import Filters from './Filters';
 import RenderSelection from './RenderSelection';
 
 
@@ -155,7 +156,9 @@ class Menu extends React.Component {
                     />
 
                     <Patterns addLayer={this.addLayer} />
-
+                    
+                    <Filters layers={this.state.layers} />
+                    
                     <ActiveLayers
                       layers={this.state.layers}
                       moveLayerUp={this.moveLayerUp}

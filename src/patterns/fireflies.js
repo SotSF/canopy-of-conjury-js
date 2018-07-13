@@ -19,6 +19,7 @@ export class Fireflies {
         this.canvas = new PCanvas();
         this.processing = this.canvas.processing;
         this.fireflies = [];
+        this.filters = [];
         
         for (let i = 0;i <= 10; i++) {
             this.addFirefly()
@@ -76,5 +77,6 @@ export class Fireflies {
 
     render(canopy) {
       this.canvas.render(canopy);
+      this.filters.forEach(filter => filter.apply(canopy));
     }
 }

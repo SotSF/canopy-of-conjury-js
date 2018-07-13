@@ -18,7 +18,7 @@ export class GradientPulse {
     constructor(params) {
         // set instance params
         this.params = params;
-
+        this.filters = [];
         this.processing = new Processing(document.getElementById('idCanvas'), this._setupProcessing);
         this.beatList = [];
         this.offset = 0;
@@ -66,5 +66,6 @@ export class GradientPulse {
                 strip.updateColor(beat.pos, color);
             });
         });
+        this.filters.forEach(filter => filter.apply(canopy));
     }
 }

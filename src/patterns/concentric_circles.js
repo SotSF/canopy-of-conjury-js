@@ -15,6 +15,7 @@ export class ConcentricCircles {
     constructor(params) {
         this.params = params;
         this.params.Brightness = 100;
+        this.filters = [];
         this.circles = [];
         this.offset = 0;
         
@@ -43,5 +44,6 @@ export class ConcentricCircles {
                 }
             });
         });
+        this.filters.forEach(filter => filter.apply(canopy));
     }
 }
