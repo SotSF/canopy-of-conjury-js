@@ -46,11 +46,9 @@ export class SineRing {
         this.amp += this.params.Velocity * this.dir;
         if (this.amp <= 0) { this.dir = 1; }
         if (this.amp > this.params.Amplitude) this.dir = -1;
-        
     }
 
     render(canopy) {
         this.canvas.render(canopy);
-        this.filters.forEach(filter => filter.apply(canopy));
     }
 }

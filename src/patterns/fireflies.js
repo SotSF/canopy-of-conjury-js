@@ -17,7 +17,6 @@ export class Fireflies {
         this.params = params;
         this.params.Brightness = 100;
         this.canvas = new PCanvas();
-        this.processing = this.canvas.processing;
         this.fireflies = [];
         this.filters = [];
         
@@ -38,14 +37,15 @@ export class Fireflies {
 
     renderFirefly(firefly) {
         const c = hexStringToRgb(this.params.BaseColor);
-        this.processing.pg.pushMatrix();
-        this.processing.pg.translate(firefly.x, firefly.y);
-        this.processing.pg.noStroke();
-        this.processing.pg.fill(c.r + firefly.offset, c.g + firefly.offset, c.b + firefly.offset, firefly.brightness * this.params.Brightness/100);
+        const { processing } = this.canvas;
+        processing.pg.pushMatrix();
+        processing.pg.translate(firefly.x, firefly.y);
+        processing.pg.noStroke();
+        processing.pg.fill(c.r + firefly.offset, c.g + firefly.offset, c.b + firefly.offset, firefly.brightness * this.params.Brightness/100);
         const x = firefly.radius * Math.cos(firefly.theta);
         const y = firefly.radius * Math.sin(firefly.theta);
-        this.processing.pg.ellipse(x,y,firefly.size,firefly.size);
-        this.processing.pg.popMatrix();
+        processing.pg.ellipse(x,y,firefly.size,firefly.size);
+        processing.pg.popMatrix();
     }
 
     updateFirefly(firefly) {
@@ -63,13 +63,14 @@ export class Fireflies {
     }
 
     update() {
-        this.processing.pg.beginDraw();
-        this.processing.pg.background(0);
+        const { processing } = this.canvas;
+        processing.pg.beginDraw();
+        processing.pg.background(0);
         this.fireflies.forEach((firefly) => {
             this.renderFirefly(firefly);
             this.updateFirefly(firefly);
         });
-        this.processing.pg.endDraw();
+        processing.pg.endDraw();
 
         if (this.fireflies.length < this.params.Qty) { this.addFirefly(); }
         if (this.fireflies.length > this.params.Qty) { this.fireflies.splice(0, this.fireflies.length - this.params.Qty); }
@@ -77,6 +78,5 @@ export class Fireflies {
 
     render(canopy) {
       this.canvas.render(canopy);
-      this.filters.forEach(filter => filter.apply(canopy));
     }
 }

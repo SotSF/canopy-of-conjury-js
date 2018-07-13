@@ -84,29 +84,32 @@ export class PatternItem extends React.Component {
         }
     }
 
-    renderControls(control) {
-        const { key } = this.props;
-        if (typeof control.defaultVal == "string") {
-            return (<ChromePicker key={key + "-" + control.name} disableAlpha={true} color={this.state.params[control.name]} 
-                onChange={(val) => this.updateParam(control.name,val.hex)} />)
-        }
-        else if (typeof control.defaultVal == "number") {
-            return (
-            <div key={key + "-" + control.name}>
-                <Typography variant="caption">{control.name}: {this.state.params[control.name]}</Typography>
-                <Slider value={this.state.params[control.name]} min={control.min} max={control.max} step={1} 
-                    onChange={(e,val)=>this.updateParam(control.name, val)}/>
-            </div>
-            )
-        }
-        else if (typeof control.defaultVal == "boolean") {
-            return (
-                <FormControlLabel key={key + "-" + control.name} label={control.name} control={
-                    <Checkbox label={control.name} checked={this.state.params[control.name]} color="primary" 
-                    onChange={() => this.updateParam(control.name,!this.state.params[control.name])} />} 
-                />
-            )
-        }
+    renderControls = () => {
+        const { key, pattern } = this.props;
+        const controls = [];
+        pattern.menuParams.map(control => {
+            if (typeof control.defaultVal == "string") {
+                controls.push(<ChromePicker key={key + "-" + control.name} disableAlpha={true} color={this.state.params[control.name]} 
+                    onChange={(val) => this.updateParam(control.name,val.hex)} />)
+            }
+            else if (typeof control.defaultVal == "number") {
+                controls.push(
+                <div key={key + "-" + control.name}>
+                    <Typography variant="caption">{control.name}: {this.state.params[control.name]}</Typography>
+                    <Slider value={this.state.params[control.name]} min={control.min} max={control.max} step={1} 
+                        onChange={(e,val)=>this.updateParam(control.name, val)}/>
+                </div>
+                )
+            }
+            else if (typeof control.defaultVal == "boolean") {
+                controls.push(
+                    <FormControlLabel key={key + "-" + control.name} label={control.name} control={
+                        <Checkbox label={control.name} checked={this.state.params[control.name]} color="primary" 
+                        onChange={() => this.updateParam(control.name,!this.state.params[control.name])} />} 
+                    />
+                )
+        }});
+        return controls;
     }
     render () {
         const { classes, pattern, key } = this.props;
@@ -133,9 +136,7 @@ export class PatternItem extends React.Component {
                 >
                     <Card className={classes.card}>
                         <CardContent>
-                           {this.props.controls.map(control =>
-                                this.renderControls(control)
-                           )}
+                           {this.renderControls()}
                         </CardContent>
                         {this.renderAddPattern()}
                     </Card>

@@ -157,8 +157,6 @@ class Menu extends React.Component {
 
                     <Patterns addLayer={this.addLayer} />
                     
-                    <Filters layers={this.state.layers} />
-                    
                     <ActiveLayers
                       layers={this.state.layers}
                       moveLayerUp={this.moveLayerUp}

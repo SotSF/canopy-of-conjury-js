@@ -44,6 +44,5 @@ export class ConcentricCircles {
                 }
             });
         });
-        this.filters.forEach(filter => filter.apply(canopy));
     }
 }

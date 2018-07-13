@@ -119,14 +119,22 @@ class Layer extends React.Component {
         });
     }
 
-    renderControls(control) {
+    removeFilter(filter) {
+        const {pattern} = this.props.layer;
+        const i = pattern.filters.indexOf(filter);
+        pattern.filters.splice(i, 1);
+    }
+
+    renderControls = () => {
         const { pattern, key } = this.props.layer;
+        const controls = [];
+        pattern.constructor.menuParams.map(control => {
         if (typeof control.defaultVal == "string") {
-            return (<ChromePicker key={key + "-" + control.name} disableAlpha={true} color={pattern.params[control.name]} 
+            controls.push(<ChromePicker key={key + "-" + control.name} disableAlpha={true} color={pattern.params[control.name]} 
                 onChange={(val) => this.updateParam(control.name,val.hex)} />)
         }
         else if (typeof control.defaultVal == "number") {
-            return (
+            controls.push(
             <div key={key + "-" + control.name}>
                 <Typography variant="caption">{control.name}: {pattern.params[control.name]}</Typography>
                 <Slider value={pattern.params[control.name]} min={control.min} max={control.max} step={1} 
@@ -135,20 +143,34 @@ class Layer extends React.Component {
             )
         }
         else if (typeof control.defaultVal == "boolean") {
-            return (
+            controls.push(
                 <FormControlLabel key={key + "-" + control.name} label={control.name} control={
                     <Checkbox label={control.name} checked={pattern.params[control.name]} color="primary" 
                     onChange={() => this.updateParam(control.name,!pattern.params[control.name])} />} 
                 />
             )
-        }
+        }});
+        return controls;
+    }
+
+    renderFilters() {
+        const {pattern} = this.props.layer;
+        if (pattern.filters.length == 0) return;
+        return(<Card className={[this.props.classes.card, this.props.classes.topText]}>
+            <CardContent>
+                {pattern.filters.map(filter => 
+                <IconButton>
+                    <Typography>{filter.constructor.displayName}</Typography>
+                    <DeleteIcon key="delete" onClick={() => this.removeFilter(filter)}/>
+                </IconButton>
+                )}
+            </CardContent>
+        </Card>);
     }
 
     renderPopover() {
-        const { menuParams, pattern } = this.props.layer;
+        const { pattern } = this.props.layer;
         const { anchorEl } = this.state;
-        if (menuParams == null) return;
-
         return (<Popover
                 open={!!anchorEl}
                 anchorEl={anchorEl}
@@ -164,19 +186,13 @@ class Layer extends React.Component {
             >
                 <Card className={this.props.classes.card}>
                     <CardContent>
-                        {menuParams.map(control =>
-                            this.renderControls(control)
-                        )}
+                        {this.renderControls()}
                         <Typography variant="caption">Brightness: {pattern.params.Brightness}</Typography>
                         <Slider value={pattern.params.Brightness} min={1} max={100} step={1} 
                             onChange={(e,val)=>this.updateParam("Brightness", val)}/>
                     </CardContent>
                 </Card>
-                <Card className={[this.props.classes.card, this.props.classes.topText]}>
-                    <CardContent>
-                        {pattern.filters.map(filter => <Typography>{filter.constructor.displayName}</Typography>)}
-                    </CardContent>
-                </Card>
+                {this.renderFilters()}
             </Popover>
         )
     }

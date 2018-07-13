@@ -66,6 +66,5 @@ export class GradientPulse {
                 strip.updateColor(beat.pos, color);
             });
         });
-        this.filters.forEach(filter => filter.apply(canopy));
     }
 }
