@@ -114,19 +114,22 @@ var doubleBrush;
 function canopyClick( event ) 
 {
     if (brush && activeLayer && activeLayer.pattern instanceof Patterns.PCanvas) {
-        var pattern = activeLayer.pattern;
-        var x = ((event.clientX - 300) / (window.innerWidth - 300) ) * 2 - 1;
-        var y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-        var vector = new THREE.Vector2( x, y );
+        const pattern = activeLayer.pattern;
+        const x = ((event.clientX - 300) / (window.innerWidth - 300) ) * 2 - 1;
+        const y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+        const vector = new THREE.Vector2( x, y );
         
-        var ray = new THREE.Raycaster();
+        const ray = new THREE.Raycaster();
         ray.setFromCamera(vector, camera);
         // create an array containing all objects in the scene with which the ray intersects
-        var intersects = ray.intersectObjects( canopy.ledHitBoxes );
+        const intersects = ray.intersectObjects( canopy.ledHitBoxes );
         if ( intersects.length > 0 )
         {
-            let i = canopy.ledHitBoxes.indexOf(intersects[0].object);
-            let coord = mapFromCanopy(Math.floor(i / canopy.numLedsPerStrip),i % canopy.numLedsPerStrip,canopy.numStrips)
+            const mesh = intersects[0].object;
+            const i = canopy.ledHitBoxes.indexOf(mesh);
+            mesh.material.opacity = 1;
+            setTimeout(() => { mesh.material.opacity = 0 }, 500);
+            const coord = mapFromCanopy(Math.floor(i / canopy.numLedsPerStrip),i % canopy.numLedsPerStrip,canopy.numStrips)
 
             if (waitingOnTarget) {
                 waitingOnTarget = false;
