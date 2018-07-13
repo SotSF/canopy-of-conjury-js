@@ -5,7 +5,7 @@
 ```javascript
 export class PatternName {
     static menuParams = [
-        { name: "ColorParam", defaultVal: "#ff0000" },
+        { name: "ColorParam", defaultVal: "#ff0000" }, // defaultVal for colors must be a hex string
         { name: "NumberParam", defaultVal: 1, min: 1, max: 10 },
         { name: "CheckboxParam", defaultVal: true }
     ];

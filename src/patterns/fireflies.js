@@ -17,8 +17,8 @@ export class Fireflies {
     constructor(params) {
         this.params = params;
         this.canvas = new PCanvas();
+
         this.fireflies = [];
-        this.filters = [];
         this.r = 1;
         for (let i = 0;i <= 10; i++) {
             this.addFirefly()
