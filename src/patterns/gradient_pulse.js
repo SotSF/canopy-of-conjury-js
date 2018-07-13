@@ -10,7 +10,8 @@ export class GradientPulse {
     // define tuning params
     static menuParams = [
         {name: "Color1", defaultVal: "#ff0000"},
-        {name: "Color2", defaultVal: "#0000ff"}
+        {name: "Color2", defaultVal: "#0000ff"},
+        {name: "Brightness", defaultVal: 100, min: 0, max: 100}
     ];
     // define display name
     static displayName = "Gradient Pulse";

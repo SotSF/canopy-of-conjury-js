@@ -188,9 +188,6 @@ class Layer extends React.Component {
                 <Card className={this.props.classes.card}>
                     <CardContent>
                         {this.renderControls()}
-                        <Typography variant="caption">Brightness: {pattern.params.Brightness}</Typography>
-                        <Slider value={pattern.params.Brightness} min={1} max={100} step={1} 
-                            onChange={(e,val)=>this.updateParam("Brightness", val)}/>
                     </CardContent>
                 </Card>
             </Popover>

@@ -9,13 +9,13 @@ export class Fireflies {
         {name: "Qty", defaultVal: 50, min: 10, max: 100},
         {name: "Velocity", defaultVal: 0, min: 0, max: 10},
         {name: "Lifespan", defaultVal: 60, min: 30, max: 120},
-        {name: "Size", defaultVal: 5, min: 1, max: 10}
+        {name: "Size", defaultVal: 5, min: 1, max: 10},
+        {name: "Brightness", defaultVal: 100, min: 0, max: 100}
     ]
     static displayName = "Fireflies";
 
     constructor(params) {
         this.params = params;
-        this.params.Brightness = 100;
         this.canvas = new PCanvas();
         this.fireflies = [];
         this.filters = [];

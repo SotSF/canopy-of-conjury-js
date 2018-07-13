@@ -9,12 +9,12 @@ export class SineRing {
         {name: "Amplitude", defaultVal: 10, min: 0, max: 30},
         {name: "Radius", defaultVal: 10, min: 5, max: 60},
         {name: "Velocity", defaultVal: 1, min: 0, max: 10},
+        {name: "Brightness", defaultVal: 100, min: 0, max: 100}
     ]
     static displayName = "Sine Ring";
 
     constructor(params) {
         this.params = params;
-        this.params.Brightness = 100;
         this.filters = [];
         this.canvas = new PCanvas();
         this.angleStep = 0.01;

@@ -7,14 +7,14 @@ export class ConcentricCircles {
         {name: "Qty", defaultVal: 1, min: 1, max: 10},
         {name: "Width", defaultVal: 1, min: 1, max: 5},
         {name: "Velocity", defaultVal: 1, min: 1, max: 5},
-        {name: "GrowOut", defaultVal: true}
+        {name: "GrowOut", defaultVal: true},
+        {name: "Brightness", defaultVal: 100, min: 0, max: 100}
     ]
 
     static displayName = "Concentric Circles";
 
     constructor(params) {
         this.params = params;
-        this.params.Brightness = 100;
         this.filters = [];
         this.circles = [];
         this.offset = 0;
