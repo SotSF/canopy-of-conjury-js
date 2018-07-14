@@ -61,7 +61,7 @@ export class Swirly {
             else { swirl.isComplete = true; }
 
             swirl.lights.forEach((light,i) => {
-                light[0] += this.params.RotateClockwise ? -this.params.Rotate : this.params.Rotate;
+                light[0] += this.params.RotateClockwise ? -1 : 1;
                 light[1] += this.params.FromApex ? 1 : -1;
                 if (light[0] >= NUM_STRIPS) { light[0] %= NUM_STRIPS; }
                 if (light[0] < 0) { light[0] = NUM_STRIPS - 1}
