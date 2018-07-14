@@ -72,6 +72,12 @@ export default class Patterns extends React.Component {
                                 controls={patterns.SineRing.menuParams}
                                 isBrush={false}
                             />
+                            <PatternItem key={patterns.Swirly.displayName} 
+                                pattern={patterns.Swirly} 
+                                addLayer={this.props.addLayer} 
+                                controls={patterns.Swirly.menuParams}
+                                isBrush={false}
+                            />
                         </List>
                     </ExpansionPanelDetails>
             </ExpansionPanel>

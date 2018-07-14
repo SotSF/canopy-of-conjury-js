@@ -2,6 +2,11 @@
 import { rgbToHex, rgbToHsv } from './util';
 
 export * from './util';
+export const pColor = new Processing(document.getElementById('idCanvas'), (processing) => {
+    processing.setup = () => {
+        processing.size(1,1);
+    }
+});
 
 export class RGB {
     constructor (r, g, b) {
