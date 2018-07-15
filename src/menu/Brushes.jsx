@@ -52,19 +52,16 @@ export default class Brushes extends React.Component {
                         }}>
                             <PatternItem key={brushes.RingBrush.displayName} 
                                 pattern={brushes.RingBrush} 
-                                controls={brushes.RingBrush.menuParams}
                                 isBrush={true}
                                 activateBrush={() => this.activateBrush('ring')}
                             />
                             <PatternItem key={brushes.RadialBrush.displayName} 
                                 pattern={brushes.RadialBrush} 
-                                controls={brushes.RadialBrush.menuParams}
                                 isBrush={true}
                                 activateBrush={() => this.activateBrush('radial')}
                             />
                             <PatternItem key={brushes.LineBrush.displayName} 
                                 pattern={brushes.LineBrush} 
-                                controls={brushes.LineBrush.menuParams}
                                 isBrush={true}
                                 activateBrush={() => this.activateBrush('line')}
                             />

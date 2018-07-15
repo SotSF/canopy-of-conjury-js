@@ -51,31 +51,36 @@ export default class Patterns extends React.Component {
                             <PatternItem key={patterns.ConcentricCircles.displayName} 
                                 pattern={patterns.ConcentricCircles} 
                                 addLayer={this.props.addLayer} 
-                                controls={patterns.ConcentricCircles.menuParams}
                                 isBrush={false}
                             />
                             <PatternItem key={patterns.GradientPulse.displayName} 
                                 pattern={patterns.GradientPulse} 
                                 addLayer={this.props.addLayer} 
-                                controls={patterns.GradientPulse.menuParams}
                                 isBrush={false}
                             />
                             <PatternItem key={patterns.Fireflies.displayName} 
                                 pattern={patterns.Fireflies} 
                                 addLayer={this.props.addLayer} 
-                                controls={patterns.Fireflies.menuParams}
+                                isBrush={false}
+                            />
+                            <PatternItem key={patterns.ShootingStars.displayName} 
+                                pattern={patterns.ShootingStars} 
+                                addLayer={this.props.addLayer} 
                                 isBrush={false}
                             />
                             <PatternItem key={patterns.SineRing.displayName} 
                                 pattern={patterns.SineRing} 
                                 addLayer={this.props.addLayer} 
-                                controls={patterns.SineRing.menuParams}
                                 isBrush={false}
                             />
                             <PatternItem key={patterns.Swirly.displayName} 
                                 pattern={patterns.Swirly} 
                                 addLayer={this.props.addLayer} 
-                                controls={patterns.Swirly.menuParams}
+                                isBrush={false}
+                            />
+                            <PatternItem key={patterns.SwirlyZig.displayName} 
+                                pattern={patterns.SwirlyZig} 
+                                addLayer={this.props.addLayer} 
                                 isBrush={false}
                             />
                         </List>

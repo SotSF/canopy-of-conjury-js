@@ -42,10 +42,9 @@ export class PatternItem extends React.Component {
 
     constructor(props) {
         super(props);
-        props.controls.forEach((control) => {
+        props.pattern.menuParams.forEach((control) => {
             this.state.params[control.name] = control.defaultVal
         });
-        this.state.params["Brightness"] = 100;
     }
 
     handleClick = event => {
