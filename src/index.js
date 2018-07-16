@@ -144,6 +144,9 @@ function canopyClick( event )
             }
 
             switch (brush) {
+                case "bubbles":
+                    pattern.add(new Brushes.BubbleBrush(Object.assign({}, Brushes.BubbleBrush.setParams), coord));
+                    break;
                 case "ring": 
                     pattern.add(new Brushes.RingBrush(Object.assign({}, Brushes.RingBrush.setParams), coord));
                     break;

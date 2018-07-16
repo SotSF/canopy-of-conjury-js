@@ -50,6 +50,11 @@ export default class Brushes extends React.Component {
                         <List dense disablePadding classes={{
                             root: classes.list
                         }}>
+                            <PatternItem key={brushes.BubbleBrush.displayName} 
+                                pattern={brushes.BubbleBrush} 
+                                isBrush={true}
+                                activateBrush={() => this.activateBrush('bubbles')}
+                            />
                             <PatternItem key={brushes.RingBrush.displayName} 
                                 pattern={brushes.RingBrush} 
                                 isBrush={true}
