@@ -1,4 +1,4 @@
-import { RGB } from '../colors';
+import { RGB, rgbToHexString } from '../colors';
 import { NUM_STRIPS } from '../canopy';
 
 // Pattern Canvas - for Free Drawing
@@ -48,7 +48,7 @@ export class PCanvas {
             if (l < 0 || l >= canopy.numLedsPerStrip) { continue; }
             if (pixels[i] == 0 && pixels[i + 1] == 0 && pixels[i + 2] == 0) continue;
             const c = new RGB(pixels[i], pixels[i+1], pixels[i+2]);
-            canopy.strips[co.strip].updateColor(l, c.toHex())
+            canopy.strips[co.strip].updateColor(l, rgbToHexString(c))
         }
     }
 

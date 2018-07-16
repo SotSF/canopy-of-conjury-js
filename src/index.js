@@ -12,12 +12,12 @@ const scene = new THREE.Scene();
 // Lights
 //const light1 = new THREE.DirectionalLight(0xffffff);
 //const light2 = new THREE.DirectionalLight(0xffffff);
-const ambientLight = new THREE.AmbientLight(0x777777);
+//const ambientLight = new THREE.AmbientLight(0x777777);
 //light1.position.set(0, 0,  1).normalize();
 //light2.position.set(0, 0, -1).normalize();
 //scene.add(light1);
 //scene.add(light2);
-scene.add(ambientLight);
+//scene.add(ambientLight);
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 50);
 camera.position.z = 11;
@@ -59,21 +59,26 @@ const mapFromCanopy = (s, l) => {
 
 const clearCanopy = () => {
     for (let s in canopy.strips) {
-        canopy.strips[s].updateColors(0x000000);
+        canopy.strips[s].updateColors("#000000");
     }
 }
 
 animate();
 
 function animate() {
-    requestAnimationFrame( animate );
-    controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
-    clearCanopy();
-    for (let layer of Array.from(layers).reverse()) {
-        layer.pattern.update();
-        layer.pattern.render(canopy);
-    }
-    renderer.render(scene, camera);
+    setTimeout( function() {
+
+        requestAnimationFrame( animate );
+        controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
+        clearCanopy();
+        for (let layer of Array.from(layers).reverse()) {
+            layer.pattern.update();
+            layer.pattern.render(canopy);
+        }
+        renderer.render(scene, camera);
+
+    }, 1000 / 60 );
+  
 }
 
 window.onkeydown = e => {
@@ -125,11 +130,23 @@ function canopyClick( event )
         const intersects = ray.intersectObjects( canopy.ledHitBoxes );
         if ( intersects.length > 0 )
         {
-            const mesh = intersects[0].object;
-            const i = canopy.ledHitBoxes.indexOf(mesh);
-            mesh.material.opacity = 1;
-            setTimeout(() => { mesh.material.opacity = 0 }, 500);
-            const coord = mapFromCanopy(Math.floor(i / canopy.numLedsPerStrip),i % canopy.numLedsPerStrip,canopy.numStrips)
+            //const mesh = intersects[0].object;
+            const intersect = intersects[0];
+            const s = canopy.ledHitBoxes.indexOf(intersect.object);
+            const points = intersect.object.geometry.attributes.position.array;
+            const point = { x: intersect.point.x.toPrecision(2), y: intersect.point.y.toPrecision(2), z: intersect.point.z.toPrecision(2) };
+            let l = intersect.index;
+            for (let i = 0; i < points.length; i += 3) {
+                if (points[i] - point.x <= 0.1 && points[i+1] - point.y <= 0.1 && points[i+2] - point.z <= 0.1) {
+                    l = parseInt(i / 3);
+                }
+            }
+
+            console.log(s,l);
+            //const i = canopy.ledHitBoxes.indexOf(mesh);
+            //mesh.material.opacity = 1;
+            //setTimeout(() => { mesh.material.opacity = 0 }, 500);
+            const coord = mapFromCanopy(s,l);
 
             if (waitingOnTarget) {
                 waitingOnTarget = false;

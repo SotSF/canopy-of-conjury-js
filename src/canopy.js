@@ -1,6 +1,7 @@
 
 import _ from 'lodash';
 import catenary from './catenary';
+import { hexStringToRgb } from './colors';
 
 // Constants. Length units are in feet unless otherwise specified
 const FEET_PER_METER = 3.28084;
@@ -45,7 +46,7 @@ class Canopy {
         const group = new THREE.Group();
         const ledGroups = _.map(this.strips, 'group');
 
-        group.add(this.base, this.apex, ...ledGroups);
+        group.add(...ledGroups);
         scene.add(group);
 
        
@@ -70,7 +71,8 @@ class Canopy {
 
         for (let i = 0; i < NUM_STRIPS; i++) {
             var s = new LedStrip(i * radialInterval);
-            this.ledHitBoxes = this.ledHitBoxes.concat(s.ledHitBoxes);
+            //this.ledHitBoxes = this.ledHitBoxes.concat(s.ledHitBoxes);
+            this.ledHitBoxes = this.ledHitBoxes.concat(s.particleSystem);
             this.ledParticles = this.ledParticles.concat(s.leds);
             strips.push(s);
         }
@@ -80,7 +82,7 @@ class Canopy {
 
     /** Clears all the LEDs */
     clear () {
-        this.strips.forEach(strip => strip.updateColors(0x000000));
+        this.strips.forEach(strip => strip.updateColors("#000000"));
     }
 
     /**
@@ -117,13 +119,28 @@ class LedStrip {
         const group = new THREE.Group();
        
         
-        var particleSystemGeometry = new THREE.Geometry();
-        this.leds.forEach(function(val) {
+        var particleSystemGeometry = new THREE.BufferGeometry();
+        /*this.leds.forEach(function(val) {
             particleSystemGeometry.vertices.push(val);
-        });
+        });*/
+        const positions = new Float32Array( NUM_LEDS_PER_STRIP*3 );
+        const colors = new Float32Array( NUM_LEDS_PER_STRIP*3 );
+        this.leds.forEach((led, i) => {
+            positions[i * 3] = led.x;
+            positions[i * 3 + 1] = led.y;
+            positions[i * 3 + 2] = led.z;
+
+            colors[i * 3] = 0;
+            colors[i * 3 + 1] = 0;
+            colors[i * 3 + 2] = 0;
+        })
         
+        particleSystemGeometry.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
+        particleSystemGeometry.addAttribute( 'color', new THREE.BufferAttribute( colors, 3 ) );
+
         var particleSystemMat = new THREE.PointsMaterial({
             size: 0.1,
+            opacity: 1,
             vertexColors: THREE.VertexColors
           });
         this.particleSystem = new THREE.Points(
@@ -131,7 +148,7 @@ class LedStrip {
             particleSystemMat
         );
        
-        group.add(this.string, this.particleSystem, ...this.ledHitBoxes);
+        group.add(this.string, this.particleSystem);
         // Rotate the group according to the offset
         group.rotateZ(offset);
         this.group = group;
@@ -152,10 +169,10 @@ class LedStrip {
         for (let i = 0; i < catenary.coordinates.length; i++) {
             let factor = Math.sqrt(catenary.coordinates[i][0] * catenary.coordinates[i][0] + catenary.coordinates[i][1] * catenary.coordinates[i][1]);
             if (factor < 1.5) factor = 1.5;
-            this.ledHitBoxes.push(new THREE.Mesh(
+            /*this.ledHitBoxes.push(new THREE.Mesh(
                 new THREE.BoxGeometry( 0.08, 0.07 * factor, 0.07 * factor),
                 new THREE.MeshBasicMaterial({opacity: 0, transparent: true})
-            ));
+            ));*/
         }
         this.colors = catenary.coordinates.map(() => 0x000000);
     }
@@ -167,7 +184,7 @@ class LedStrip {
             const led = this.leds[i];
             const [x, z] = catenary.coordinates[i];
             [led.x, led.z] = [x,-z];
-            this.ledHitBoxes[i].position.set(x, 0, -z);
+            //this.ledHitBoxes[i].position.set(x, 0, -z);
         }
 
         // String
@@ -181,10 +198,12 @@ class LedStrip {
 
     /** Updates the color of a single pixel in the string */
     updateColor (i, color) {
-        this.colors[i] = color;
-        if (!COLOR_MEMO[color]) { COLOR_MEMO[color] = new THREE.Color(color); }
-        this.particleSystem.geometry.colors[i] = COLOR_MEMO[color];
-        this.particleSystem.geometry.colorsNeedUpdate = true;
+        this.colors[i] = hexStringToRgb(color);
+
+        this.particleSystem.geometry.attributes.color.array[i * 3] = this.colors[i].r / 255;
+        this.particleSystem.geometry.attributes.color.array[i * 3 + 1] = this.colors[i].g / 255;
+        this.particleSystem.geometry.attributes.color.array[i * 3 + 2] = this.colors[i].b / 255;
+        this.particleSystem.geometry.attributes.color.needsUpdate = true;
     }
 
     /** Shorthand for updating the color of the entire strip */
