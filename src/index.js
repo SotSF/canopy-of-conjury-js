@@ -77,7 +77,7 @@ function animate() {
         }
         renderer.render(scene, camera);
 
-    }, 1000 / 60 );
+    }, 1000 / 30 );
   
 }
 
@@ -116,6 +116,8 @@ $(document).ready(function () {
 
 var waitingOnTarget = false;
 var doubleBrush;
+const ray = new THREE.Raycaster();
+ray.params.Points.threshold = 0.5;
 function canopyClick( event ) 
 {
     if (brush && activeLayer && activeLayer.pattern instanceof Patterns.PCanvas) {
@@ -123,29 +125,15 @@ function canopyClick( event )
         const x = ((event.clientX - 300) / (window.innerWidth - 300) ) * 2 - 1;
         const y = - ( event.clientY / window.innerHeight ) * 2 + 1;
         const vector = new THREE.Vector2( x, y );
-        
-        const ray = new THREE.Raycaster();
         ray.setFromCamera(vector, camera);
         // create an array containing all objects in the scene with which the ray intersects
         const intersects = ray.intersectObjects( canopy.ledHitBoxes );
+        intersects.sort((a,b) => { return (a.distanceToRay - b.distanceToRay)});
         if ( intersects.length > 0 )
         {
-            //const mesh = intersects[0].object;
             const intersect = intersects[0];
             const s = canopy.ledHitBoxes.indexOf(intersect.object);
-            const points = intersect.object.geometry.attributes.position.array;
-            const point = { x: intersect.point.x.toPrecision(2), y: intersect.point.y.toPrecision(2), z: intersect.point.z.toPrecision(2) };
-            let l = intersect.index;
-            for (let i = 0; i < points.length; i += 3) {
-                if (points[i] - point.x <= 0.1 && points[i+1] - point.y <= 0.1 && points[i+2] - point.z <= 0.1) {
-                    l = parseInt(i / 3);
-                }
-            }
-
-            console.log(s,l);
-            //const i = canopy.ledHitBoxes.indexOf(mesh);
-            //mesh.material.opacity = 1;
-            //setTimeout(() => { mesh.material.opacity = 0 }, 500);
+            const l = intersect.index;
             const coord = mapFromCanopy(s,l);
 
             if (waitingOnTarget) {
