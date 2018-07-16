@@ -50,7 +50,7 @@ export class BubbleBrush {
             })
         }
         processing.pg.beginDraw();
-       
+        processing.pg.noStroke();
         this.bubbles.forEach(bubble => {
             processing.pg.fill(bubble.color.r, bubble.color.g, bubble.color.b, bubble.brightness * 255);
             processing.pg.ellipse(bubble.coord.x, bubble.coord.y, bubble.size * 5, bubble.size * 5);
