@@ -85,6 +85,7 @@ export class PatternItem extends React.Component {
 
     renderControls = () => {
         const { key, pattern } = this.props;
+        if (pattern.menuParams == null) return;
         const controls = [];
         pattern.menuParams.map(control => {
             if (typeof control.defaultVal == "string") {

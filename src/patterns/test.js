@@ -1,5 +1,5 @@
 import { NUM_STRIPS } from '../canopy';
-import { RGB } from '../colors';
+import { RGB, rgbToHexString } from '../colors';
 import { PCanvas } from '.';
 
 /**
@@ -21,7 +21,7 @@ export class TestLEDs {
     render(canopy) {
         var c = 0;
         for (let s = 0; s < NUM_STRIPS; s++) {
-            canopy.strips[s].updateColors(this.colors[c].toHex());
+            canopy.strips[s].updateColors(rgbToHexString(this.colors[c]));
             if ((s + 1) % 8 == 0) c++;
             if (c >= this.colors.length) { c = 0; }
         }

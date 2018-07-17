@@ -127,6 +127,7 @@ class Layer extends React.Component {
 
     renderControls = () => {
         const { pattern, key } = this.props.layer;
+        if (pattern.menuParams == null) return;
         const controls = [];
         pattern.constructor.menuParams.map(control => {
         if (typeof control.defaultVal == "string") {
