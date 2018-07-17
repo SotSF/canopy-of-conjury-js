@@ -20,6 +20,7 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
+import { Gif } from '../../patterns';
 import Slider from '@material-ui/lab/Slider';
 
 const patternMenustyles = {
@@ -53,11 +54,22 @@ export class PatternItem extends React.Component {
     };
 
     handleClose = () => {
-        this.setState({ anchorEl: null });
+        this.setState({ anchorEl: null }); 
+        if (this.props.pattern == Gif) { 
+            this.setState((prevState) => {
+                prevState.params["Filepath"] = "";
+                return { params: prevState.params }
+            });
+        }
     };
 
     addPattern = () => {
         this.props.addLayer(this.props.pattern, this.state.params);
+            if (this.props.pattern == Gif) { this.setState((prevState) => {
+                prevState.params["Filepath"] = "";
+                return { params: prevState.params }
+            });
+        }
     }
 
     updateParam = (name, val) => {
@@ -88,7 +100,19 @@ export class PatternItem extends React.Component {
         if (pattern.menuParams == null) return;
         const controls = [];
         pattern.menuParams.map(control => {
-            if (typeof control.defaultVal == "string") {
+            if (control.type == "GIF") {
+                controls.push(
+                    <input type="file" accept="image/gif" value={this.state.params[control.name]} 
+                    onChange={
+                        (e) => { 
+                            this.updateParam(control.name,e.target.value) 
+                            this.updateParam("Blob", e.target.files[0]);
+                        }
+                    }
+                    />
+                )
+            }
+            else if (typeof control.defaultVal == "string") {
                 controls.push(<ChromePicker key={key + "-" + control.name} disableAlpha={true} color={this.state.params[control.name]} 
                     onChange={(val) => this.updateParam(control.name,val.hex)} />)
             }

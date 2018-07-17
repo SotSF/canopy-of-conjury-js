@@ -27,8 +27,8 @@ export class Fireflies {
 
     addFirefly() {
         const size = this.params.Size + Math.random() * 5 - 5;
-        const x = Math.random() * 200;
-        const y = Math.random() * 200;
+        const x = Math.random() * PCanvas.dimension;
+        const y = Math.random() * PCanvas.dimension;
         const offset = Math.random() * 5;
         const brightness = Math.random() * 10;
         // dir = [brightness, radius, theta]

@@ -1,3 +1,4 @@
+export { Gif } from './gif';
 export { GradientPulse } from './gradient_pulse';
 export { ConcentricCircles } from './concentric_circles';
 export { Fireflies } from './fireflies';

@@ -14,7 +14,7 @@ export class ShootingStars {
         this.params = params;
 
         this.stars = [];
-        for(let i = 0; i < 5; i++) {
+        for(let i = 0; i < 3; i++) {
             this.stars.push([parseInt(Math.random() * NUM_STRIPS), this.params.FromApex ? 0 : NUM_LEDS_PER_STRIP - 1]);
         }
     }

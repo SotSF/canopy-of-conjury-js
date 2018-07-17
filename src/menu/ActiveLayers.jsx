@@ -130,26 +130,27 @@ class Layer extends React.Component {
         if (pattern.constructor.menuParams == null) return;
         const controls = [];
         pattern.constructor.menuParams.map(control => {
-        if (typeof control.defaultVal == "string") {
-            controls.push(<ChromePicker key={key + "-" + control.name} disableAlpha={true} color={pattern.params[control.name]} 
-                onChange={(val) => this.updateParam(control.name,val.hex)} />)
-        }
-        else if (typeof control.defaultVal == "number") {
-            controls.push(
-            <div key={key + "-" + control.name}>
-                <Typography variant="caption">{control.name}: {pattern.params[control.name]}</Typography>
-                <Slider value={pattern.params[control.name]} min={control.min} max={control.max} step={1} 
-                    onChange={(e,val)=>this.updateParam(control.name, val)}/>
-            </div>
-            )
-        }
-        else if (typeof control.defaultVal == "boolean") {
-            controls.push(
-                <FormControlLabel key={key + "-" + control.name} label={control.name} control={
-                    <Checkbox label={control.name} checked={pattern.params[control.name]} color="primary" 
-                    onChange={() => this.updateParam(control.name,!pattern.params[control.name])} />} 
-                />
-            )
+            if (control.type == "GIF" || control.type == "HIDDEN") return;
+            if (typeof control.defaultVal == "string") {
+                controls.push(<ChromePicker key={key + "-" + control.name} disableAlpha={true} color={pattern.params[control.name]} 
+                    onChange={(val) => this.updateParam(control.name,val.hex)} />)
+            }
+            else if (typeof control.defaultVal == "number") {
+                controls.push(
+                <div key={key + "-" + control.name}>
+                    <Typography variant="caption">{control.name}: {pattern.params[control.name]}</Typography>
+                    <Slider value={pattern.params[control.name]} min={control.min} max={control.max} step={1} 
+                        onChange={(e,val)=>this.updateParam(control.name, val)}/>
+                </div>
+                )
+            }
+            else if (typeof control.defaultVal == "boolean") {
+                controls.push(
+                    <FormControlLabel key={key + "-" + control.name} label={control.name} control={
+                        <Checkbox label={control.name} checked={pattern.params[control.name]} color="primary" 
+                        onChange={() => this.updateParam(control.name,!pattern.params[control.name])} />} 
+                    />
+                )
         }});
         return controls;
     }

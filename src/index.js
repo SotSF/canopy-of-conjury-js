@@ -38,12 +38,11 @@ var filter; // filter overlay
 var mapFromCanopyMemo = {};
 window.onload = function () {  
     (function(){
-        const dimension = 200;
         let _mapFromCanopy = (s, l, numStrips) => {
             let theta = s * 2 * Math.PI / numStrips;
             let radius = l + 20;
-            let x = radius * Math.cos(theta) + 100;
-            let y = radius * Math.sin(theta) + 100;
+            let x = parseInt(radius * Math.cos(theta) + Patterns.PCanvas.dimension / 2);
+            let y = parseInt(radius * Math.sin(theta) + Patterns.PCanvas.dimension / 2);
             return {x,y};
         }
         canopy.strips.forEach((strip, s) => {

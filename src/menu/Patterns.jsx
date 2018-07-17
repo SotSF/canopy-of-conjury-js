@@ -48,6 +48,11 @@ export default class Patterns extends React.Component {
                         <List dense disablePadding classes={{
                             root: classes.list
                         }}>
+                            <PatternItem key={patterns.Gif.displayName} 
+                                pattern={patterns.Gif} 
+                                addLayer={this.props.addLayer} 
+                                isBrush={false}
+                            />
                             <PatternItem key={patterns.ConcentricCircles.displayName} 
                                 pattern={patterns.ConcentricCircles} 
                                 addLayer={this.props.addLayer} 
