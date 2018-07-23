@@ -47,25 +47,20 @@ app.use(function(err, req, res, next) {
 // Ensure the canopy-api process is up and responding to requests, exit with error if not
 request.get("http://localhost:8080/api/ping")
   .on("response", function (resp) {
-    if (resp.statusCode === 200) {
-      console.log("Successfully detected the canopy-api process!");
-    } else {
-      console.log("ERROR: Non-200 status code from canopy-api process /ping endpoint!");
-      process.exit(1);
-    }
+    console.log("Successfully detected the canopy-api process!");
+
+    // TODO: Send requests to the canopy-api process with byte arrays of pixels to render
+    setInterval(function() {
+      request.post({
+        url: "http://localhost:8080/api/render",
+        body: "aaaa" // TODO: provide base64-encoded byte array here per https://github.com/SotSF/canopy-api
+      });
+    }, 1000); // TODO: set this to a different interval; this will set the framerate
   })
   .on('error', function(err) {
-    console.log("ERROR: Make sure the canopy-api process is running!");
-    console.log(err);
-    process.exit(1);
+    console.log("WARNING: The canopy-api process was not found!");
+    // console.log(err);
+    // process.exit(1);
   });
-
-// The backend express app will send requests to the canopy-api process with byte arrays of pixels to render
-setInterval(function() {
-  request.post({
-    url: "http://localhost:8080/api/render",
-    body: "aaaa" // TODO: provide base64-encoded byte array here per https://github.com/SotSF/canopy-api
-  });
-}, 1000);
 
 module.exports = app;
