@@ -17,7 +17,7 @@ export const NUM_LEDS_PER_STRIP = TOTAL_LEDS / NUM_STRIPS;
  * Singleton class. Contains much of the state of the physical canopy, including the height of the
  * apex, the catenary coordinates, and the colors of the LEDs.
  */
-class Index {
+class Canopy {
     apexHeight = 0; // Height above the base
     apexRadius = APEX_RADIUS;
     baseRadius = BASE_RADIUS;
@@ -193,4 +193,4 @@ class LedStrip {
     }
 }
 
-export default new Index;
+export default new Canopy;
