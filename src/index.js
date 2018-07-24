@@ -1,11 +1,13 @@
 
-import * as dat from 'dat.gui';
+import config from '../config';
 import canopy from './canopy';
-import { RGB } from './colors';
 import * as Patterns from './patterns';
 import * as Brushes from './brushes';
 import * as Menu from './menu';
+import Transmitter from './transmitter';
 
+
+const transmitter = config.api_host ? new Transmitter(config.api_host) : null;
 const scene = new THREE.Scene();
 
 
@@ -62,6 +64,27 @@ const clearCanopy = () => {
     }
 }
 
+/**
+ * Iterates over the canopy's strips, pulling the colors from the LEDs in order to transmit them to
+ * the API.
+ *
+ * TODO: The ordering of the colors matters, as it needs to comply with the ordering the LED driver
+ * (e.g. the Pixel Pusher) expects. This is not currently taken into consideration.
+ */
+const transmit = () => {
+    if (!transmitter) return;
+
+    const colors = [];
+    canopy.strips.forEach((strip) => {
+        strip.colors.forEach((color) => {
+            const { r, g, b } = color;
+            colors.push(r, g, b);
+        });
+    });
+
+    transmitter.render(colors);
+};
+
 animate();
 
 function animate() {
@@ -74,6 +97,8 @@ function animate() {
             layer.pattern.update();
             layer.pattern.render(canopy);
         }
+
+        transmit();
         renderer.render(scene, camera);
 
     }, 1000 / 30 );
