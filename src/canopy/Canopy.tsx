@@ -1,9 +1,11 @@
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import _ from 'lodash';
+/// <reference path="../types.ts" />
+
+import * as React from 'react';
+import * as _ from 'lodash';
 
 import { rgbToHexString } from '../colors';
+import {Pattern} from "../types";
 
 
 // Rendering constants
@@ -40,12 +42,13 @@ const Strip = ({ leds, length, rotation }) => {
     );
 };
 
-export default class Canopy extends React.Component {
-    static propTypes = {
-        mini: PropTypes.bool,
-        width: PropTypes.number
-    };
+interface CanopyProps {
+    mini?: boolean,
+    width?: number,
+    pattern: Pattern
+}
 
+export default class Canopy extends React.Component<CanopyProps, any> {
     static defaultProps = {
         mini: false,
         width: 400
@@ -63,6 +66,11 @@ export default class Canopy extends React.Component {
                 _.range(NUM_LEDS_PER_STRIP).map(() => ({ r: 0, g: 0, b: 0 }))
             ),
         };
+    }
+
+    updatePattern () {
+        this.props.pattern.update();
+        this.props.pattern.render(this);
     }
 
     render () {

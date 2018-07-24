@@ -5,8 +5,6 @@ import classNames from 'classnames';
 
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions'
-import CardContent from '@material-ui/core/CardContent';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -21,9 +19,9 @@ import AddIcon from '@material-ui/icons/Add';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import Canopy from '../canopy/Canopy';
+import { GradientPulse } from '../patterns';
 import { ColorPicker } from './components';
 
-//import { ConcentricCircles } from '../patterns';
 
 
 const concentricCirclesStyles = {
@@ -57,21 +55,35 @@ const concentricCirclesStyles = {
 
 @withStyles(concentricCirclesStyles)
 class ConcentricCircles extends React.Component {
+    static propTypes = {
+        addPattern: PropTypes.func.isRequired
+    };
+
     state = {
         anchorEl: null
     };
 
     handleClick = event => {
-        this.setState({ anchorEl: event.currentTarget });
+        this.setState({
+            anchorEl: event.currentTarget,
+            pattern: new GradientPulse()
+        });
     };
 
     handleClose = () => {
-        this.setState({ anchorEl: null });
+        this.setState({
+            anchorEl: null,
+            pattern: null
+        });
+    };
+
+    addPattern = () => {
+        this.props.addPattern();
     };
 
     render () {
         const { classes } = this.props;
-        const { anchorEl } = this.state;
+        const { anchorEl, pattern } = this.state;
 
         return (
             <ListItem key={name} button>
@@ -100,10 +112,18 @@ class ConcentricCircles extends React.Component {
                         <Card className={classNames(classes.card, classes.parameters)} raised>
                             <ColorPicker />
                         </Card>
+
                         <Card className={classNames(classes.card, classes.canopy)} raised>
-                            <Canopy mini />
+                            <Canopy mini pattern={pattern} />
                         </Card>
-                        <Button variant="fab" color="primary" mini className={classes.fab}>
+
+                        <Button
+                          className={classes.fab}
+                          color="primary"
+                          mini
+                          onClick={this.addPattern}
+                          variant="fab"
+                        >
                             <AddIcon />
                         </Button>
                     </div>
@@ -144,7 +164,7 @@ export default class Patterns extends React.Component {
                         <List dense disablePadding classes={{
                             root: classes.list
                         }}>
-                            <ConcentricCircles />
+                            <ConcentricCircles addPattern={this.props.addLayer} />
                         </List>
                     </ExpansionPanelDetails>
             </ExpansionPanel>
