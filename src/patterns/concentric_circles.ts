@@ -1,8 +1,8 @@
 
 import * as _ from 'lodash';
 import { NUM_LEDS_PER_STRIP } from '../canopy';
-import { Color, HSV } from '../colors';
-import {pattern, PatternPropType} from '../types';
+import { Color, RGB } from '../colors';
+import { pattern, PatternPropType } from '../types';
 
 
 interface ConcentricCirclesProps {
@@ -25,7 +25,7 @@ export class ConcentricCircles {
 
     static defaultProps () {
         return {
-            color: new HSV(0.5, 1, 1),
+            color: RGB.random(),
             period: 5
         };
     }

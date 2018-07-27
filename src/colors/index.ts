@@ -11,6 +11,14 @@ export class RGB implements Color {
     g = null;
     b = null;
 
+    static random () {
+        return new RGB(
+            Math.floor(Math.random() * 256),
+            Math.floor(Math.random() * 256),
+            Math.floor(Math.random() * 256)
+        );
+    }
+
     constructor (r, g, b) {
         this.r = r;
         this.g = g;
