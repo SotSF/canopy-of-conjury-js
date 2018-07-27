@@ -32,7 +32,6 @@ document.body.appendChild(renderer.domElement);
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
 const canopy = new CanopyThreeJs;
 canopy.initialize(scene);
-console.log(canopy.numLedsPerStrip);
 
 var brush; // active freedraw brush
 var activeLayer;
@@ -135,7 +134,6 @@ const setOptions = function (layer) {
     clearCurrentOptions();
     let p = layer.pattern;
     for (var key in layer.pattern.optionVals) {
-        console.log(key);
         activeLayerOptions.add(p.optionVals, key, p.optionParams[key].min, p.optionParams[key].max, 1);
     }
 }
