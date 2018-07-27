@@ -1,5 +1,8 @@
 
-export const rgbToHex = ({ r, g, b }) => (
+import { HSV, RGB } from './types';
+
+
+export const rgbToHex = ({ r, g, b }: RGB) => (
     r * (16 ** 4) +
     g * (16 ** 2) +
     b
@@ -7,7 +10,7 @@ export const rgbToHex = ({ r, g, b }) => (
 
 
 /** Given an integer in the range [0, 255], this will return the hex string */
-const convertIntToHex = (int) => {
+const convertIntToHex = (int: number) => {
     const hexAlphabet = '0123456789ABCDEF';
     const quotient = Math.floor(int / 16);
     const remainder = Math.round(int % 16);
@@ -16,7 +19,7 @@ const convertIntToHex = (int) => {
 };
 
 /** Given an RGB object, this will return the corresponding hex triplet */
-export const rgbToHexString = ({ r, g, b }) => {
+export const rgbToHexString = ({ r, g, b }: RGB) => {
     const rHex = convertIntToHex(r);
     const gHex = convertIntToHex(g);
     const bHex = convertIntToHex(b);
@@ -30,7 +33,7 @@ export const rgbToHexString = ({ r, g, b }) => {
  * Assumes r, g, and b are contained in the set [0, 255] and
  * returns h, s, and v in the set [0, 1].
  */
-export const rgbToHsv = (r: number, g: number, b: number) => {
+export const rgbToHsv = ({ r, g, b }: RGB): HSV => {
     r /= 255, g /= 255, b /= 255;
 
     const max = Math.max(r, g, b), min = Math.min(r, g, b);
@@ -51,7 +54,7 @@ export const rgbToHsv = (r: number, g: number, b: number) => {
         h /= 6;
     }
 
-    return [ h, s, v ];
+    return { h, s, v };
 };
 
 /**
@@ -60,7 +63,7 @@ export const rgbToHsv = (r: number, g: number, b: number) => {
  * Assumes h, s, and v are contained in the set [0, 1] and
  * returns r, g, and b in the set [0, 255].
  */
-export const hsvToRgb = (h: number, s: number, v: number) => {
+export const hsvToRgb = ({ h, s, v }: HSV): RGB => {
     let r, g, b;
 
     const i = Math.floor(h * 6);
@@ -78,5 +81,5 @@ export const hsvToRgb = (h: number, s: number, v: number) => {
         case 5: r = v, g = p, b = q; break;
     }
 
-    return [ r * 255, g * 255, b * 255 ];
+    return { r: r * 255, g: g * 255, b: b * 255 };
 };

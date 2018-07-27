@@ -1,10 +1,12 @@
 
+import { Color } from './types';
 import { hsvToRgb, rgbToHex } from './util';
 
 
+export * from './types';
 export * from './util';
 
-export class RGB {
+export class RGB implements Color {
     r = null;
     g = null;
     b = null;
@@ -15,18 +17,22 @@ export class RGB {
         this.b = b;
     }
 
+    toRgb () {
+        return this;
+    }
+
     /**
      * Converts the color to hexadecimal triplet notation, which is ThreeJS's preferred
      * representation. This is achieved by left-shifting the `r` value by 4, adding the `g` value
      * left-shifted by 2, and adding the `b` value unchanged. The shifting is done in base 16.
      */
     toHex () {
-        return rgbToHex({ r: this.r, g: this.g, b: this.b });
+        return rgbToHex(this.toRgb());
     }
 }
 
 
-export class HSV {
+export class HSV implements Color {
     h = null;
     s = null;
     v = null;
@@ -47,7 +53,6 @@ export class HSV {
     }
 
     toRgb () {
-        const [r, g, b] = hsvToRgb(this.h, this.s, this.v);
-        return { r, g, b };
+        return hsvToRgb(this);
     }
 }
