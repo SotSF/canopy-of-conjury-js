@@ -68,6 +68,11 @@ export default class Patterns extends React.Component {
                                 addLayer={this.props.addLayer} 
                                 isBrush={false}
                             />
+                            <PatternItem key={patterns.Radar.displayName} 
+                                pattern={patterns.Radar} 
+                                addLayer={this.props.addLayer} 
+                                isBrush={false}
+                            />
                             <PatternItem key={patterns.ShootingStars.displayName} 
                                 pattern={patterns.ShootingStars} 
                                 addLayer={this.props.addLayer} 
