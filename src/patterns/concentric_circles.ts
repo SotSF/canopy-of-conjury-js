@@ -2,7 +2,7 @@
 import * as _ from 'lodash';
 import { NUM_LEDS_PER_STRIP } from '../canopy';
 import { Color, HSV } from '../colors';
-import { PatternInterface } from '../types';
+import {pattern, PatternPropType} from '../types';
 
 
 interface ConcentricCirclesProps {
@@ -13,20 +13,26 @@ interface ConcentricCirclesProps {
 /**
  * Emits pulse rings from center - each ring is a different color, following a gradient color scheme
  */
-export class ConcentricCircles implements PatternInterface {
+@pattern()
+export class ConcentricCircles {
     circles = [];
     iteration = 0;
 
-    static defaultProps = {
-        color: new HSV(0.5, 1, 1),
-        period: 5,
+    static propTypes = {
+        color: PatternPropType.Color,
+        period: PatternPropType.Range
     };
 
-    update (properties: ConcentricCirclesProps) {
-        const props = _.assign({}, properties, ConcentricCircles.defaultProps);
+    static defaultProps () {
+        return {
+            color: new HSV(0.5, 1, 1),
+            period: 5
+        };
+    }
 
-        if (this.iteration++ % props.period === 0) {
-            this.circles.push({ pos: 0, color: props.color });
+    update (properties: ConcentricCirclesProps) {
+        if (this.iteration++ % properties.period === 0) {
+            this.circles.push({ pos: 0, color: properties.color });
         }
 
         // go through every position in beatList, and light up the corresponding LED in all strips

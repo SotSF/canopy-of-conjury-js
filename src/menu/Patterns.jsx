@@ -2,6 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import * as _ from 'lodash';
 
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
@@ -20,7 +21,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import { CanopySvg } from '../canopy';
 import { ConcentricCircles } from '../patterns';
-import { ColorPicker } from './components';
+import PatternProps from './PatternProps';
 
 
 const concentricCirclesStyles = {
@@ -57,22 +58,29 @@ class ConcentricCirclesPattern extends React.Component {
     static propTypes = {
         addPattern: PropTypes.func.isRequired
     };
-
+    
     state = {
-        anchorEl: null
+        anchorEl: null,
+        pattern: null,
+        patternInstance: null,
+        patternProps: null
     };
 
     handleClick = event => {
         this.setState({
             anchorEl: event.currentTarget,
-            pattern: new ConcentricCircles()
+            pattern: ConcentricCircles,
+            patternInstance: new ConcentricCircles(),
+            patternProps: ConcentricCircles.defaultProps()
         });
     };
 
     handleClose = () => {
         this.setState({
             anchorEl: null,
-            pattern: null
+            pattern: null,
+            patternInstance: null,
+            patternProps: null
         });
     };
 
@@ -80,9 +88,44 @@ class ConcentricCirclesPattern extends React.Component {
         this.props.addPattern();
     };
 
+    updateProps = (patternProps) => this.setState({ patternProps });
+
+    renderPattern () {
+        const { classes } = this.props;
+        const { pattern, patternInstance, patternProps } = this.state;
+
+        if (!pattern) return null;
+
+        return (
+            <div className={classes.patternWrapper}>
+                <Card className={classNames(classes.card, classes.parameters)} raised>
+                    <PatternProps
+                      propTypes={pattern.propTypes}
+                      values={patternProps}
+                      onChange={this.updateProps}
+                    />
+                </Card>
+
+                <Card className={classNames(classes.card, classes.canopy)} raised>
+                    <CanopySvg mini pattern={patternInstance} patternProps={patternProps} />
+                </Card>
+
+                <Button
+                  className={classes.fab}
+                  color="primary"
+                  mini
+                  onClick={this.addPattern}
+                  variant="fab"
+                >
+                    <AddIcon />
+                </Button>
+            </div>
+        );
+    }
+
     render () {
         const { classes } = this.props;
-        const { anchorEl, pattern } = this.state;
+        const { anchorEl } = this.state;
 
         return (
             <ListItem key={name} button>
@@ -107,25 +150,7 @@ class ConcentricCirclesPattern extends React.Component {
                       classes: { root: classes.popover }
                   }}
                 >
-                    <div className={classes.patternWrapper}>
-                        <Card className={classNames(classes.card, classes.parameters)} raised>
-                            <ColorPicker />
-                        </Card>
-
-                        <Card className={classNames(classes.card, classes.canopy)} raised>
-                            <CanopySvg mini pattern={pattern} />
-                        </Card>
-
-                        <Button
-                          className={classes.fab}
-                          color="primary"
-                          mini
-                          onClick={this.addPattern}
-                          variant="fab"
-                        >
-                            <AddIcon />
-                        </Button>
-                    </div>
+                    {this.renderPattern()}
                 </Popover>
             </ListItem>
         )

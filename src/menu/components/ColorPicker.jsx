@@ -1,5 +1,5 @@
 
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { ChromePicker } from 'react-color';
 
@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 import Popover from '@material-ui/core/Popover';
 import { withTheme } from '@material-ui/core/styles';
 
-import { rgbToHexString } from '../../colors';
+import { rgbToHexString, RGB} from '../../colors';
 
 
 @withTheme()
@@ -17,6 +17,7 @@ export default class ColorPicker extends React.Component {
             vertical: PropTypes.oneOf(['top', 'center', 'bottom']),
             horizontal: PropTypes.oneOf(['left', 'center', 'right']),
         }),
+        onChange: PropTypes.func,
         transformOrigin: PropTypes.shape({
             vertical: PropTypes.oneOf(['top', 'center', 'bottom']),
             horizontal: PropTypes.oneOf(['left', 'center', 'right']),
@@ -28,6 +29,7 @@ export default class ColorPicker extends React.Component {
             vertical: 'top',
             horizontal: 'center',
         },
+        onChange: () => {},
         transformOrigin: {
             vertical: 'bottom',
             horizontal: 'center',
@@ -38,7 +40,7 @@ export default class ColorPicker extends React.Component {
         super(props);
         this.state = {
             anchorEl: null,
-            color: {
+            color: props.color || {
                 r: Math.floor(Math.random() * 256),
                 g: Math.floor(Math.random() * 256),
                 b: Math.floor(Math.random() * 256)
@@ -49,7 +51,10 @@ export default class ColorPicker extends React.Component {
     handleClick = event => this.setState({ anchorEl: event.currentTarget });
     handleClose = () => this.setState({ anchorEl: null });
 
-    updateColor = (color) => this.setState({ color: color.rgb });
+    updateColor = ({ rgb }) => {
+        this.setState({ color: rgb });
+        this.props.onChange(new RGB(rgb.r, rgb.g, rgb.b));
+    };
 
     renderButton () {
         const { theme } = this.props;
