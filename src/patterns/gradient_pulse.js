@@ -12,9 +12,8 @@ export class GradientPulse {
     currHue = 0;
 
     update () {
-        const r = Math.floor(Math.random() * 100);
-        if (r > 50 && this.beatList.length < 25) {
-            const c = new HSV(this.currHue, 100, r * 2);
+        if (Math.random() > 0.5 && this.beatList.length < 25) {
+            const c = new HSV(this.currHue / 100, 1, Math.random());
             this.currHue = (this.currHue + 1) % 360;
             this.beatList.push({ pos: 0, c });
         }
@@ -34,7 +33,7 @@ export class GradientPulse {
     render (canopy) {
         this.beatList.forEach((beat) => {
             canopy.strips.forEach((strip) => {
-                strip.updateColor(beat.pos, beat.c.toHex());
+                strip.updateColor(beat.pos, beat.c.toRgb());
             });
         });
     }
