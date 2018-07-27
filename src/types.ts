@@ -1,13 +1,20 @@
 
-export interface Strip {
-
+export interface LedInterface {
+    r: number,
+    b: number,
+    g: number
 }
 
-export interface Canopy {
-    strips: Strip[]
+export interface StripInterface {
+    leds: LedInterface[]
+    updateColor: (position: number, color: string) => void
 }
 
-export interface Pattern {
+export interface CanopyInterface {
+    strips: StripInterface[]
+}
+
+export interface PatternInterface {
     update: () => void,
-    render: (Canopy) => void
+    render: (canopy: CanopyInterface) => void
 }

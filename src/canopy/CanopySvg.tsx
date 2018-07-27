@@ -1,11 +1,10 @@
 
-/// <reference path="../types.ts" />
-
 import * as React from 'react';
 import * as _ from 'lodash';
 
 import { rgbToHexString } from '../colors';
-import {Pattern} from "../types";
+import { CanopyInterface, PatternInterface } from '../types';
+import Canopy from './Canopy';
 
 
 // Rendering constants
@@ -17,7 +16,7 @@ const NUM_LEDS_PER_STRIP = 75;
 const Strip = ({ leds, length, rotation }) => {
     const interval = LED_RADIUS * 2 + LED_GAP;
 
-    //
+    // We render as many LEDs from the array as we can, respecting the spacing rules
     const numToRender = Math.floor(length / interval) - 1;
 
     // The strip is rotated a specified amount, then translated along its radial path as though
@@ -42,13 +41,18 @@ const Strip = ({ leds, length, rotation }) => {
     );
 };
 
-interface CanopyProps {
+interface CanopySvgProps {
     mini?: boolean,
     width?: number,
-    pattern: Pattern
+    pattern: PatternInterface
 }
 
-export default class Canopy extends React.Component<CanopyProps, any> {
+interface CanopySvgState {
+    canopy: CanopyInterface,
+    width: number
+}
+
+export default class CanopySvg extends React.Component<CanopySvgProps, CanopySvgState> {
     static defaultProps = {
         mini: false,
         width: 400
@@ -56,35 +60,32 @@ export default class Canopy extends React.Component<CanopyProps, any> {
 
     constructor (props) {
         super(props);
+
         const { mini, width } = props;
-
-        const numStrips = mini ? 48 : NUM_STRIPS;
-
         this.state = {
             width: mini ? 200 : width,
-            strips: _.range(numStrips).map(() =>
-                _.range(NUM_LEDS_PER_STRIP).map(() => ({ r: 0, g: 0, b: 0 }))
-            ),
+            canopy: new Canopy(mini ? 48 : NUM_STRIPS, NUM_LEDS_PER_STRIP)
         };
     }
 
     updatePattern () {
-        this.props.pattern.update();
-        this.props.pattern.render(this);
+        const { pattern } = this.props;
+        pattern.update();
+        pattern.render(this.state.canopy);
     }
 
     render () {
-        const { strips, width } = this.state;
-        const rotationAmount = 360 / strips.length;
+        const { canopy, width } = this.state;
+        const rotationAmount = 360 / canopy.strips.length;
 
         const halfWidth = width / 2;
         const viewBox = `-${halfWidth} -${halfWidth} ${width} ${width}`;
 
         return (
             <svg viewBox={viewBox} width={width} height={width}>
-                {this.state.strips.map((leds, i) => {
+                {canopy.strips.map((strip, i) => {
                     const rotation = rotationAmount * i;
-                    return <Strip key={i} leds={leds} length={halfWidth} rotation={rotation} />;
+                    return <Strip key={i} leds={strip.leds} length={halfWidth} rotation={rotation} />;
                 })}
             </svg>
         );

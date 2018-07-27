@@ -18,10 +18,9 @@ import { withStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import Canopy from '../canopy/Canopy';
+import { CanopySvg } from '../canopy';
 import { GradientPulse } from '../patterns';
 import { ColorPicker } from './components';
-
 
 
 const concentricCirclesStyles = {
@@ -114,7 +113,7 @@ class ConcentricCircles extends React.Component {
                         </Card>
 
                         <Card className={classNames(classes.card, classes.canopy)} raised>
-                            <Canopy mini pattern={pattern} />
+                            <CanopySvg mini pattern={pattern} />
                         </Card>
 
                         <Button

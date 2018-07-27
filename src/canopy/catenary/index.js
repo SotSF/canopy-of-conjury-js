@@ -1,10 +1,14 @@
 
-import canopy from '../canopy';
 import compute from './compute';
 
 class Catenary {
+    constructor (canopy) {
+        this.canopy = canopy;
+        this.initialize();
+    }
+
     initialize () {
-        const catenaryCoords = new Array(canopy.numLedsPerStrip);
+        const catenaryCoords = new Array(this.canopy.numLedsPerStrip);
         for (let i = 0; i < catenaryCoords.length; i++) {
             catenaryCoords[i] = new Array(2);
         }
@@ -15,9 +19,14 @@ class Catenary {
 
     /** Updates the coordinates for the catenaries */
     update () {
-        const apexCoord = { x: canopy.apexRadius, y: canopy.apexHeight };
-        const baseCoord = { x: canopy.baseRadius, y: 0 };
-        const newCoords = compute(baseCoord, apexCoord, canopy.stripLength, canopy.numLedsPerStrip);
+        const apexCoord = { x: this.canopy.apexRadius, y: this.canopy.apexHeight };
+        const baseCoord = { x: this.canopy.baseRadius, y: 0 };
+        const newCoords = compute(
+            baseCoord,
+            apexCoord,
+            this.canopy.stripLength,
+            this.canopy.numLedsPerStrip
+        );
 
         for (let i = 0; i < newCoords.length; i++) {
             this.coordinates[i][0] = newCoords[i][0];
@@ -26,4 +35,4 @@ class Catenary {
     }
 }
 
-export default new Catenary;
+export default Catenary;

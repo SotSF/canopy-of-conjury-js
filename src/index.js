@@ -1,6 +1,7 @@
 
+import * as THREE from 'three';
 import * as dat from 'dat.gui';
-import canopy from './canopy';
+import { CanopyThreeJs } from './canopy';
 import { RGB } from './colors';
 import * as Patterns from './patterns';
 import * as Brushes from './brushes';
@@ -29,7 +30,9 @@ renderer.domElement.id = "idRenderer";
 document.body.appendChild(renderer.domElement);
 
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
+const canopy = new CanopyThreeJs;
 canopy.initialize(scene);
+console.log(canopy.numLedsPerStrip);
 
 var brush; // active freedraw brush
 var activeLayer;
