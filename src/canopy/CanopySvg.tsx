@@ -66,7 +66,7 @@ export default class CanopySvg extends React.Component<CanopySvgProps, CanopySvg
         const { mini, width } = props;
         this.state = {
             width: mini ? 200 : width,
-            canopy: new Canopy(mini ? 48 : NUM_STRIPS, NUM_LEDS_PER_STRIP)
+            canopy: this.makeCanopy()
         };
     }
 
@@ -78,11 +78,18 @@ export default class CanopySvg extends React.Component<CanopySvgProps, CanopySvg
         clearInterval(this.patternInterval);
     }
 
+    makeCanopy () {
+        return new Canopy(this.props.mini ? 48 : NUM_STRIPS, NUM_LEDS_PER_STRIP);
+    }
+
     updatePattern = () => {
         const { pattern } = this.props;
+        const canopy = this.makeCanopy();
+
         pattern.update();
-        pattern.render(this.state.canopy);
-        this.forceUpdate();
+        pattern.render(canopy);
+
+        this.setState({ canopy });
     };
 
     render () {
