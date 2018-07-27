@@ -19,7 +19,7 @@ import AddIcon from '@material-ui/icons/Add';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import { CanopySvg } from '../canopy';
-import { GradientPulse } from '../patterns';
+import { ConcentricCircles } from '../patterns';
 import { ColorPicker } from './components';
 
 
@@ -53,7 +53,7 @@ const concentricCirclesStyles = {
 };
 
 @withStyles(concentricCirclesStyles)
-class ConcentricCircles extends React.Component {
+class ConcentricCirclesPattern extends React.Component {
     static propTypes = {
         addPattern: PropTypes.func.isRequired
     };
@@ -65,7 +65,7 @@ class ConcentricCircles extends React.Component {
     handleClick = event => {
         this.setState({
             anchorEl: event.currentTarget,
-            pattern: new GradientPulse()
+            pattern: new ConcentricCircles()
         });
     };
 
@@ -163,7 +163,7 @@ export default class Patterns extends React.Component {
                         <List dense disablePadding classes={{
                             root: classes.list
                         }}>
-                            <ConcentricCircles addPattern={this.props.addLayer} />
+                            <ConcentricCirclesPattern addPattern={this.props.addLayer} />
                         </List>
                     </ExpansionPanelDetails>
             </ExpansionPanel>
