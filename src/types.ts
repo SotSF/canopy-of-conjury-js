@@ -7,7 +7,7 @@ export interface LedInterface {
 
 export interface StripInterface {
     leds: LedInterface[]
-    updateColor: (position: number, color: string) => void
+    updateColor (position: number, color: string): void
 }
 
 export interface CanopyInterface {
@@ -15,6 +15,6 @@ export interface CanopyInterface {
 }
 
 export interface PatternInterface {
-    update: () => void,
-    render: (canopy: CanopyInterface) => void
+    update (o?: object) : void,
+    render (canopy: CanopyInterface) : void
 }
