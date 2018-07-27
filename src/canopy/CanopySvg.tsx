@@ -53,6 +53,8 @@ interface CanopySvgState {
 }
 
 export default class CanopySvg extends React.Component<CanopySvgProps, CanopySvgState> {
+    patternInterval = null;
+
     static defaultProps = {
         mini: false,
         width: 400
@@ -68,11 +70,20 @@ export default class CanopySvg extends React.Component<CanopySvgProps, CanopySvg
         };
     }
 
-    updatePattern () {
+    componentDidMount () {
+        this.patternInterval = setInterval(this.updatePattern, 50);
+    }
+
+    componentWillUnmount () {
+        clearInterval(this.patternInterval);
+    }
+
+    updatePattern = () => {
         const { pattern } = this.props;
         pattern.update();
         pattern.render(this.state.canopy);
-    }
+        this.forceUpdate();
+    };
 
     render () {
         const { canopy, width } = this.state;
