@@ -1,13 +1,13 @@
 
 import _ from 'lodash';
 import { NUM_STRIPS } from '../canopy';
-import { pColor, hexStringToRgb, rgbToHexString, modifyBrightness } from '../colors';
+import { RGB } from '../colors';
 
 
 export class Radar {
     // define tuning params
     static menuParams = [
-        {name: "Color", defaultVal: "#ff0000"},
+        {name: "Color", defaultVal: {r: 255, g: 0, b: 0}},
         {name: "Velocity", defaultVal: 1, min: 1, max: 10},
         {name: "Brightness", defaultVal: 100, min: 0, max: 100},
         {name: "Clockwise", defaultVal: true}
@@ -32,7 +32,7 @@ export class Radar {
     render (canopy) {
         for (let i = 0; i < this.length; i++) {
             const b = this.params.Brightness - (5 * i);
-            const c = modifyBrightness(b < 0 ? 0 : b, this.params.Color);
+            const c = new RGB(this.params.Color.r, this.params.Color.g, this.params.Color.b, b < 0 ? 0 : b / 100);
             let s = this.head + (this.params.Clockwise ? i : -i);
             if (s > NUM_STRIPS - 1) s %= NUM_STRIPS;
             if (s < 0) s += NUM_STRIPS;

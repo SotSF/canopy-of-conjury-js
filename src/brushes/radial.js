@@ -2,22 +2,22 @@ import { hexStringToRgb } from '../colors';
 
 export class RadialBrush {
     static menuParams = [
-        {name: "Color1", defaultVal: "#0000ff"},
-		{name: "Color2", defaultVal: "#ffffff"},
+        {name: "Color1", defaultVal: {r:0,g:0,b:255}},
+		{name: "Color2", defaultVal: {r:255, g: 255, b: 255}},
 		{name: "Size", defaultVal: 5, min: 1, max: 10}
     ]
     static displayName = "Radial";
     static setParams = {
-        Color1: "#0000ff",
-        Color2: "#ffffff",
+        Color1: {r:0, g: 0, b: 255},
+		Color2: {r:255, g: 255, b: 255},
         Size: 5
     }
 
     constructor(params, coord) {
         this.params = params;
         this.target = coord;
-        this.innerColor = hexStringToRgb(params.Color1);
-        this.outerColor = hexStringToRgb(params.Color2);
+        this.innerColor = params.Color1;
+        this.outerColor = params.Color2;
         this.f = 0;
     }
     render(processing) {

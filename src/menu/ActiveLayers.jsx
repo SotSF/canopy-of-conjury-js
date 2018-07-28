@@ -131,9 +131,9 @@ class Layer extends React.Component {
         const controls = [];
         pattern.constructor.menuParams.map(control => {
             if (control.type == "GIF" || control.type == "HIDDEN") return;
-            if (typeof control.defaultVal == "string") {
+            if (typeof control.defaultVal == "object") {
                 controls.push(<ChromePicker key={key + "-" + control.name} disableAlpha={true} color={pattern.params[control.name]} 
-                    onChange={(val) => this.updateParam(control.name,val.hex)} />)
+                    onChange={(val) => this.updateParam(control.name,val.rgb)} />)
             }
             else if (typeof control.defaultVal == "number") {
                 controls.push(

@@ -9,10 +9,12 @@ export const pColor = new Processing(document.getElementById('idCanvas'), (proce
 });
 
 export class RGB {
-    constructor (r, g, b) {
+    constructor (r, g, b, a) {
         this.r = r;
         this.g = g;
         this.b = b;
+
+        this.a = (arguments.length == 4) ? a : 1;
     }
 
     /**

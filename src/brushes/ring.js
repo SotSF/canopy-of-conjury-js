@@ -2,23 +2,23 @@ import { hexStringToRgb } from '../colors';
 
 export class RingBrush {
 	static menuParams = [
-		{name: "Color1", defaultVal: "#0000ff"},
-		{name: "Color2", defaultVal: "#ffffff"},
+		{name: "Color1", defaultVal: {r:0,g:0,b:255}},
+		{name: "Color2", defaultVal: {r:255, g: 255, b: 255}},
 		{name: "Size", defaultVal: 5, min: 1, max: 10}
 	]
 
 	static displayName = "Ring";
 
 	static setParams = {
-		Color1: "#0000ff",
-		Color2: "#ffffff",
+		Color1: {r:0, g: 0, b: 255},
+		Color2: {r:255, g: 255, b: 255},
 		Size: 5
 	}
 
 	constructor(params,coord) {	
 		this.params = params;
-		this.startColor = hexStringToRgb(params.Color1);
-		this.targetColor = hexStringToRgb(params.Color2);
+		this.startColor = params.Color1;
+		this.targetColor = params.Color2;
 
 		this.maxRad = params.Size * 10;
 		this.x = coord.x;

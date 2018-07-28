@@ -5,7 +5,7 @@ import {hexStringToRgb} from '../colors';
 
 export class Fireflies {
     static menuParams = [
-        {name: "BaseColor", defaultVal: "#ffff00"},
+        {name: "Color", defaultVal: { r: 255, g: 255, b: 0}},
         {name: "Qty", defaultVal: 50, min: 10, max: 100},
         {name: "Velocity", defaultVal: 0, min: 0, max: 10},
         {name: "Size", defaultVal: 5, min: 1, max: 10},
@@ -36,8 +36,8 @@ export class Fireflies {
     }
 
     renderFirefly(firefly) {
-        const c = hexStringToRgb(this.params.BaseColor);
         const { processing } = this.canvas;
+        const c = this.params.Color;
         processing.pg.pushMatrix();
         processing.pg.translate(firefly.x-100, firefly.y-100);
         processing.pg.noStroke();

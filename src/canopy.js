@@ -1,7 +1,7 @@
 
 import _ from 'lodash';
 import catenary from './catenary';
-import { hexStringToRgb } from './colors';
+import { pColor } from './colors';
 
 // Constants. Length units are in feet unless otherwise specified
 const FEET_PER_METER = 3.28084;
@@ -181,19 +181,35 @@ class LedStrip {
         this.string.geometry.setFromPoints(points);
     }
 
-    /** Updates the color of a single pixel in the string */
-    updateColor (i, color) {
-        this.colors[i] = hexStringToRgb(color);
+    /** Updates the color of a single pixel in the string 
+     * color as RGB
+    */
 
+    updateColor (i, color) {
+        this.colors[i] = { 
+            r: this.applyAlphas(color.r, color.a),
+            g: this.applyAlphas(color.g, color.a),
+            b: this.applyAlphas(color.b, color.a)
+        };
+
+        // expects a float between 0.0 and 1.0
         this.particleSystem.geometry.attributes.color.array[i * 3] = this.colors[i].r / 255;
         this.particleSystem.geometry.attributes.color.array[i * 3 + 1] = this.colors[i].g / 255;
         this.particleSystem.geometry.attributes.color.array[i * 3 + 2] = this.colors[i].b / 255;
         this.particleSystem.geometry.attributes.color.needsUpdate = true;
+        
     }
 
-    /** Shorthand for updating the color of the entire strip */
+    /** Shorthand for updating the color of the entire strip 
+     * color as RGB
+    */
     updateColors (color) {
         _.range(this.leds.length).forEach(i => this.updateColor(i, color));
+    }
+
+    /* c [0,255], a [0,1] */
+    applyAlphas(c, a) {
+        return pColor.lerp(0, c, a);
     }
 }
 

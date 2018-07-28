@@ -2,8 +2,8 @@ import { Swirly } from '.';
 
 export class SwirlyZig {
     static menuParams = [
-        { name: "Color1", defaultVal: "#ff0000"},
-        { name: "Color2", defaultVal: "#ffff00"},
+        { name: "Color1", defaultVal: {r: 255, g: 0, b: 0}},
+        { name: "Color2", defaultVal: {r: 0, g: 0, b: 255}},
         { name: "FromApex", defaultVal: true },
         { name: "Qty", defaultVal: 40, min: 1, max: 100 },
         { name: "Velocity", defaultVal: 10, min: 5, max: 30 },

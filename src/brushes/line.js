@@ -3,8 +3,8 @@ import { hexStringToRgb } from '../colors';
 // take first click as start, second click as target
 export class LineBrush {
     static menuParams = [
-		{name: "Color1", defaultVal: "#0000ff"},
-		{name: "Color2", defaultVal: "#ffffff"},
+		{name: "Color1", defaultVal: {r:0,g:0,b:255}},
+		{name: "Color2", defaultVal: {r:255, g: 255, b: 255}},
         {name: "Size", defaultVal: 5, min: 1, max: 10},
         {name: "RemainSolid", defaultVal: true}
 	]
@@ -12,15 +12,13 @@ export class LineBrush {
 	static displayName = "Line (Click 2x)";
 
 	static setParams = {
-		Color1: "#0000ff",
-		Color2: "#ffffff",
+		Color1: {r:0, g: 0, b: 255},
+		Color2: {r:255, g: 255, b: 255},
 		Size: 5
     }
     
     constructor(params, coord) {
         this.params = params;
-        this.color1 = hexStringToRgb(params.Color1);
-        this.color2 = hexStringToRgb(params.Color2);
         this.start = coord;
 
         this.f = 0.05;
@@ -29,9 +27,9 @@ export class LineBrush {
         processing.pg.beginDraw();
         processing.pg.strokeWeight(this.params.Size);
         processing.pg.stroke(
-            processing.lerp(this.color1.r, this.color2.r, this.f),
-            processing.lerp(this.color1.g, this.color2.g, this.f),
-            processing.lerp(this.color1.b, this.color2.b, this.f)
+            processing.lerp(this.params.Color1.r, this.params.Color2.r, this.f),
+            processing.lerp(this.params.Color1.g, this.params.Color2.g, this.f),
+            processing.lerp(this.params.Color1.b, this.params.Color2.b, this.f)
         );
        if (this.params.RemainSolid) {
             processing.pg.line(

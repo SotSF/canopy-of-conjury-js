@@ -50,8 +50,7 @@ export class PCanvas {
             let l = co.led - 35;
             if (l < 0 || l >= canopy.numLedsPerStrip) { continue; }
             if (pixels[i] == 0 && pixels[i + 1] == 0 && pixels[i + 2] == 0) continue;
-            const c = new RGB(pixels[i], pixels[i+1], pixels[i+2]);
-            canopy.strips[co.strip].updateColor(l, rgbToHexString(c))
+            canopy.strips[co.strip].updateColor(l, new RGB(pixels[i],pixels[i+1],pixels[i+2],1))
         }
     }
 
