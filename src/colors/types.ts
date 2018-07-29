@@ -14,4 +14,5 @@ export interface RGB {
 export interface Color {
     toHex (): number
     toRgb (): RGB
+    toString (): string
 }

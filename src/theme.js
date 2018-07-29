@@ -30,6 +30,12 @@ export default createMuiTheme({
             selectMenu: {
                 minHeight: '16px'
             }
+        },
+
+        MuiSlider: {
+            root: {
+                boxSizing: 'border-box'
+            }
         }
     }
 });

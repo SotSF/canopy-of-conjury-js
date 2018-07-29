@@ -1,6 +1,6 @@
 
 import * as React from 'react';
-import { ColorPicker } from './components';
+import { ColorPicker, Slider } from './components';
 import { PatternPropType } from '../types';
 
 
@@ -33,6 +33,17 @@ export default class PatternProps extends React.Component<PatternPropsProps> {
                         />
                     );
                     break;
+                case PatternPropType.Range:
+                    components.push(
+                        <Slider
+                          key={prop}
+                          onChange={value => this.updateProp(prop, value)}
+                          min={1}
+                          max={10}
+                          step={1}
+                          value={values[prop]}
+                        />
+                    )
             }
         });
 

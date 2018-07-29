@@ -1,6 +1,6 @@
 
 import { Color } from './types';
-import { hsvToRgb, rgbToHex } from './util';
+import {hsvToRgb, rgbToHex, rgbToHexString} from './util';
 
 
 export * from './types';
@@ -37,6 +37,10 @@ export class RGB implements Color {
     toHex () {
         return rgbToHex(this.toRgb());
     }
+
+    toString () {
+        return rgbToHexString(this.toRgb());
+    }
 }
 
 
@@ -62,5 +66,9 @@ export class HSV implements Color {
 
     toRgb () {
         return hsvToRgb(this);
+    }
+
+    toString () {
+        return rgbToHexString(this.toRgb());
     }
 }
