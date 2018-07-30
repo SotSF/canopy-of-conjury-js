@@ -1,5 +1,4 @@
 import { PCanvas } from '.';
-import { hexStringToRgb } from '../colors';
 
 /**
  * Applies a sine wave to a concentric circle, given frequency and amplitude of the wave.
@@ -34,7 +33,7 @@ export class SineRing {
         processing.pg.beginDraw();
         processing.pg.background(0);
         processing.pg.pushMatrix(); // bind any transformations to this context
-        processing.pg.translate(100,100); // set context to middle of canvas
+        processing.pg.translate(PCanvas.dimension / 2,PCanvas.dimension / 2); // set context to middle of canvas
         processing.pg.rotate(processing.radians(this.r * this.params.Rotate)); // apply rotations (if this.params.Rotate != 0)
         processing.pg.strokeWeight(this.params.Weight);
         processing.pg.stroke(this.params.Color.r,this.params.Color.g,this.params.Color.b,this.params.Brightness / 100 * 255); // set stroke color, with brightness param

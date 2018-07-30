@@ -1,5 +1,4 @@
 
-import * as dat from 'dat.gui';
 import canopy from './canopy';
 import { RGB } from './colors';
 import * as Patterns from './patterns';
@@ -7,17 +6,6 @@ import * as Brushes from './brushes';
 import * as Menu from './menu';
 
 const scene = new THREE.Scene();
-
-
-// Lights
-//const light1 = new THREE.DirectionalLight(0xffffff);
-//const light2 = new THREE.DirectionalLight(0xffffff);
-//const ambientLight = new THREE.AmbientLight(0x777777);
-//light1.position.set(0, 0,  1).normalize();
-//light2.position.set(0, 0, -1).normalize();
-//scene.add(light1);
-//scene.add(light2);
-//scene.add(ambientLight);
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 50);
 camera.position.z = 11;
@@ -33,8 +21,7 @@ canopy.initialize(scene);
 
 var brush; // active freedraw brush
 var activeLayer;
-var layers = []; // attempt #1, layers
-var filter; // filter overlay
+var layers = [];
 var mapFromCanopyMemo = {};
 window.onload = function () {  
     (function(){
@@ -56,9 +43,10 @@ const mapFromCanopy = (s, l) => {
     return mapFromCanopyMemo[s + "-" + l];
  }
 
+const BLACK = new RGB(0,0,0);
 const clearCanopy = () => {
     for (let s in canopy.strips) {
-        canopy.strips[s].updateColors("#000000");
+        canopy.strips[s].updateColors(BLACK);
     }
 }
 

@@ -6,7 +6,7 @@ export class ShootingStars {
     static menuParams = [
         { name: "FromApex", defaultVal: true },
         { name: "Velocity", defaultVal: 2, min: 0, max: 5 },
-        { name: "Color", defaultVal: "#ffffff" },
+        { name: "Color", defaultVal: {r:255,g:255,b:255} },
         { name: "Brightness", defaultVal: 100, min: 0, max: 100}
     ]
     static displayName = 'Shooting Stars';

@@ -1,7 +1,7 @@
 
 import _ from 'lodash';
 import {PCanvas} from '.';
-import {hexStringToRgb} from '../colors';
+
 
 export class Fireflies {
     static menuParams = [
@@ -39,7 +39,7 @@ export class Fireflies {
         const { processing } = this.canvas;
         const c = this.params.Color;
         processing.pg.pushMatrix();
-        processing.pg.translate(firefly.x-100, firefly.y-100);
+        processing.pg.translate(firefly.x-PCanvas.dimension / 2, firefly.y-PCanvas.dimension / 2);
         processing.pg.noStroke();
         processing.pg.fill(c.r + firefly.offset, c.g + firefly.offset, c.b + firefly.offset, firefly.brightness * this.params.Brightness/100);
         const x = firefly.radius * Math.cos(firefly.theta);
@@ -67,7 +67,7 @@ export class Fireflies {
         processing.pg.beginDraw();
         processing.pg.background(0);
         processing.pg.pushMatrix();
-        processing.pg.translate(100,100);
+        processing.pg.translate(PCanvas.dimension / 2, PCanvas.dimension / 2);
         processing.pg.rotate(processing.radians(this.r * this.params.Rotate));
         this.fireflies.forEach((firefly) => {
             this.renderFirefly(firefly);

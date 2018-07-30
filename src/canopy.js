@@ -185,31 +185,27 @@ class LedStrip {
      * color as RGB
     */
 
-    updateColor (i, color) {
+    updateColor (i, newColor) {
+        const { color } = this.particleSystem.geometry.attributes;
         this.colors[i] = { 
-            r: this.applyAlphas(color.r, color.a),
-            g: this.applyAlphas(color.g, color.a),
-            b: this.applyAlphas(color.b, color.a)
+            r: pColor.lerp(color.array[i*3] * 255, newColor.r, newColor.a),
+            g: pColor.lerp(color.array[i*3 + 1] * 255, newColor.g, newColor.a),
+            b: pColor.lerp(color.array[i*3 + 2] * 255, newColor.b, newColor.a)
         };
 
         // expects a float between 0.0 and 1.0
-        this.particleSystem.geometry.attributes.color.array[i * 3] = this.colors[i].r / 255;
-        this.particleSystem.geometry.attributes.color.array[i * 3 + 1] = this.colors[i].g / 255;
-        this.particleSystem.geometry.attributes.color.array[i * 3 + 2] = this.colors[i].b / 255;
-        this.particleSystem.geometry.attributes.color.needsUpdate = true;
+        color.array[i * 3] = this.colors[i].r / 255;
+        color.array[i * 3 + 1] = this.colors[i].g / 255;
+        color.array[i * 3 + 2] = this.colors[i].b / 255;
+        color.needsUpdate = true;
         
     }
 
     /** Shorthand for updating the color of the entire strip 
      * color as RGB
     */
-    updateColors (color) {
-        _.range(this.leds.length).forEach(i => this.updateColor(i, color));
-    }
-
-    /* c [0,255], a [0,1] */
-    applyAlphas(c, a) {
-        return pColor.lerp(0, c, a);
+    updateColors (newColor) {
+        _.range(this.leds.length).forEach(i => this.updateColor(i, newColor));
     }
 }
 
