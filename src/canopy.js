@@ -1,7 +1,7 @@
 
 import _ from 'lodash';
 import catenary from './catenary';
-import { pColor } from './colors';
+import { pColor, BLACK } from './colors';
 
 // Constants. Length units are in feet unless otherwise specified
 const FEET_PER_METER = 3.28084;
@@ -80,7 +80,7 @@ class Canopy {
 
     /** Clears all the LEDs */
     clear () {
-        this.strips.forEach(strip => strip.updateColors("#000000"));
+        this.strips.forEach(strip => strip.updateColors(BLACK));
     }
 
     /**

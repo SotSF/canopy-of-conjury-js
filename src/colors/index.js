@@ -31,6 +31,8 @@ export class RGB {
     }
 }
 
+export const BLACK = new RGB(0,0,0);
+
 
 export class HSV {
     constructor (h, s, v) {

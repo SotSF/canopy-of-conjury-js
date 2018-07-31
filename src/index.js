@@ -43,21 +43,14 @@ const mapFromCanopy = (s, l) => {
     return mapFromCanopyMemo[s + "-" + l];
  }
 
-const BLACK = new RGB(0,0,0);
-const clearCanopy = () => {
-    for (let s in canopy.strips) {
-        canopy.strips[s].updateColors(BLACK);
-    }
-}
-
-animate();
+ animate();
 
 function animate() {
     setTimeout( function() {
 
         requestAnimationFrame( animate );
         controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
-        clearCanopy();
+        canopy.clear();
         for (let layer of Array.from(layers).reverse()) {
             layer.pattern.update();
             layer.pattern.render(canopy);
