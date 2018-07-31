@@ -35,22 +35,27 @@ export class PCanvas {
 
     _renderProcessing(canopy, processing) {
         const colorData = processing.pg.get();
-        const pixels = colorData.imageData.data;
+        const pixels = colorData.pixels.toArray();
+    
+
         const mapToCanopy = (x,y,processing,canopy) => {
             const x2 = Math.floor(processing.map(x,0,PCanvas.dimension,-PCanvas.dimension/2,PCanvas.dimension/2));
             const y2 = Math.floor(processing.map(y,0,PCanvas.dimension,-PCanvas.dimension/2,PCanvas.dimension/2));
             return mapMemo[x2 + "-" + y2];
         }
-            
-        for(let i = 0; i < pixels.length; i += 4) {
-            const pixel = Math.floor((i + 1) / 4);
-            const x = pixel % PCanvas.dimension;
-            const y = Math.floor(pixel / PCanvas.dimension);
-            const co = mapToCanopy(x,y,processing,canopy);
-            let l = co.led - 35;
-            if (l < 0 || l >= canopy.numLedsPerStrip) { continue; }
-            if (pixels[i] == 0 && pixels[i + 1] == 0 && pixels[i + 2] == 0) continue;
-            canopy.strips[co.strip].updateColor(l, new RGB(pixels[i],pixels[i+1],pixels[i+2],1))
+
+        for (let x = 0; x < PCanvas.dimension; x++) {
+            for (let y = 0; y < PCanvas.dimension; y++) {
+                const c = pixels[y * PCanvas.dimension + x];
+                if (c == -16777216) continue; // if black, skip it
+                const b = c & 0xFF,
+                    g = (c & 0xFF00) >>> 8,
+                    r = (c & 0xFF0000) >>> 16,
+                    a = ( (c & 0xFF000000) >>> 24 ) / 255;
+                const co = mapToCanopy(x,y,processing,canopy);
+                let l = co.led - 35;
+                canopy.strips[co.strip].updateColor(l, {r,g,b,a})
+            }
         }
     }
 
