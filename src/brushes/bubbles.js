@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { PCanvas } from '../patterns';
 
 export class BubbleBrush {
     static menuParams = [
@@ -49,7 +50,8 @@ export class BubbleBrush {
         processing.pg.beginDraw();
         processing.pg.noStroke();
         this.bubbles.forEach(bubble => {
-            processing.pg.fill(bubble.color.r, bubble.color.g, bubble.color.b, bubble.brightness * 255);
+            const color = PCanvas.color(bubble.color.r, bubble.color.g, bubble.color.b, bubble.brightness * 255);
+            processing.pg.fill(color);
             processing.pg.ellipse(bubble.coord.x, bubble.coord.y, bubble.size * 5, bubble.size * 5);
 
             bubble.coord.x += bubble.change[0];

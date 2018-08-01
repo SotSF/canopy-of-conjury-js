@@ -1,5 +1,6 @@
 import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
-import { pColor, hexStringToRgb, rgbToHexString, modifyBrightness, RGB } from '../colors';
+import { RGB } from '../colors';
+import { PCanvas } from '.';
 import _ from 'lodash';
 
 export class Swirly {
@@ -74,7 +75,7 @@ export class Swirly {
         })
         const color1 = this.params.Color1;
         const color2 = this.params.Color2;
-        this.color = { r: pColor.lerp(color1.r,color2.r,this.f), g: pColor.lerp(color1.g,color2.g,this.f), b: pColor.lerp(color1.b,color2.b,this.f) };
+        this.color = { r: PCanvas.lerp(color1.r,color2.r,this.f), g: PCanvas.lerp(color1.g,color2.g,this.f), b: PCanvas.lerp(color1.b,color2.b,this.f) };
         this.f += this.colorRate * this.colorDir;
         if (this.f >= 1) { this.f = 1; this.colorDir = -1; }
         if (this.f <= 0) { this.f = 0; this.colorDir = 1; }

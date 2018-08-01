@@ -48,6 +48,7 @@ const styles = theme => ({
 class Menu extends React.Component {
     static presets = [
         { pattern: patterns.TestLEDs, name: 'Test LEDs' },
+        { pattern: patterns.AlphaTest, name: 'Test Alpha' },
         { pattern: patterns.PCanvas, name: 'Draw Canvas'}
     ];
     currentId = 0;

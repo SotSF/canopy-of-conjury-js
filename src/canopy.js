@@ -1,7 +1,8 @@
 
 import _ from 'lodash';
 import catenary from './catenary';
-import { pColor, BLACK } from './colors';
+import { BLACK } from './colors';
+import { PCanvas } from './patterns';
 
 // Constants. Length units are in feet unless otherwise specified
 const FEET_PER_METER = 3.28084;
@@ -10,7 +11,6 @@ const BASE_RADIUS = 8;
 const APEX_RADIUS = 0.5;
 const STRIP_LENGTH_METERS = 2.5;
 const STRIP_LENGTH = STRIP_LENGTH_METERS * FEET_PER_METER;
-var COLOR_MEMO = {};
 export const NUM_STRIPS = 96;
 export const NUM_LEDS_PER_STRIP = TOTAL_LEDS / NUM_STRIPS;
 
@@ -188,9 +188,9 @@ class LedStrip {
     updateColor (i, newColor) {
         const { color } = this.particleSystem.geometry.attributes;
         this.colors[i] = { 
-            r: pColor.lerp(color.array[i*3] * 255, newColor.r, newColor.a),
-            g: pColor.lerp(color.array[i*3 + 1] * 255, newColor.g, newColor.a),
-            b: pColor.lerp(color.array[i*3 + 2] * 255, newColor.b, newColor.a)
+            r: PCanvas.lerp(color.array[i*3] * 255, newColor.r, newColor.a),
+            g: PCanvas.lerp(color.array[i*3 + 1] * 255, newColor.g, newColor.a),
+            b: PCanvas.lerp(color.array[i*3 + 2] * 255, newColor.b, newColor.a)
         };
 
         // expects a float between 0.0 and 1.0
@@ -210,3 +210,28 @@ class LedStrip {
 }
 
 export default new Canopy;
+
+function _mapToCanopy(x,y) {
+    let theta = 0;
+    if (x == 0) {
+        if (y > 0) theta = Math.PI / 2;
+        if (y < 0) theta = -Math.PI / 2;
+        if (y == 0) theta = 0;
+    } else {
+        theta = Math.atan2(y,x);
+    }
+    const radius = Math.sqrt(x * x + y * y) * 3;
+    let thetaDegrees = theta * 180 / Math.PI;
+    if (thetaDegrees < 0) { thetaDegrees += 360; }
+    const s = parseInt(thetaDegrees * NUM_STRIPS / 360);
+    const l = parseInt(radius / 3);
+    return { strip: s, led: l};
+}
+
+(function(){
+    for(let x = -PCanvas.dimension/2;x <= PCanvas.dimension/2;x++) {
+        for(let y = -PCanvas.dimension/2;y <= PCanvas.dimension/2;y++) {
+            PCanvas.mapMemo[x + "-" + y] = _mapToCanopy(x,y);
+        }
+    }
+})();

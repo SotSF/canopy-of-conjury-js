@@ -1,4 +1,4 @@
-import { hexStringToRgb } from '../colors';
+import { PCanvas } from '../patterns';
 // two clicks one brush
 // take first click as start, second click as target
 export class LineBrush {
@@ -26,11 +26,13 @@ export class LineBrush {
     render(processing) {
         processing.pg.beginDraw();
         processing.pg.strokeWeight(this.params.Size);
-        processing.pg.stroke(
+        const color = PCanvas.color(
             processing.lerp(this.params.Color1.r, this.params.Color2.r, this.f),
             processing.lerp(this.params.Color1.g, this.params.Color2.g, this.f),
-            processing.lerp(this.params.Color1.b, this.params.Color2.b, this.f)
+            processing.lerp(this.params.Color1.b, this.params.Color2.b, this.f),
+            255
         );
+        processing.pg.stroke(color);
        if (this.params.RemainSolid) {
             processing.pg.line(
                 this.start.x,

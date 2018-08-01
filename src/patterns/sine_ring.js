@@ -36,7 +36,8 @@ export class SineRing {
         processing.pg.translate(PCanvas.dimension / 2,PCanvas.dimension / 2); // set context to middle of canvas
         processing.pg.rotate(processing.radians(this.r * this.params.Rotate)); // apply rotations (if this.params.Rotate != 0)
         processing.pg.strokeWeight(this.params.Weight);
-        processing.pg.stroke(this.params.Color.r,this.params.Color.g,this.params.Color.b,this.params.Brightness / 100 * 255); // set stroke color, with brightness param
+        const color = PCanvas.color(this.params.Color.r,this.params.Color.g,this.params.Color.b,this.params.Brightness / 100 * 255);
+        processing.pg.stroke(color); // set stroke color, with brightness param
         
         while (angle <= Math.PI * 2) { 
             // calculate start point of line segment

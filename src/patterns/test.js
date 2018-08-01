@@ -1,5 +1,5 @@
 import { NUM_STRIPS } from '../canopy';
-import { RGB, rgbToHexString } from '../colors';
+import { RGB, alphaMap } from '../colors';
 import { PCanvas } from '.';
 
 /**
@@ -21,9 +21,35 @@ export class TestLEDs {
     render(canopy) {
         var c = 0;
         for (let s = 0; s < NUM_STRIPS; s++) {
-            canopy.strips[s].updateColors(rgbToHexString(this.colors[c]));
+            canopy.strips[s].updateColors(this.colors[c]);
             if ((s + 1) % 8 == 0) c++;
             if (c >= this.colors.length) { c = 0; }
         }
+    }
+}
+
+export class AlphaTest {
+    static menuParams = [];
+    static displayName = "Alpha Test";
+
+    constructor(params) {
+        this.canvas = new PCanvas();
+    }
+
+    update() {
+        const { processing } = this.canvas;
+        processing.pg.beginDraw();
+        processing.pg.background(0);
+        for (let x = 0; x < PCanvas.dimension; x++) {
+            const alpha = PCanvas.lerp(255,0,x / PCanvas.dimension);
+            const c = PCanvas.color(255,0,0,alpha);
+            processing.pg.stroke(c);
+            processing.pg.line(x,0,x,PCanvas.dimension);
+        }
+        processing.pg.endDraw();
+    }
+
+    render(canopy) {
+        this.canvas.render(canopy);
     }
 }

@@ -1,4 +1,4 @@
-import { hexStringToRgb } from '../colors';
+import { PCanvas } from '../patterns';
 
 export class RingBrush {
 	static menuParams = [
@@ -28,14 +28,14 @@ export class RingBrush {
 	}
 	render(processing) {
 		let { startColor, targetColor, maxRad } = this;
-		const color = {
-			r: processing.lerp(startColor.r, targetColor.r, this.f),
-			g: processing.lerp(startColor.g, targetColor.g, this.f),
-			b: processing.lerp(startColor.b, targetColor.b, this.f)
-		}
+		const color = PCanvas.color(processing.lerp(startColor.r, targetColor.r, this.f),
+			processing.lerp(startColor.g, targetColor.g, this.f),
+			processing.lerp(startColor.b, targetColor.b, this.f),
+			255
+		);
 		processing.pg.beginDraw();
 		processing.pg.noFill();
-		processing.pg.stroke(color.r, color.g, color.b);
+		processing.pg.stroke(color);
 		processing.pg.strokeWeight(Math.floor(this.params.Size / 2));
 		processing.pg.ellipse(this.x,this.y,this.r,this.r);
 
