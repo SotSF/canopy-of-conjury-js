@@ -36,7 +36,7 @@ export class PatternName {
 }
 ```
 
-- `strip.updateColor(i, color)` and `strip.updateColors(color)` expects color to be a hex value (0xff0000) or hex string ("#ff0000");
+- `strip.updateColor(i, color)` and `strip.updateColors(color)` expects color to be an RGBA value
 =============
 
 #### Using Processing Canvas (for utilizing ProcessingJS drawing functions)
@@ -46,7 +46,7 @@ export class PatternName {
 import { PCanvas } from '.';
 export class PatternName {
     static menuParams = [
-        { name: "ColorParam", defaultVal: "#ff0000" },
+        { name: "ColorParam", defaultVal: {r: 255, g:0, b:0} }, // default color vals must be RGB or RGBA
         { name: "NumberParam", defaultVal: 1, min: 1, max: 10 },
         { name: "CheckboxParam", defaultVal: true }
     ];
