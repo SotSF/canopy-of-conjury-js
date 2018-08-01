@@ -31,13 +31,14 @@ export class SineRing {
         let angle = 0;
     
         processing.pg.beginDraw();
-        processing.pg.background(0);
+        processing.pg.background(0); // wipe canvas to draw next frame in this animation
         processing.pg.pushMatrix(); // bind any transformations to this context
         processing.pg.translate(PCanvas.dimension / 2,PCanvas.dimension / 2); // set context to middle of canvas
         processing.pg.rotate(processing.radians(this.r * this.params.Rotate)); // apply rotations (if this.params.Rotate != 0)
         processing.pg.strokeWeight(this.params.Weight);
+        // use PCanvas.color() to set color with this.params.Brightness; this will retain RGBA alpha information for transparency
         const color = PCanvas.color(this.params.Color.r,this.params.Color.g,this.params.Color.b,this.params.Brightness / 100 * 255);
-        processing.pg.stroke(color); // set stroke color, with brightness param
+        processing.pg.stroke(color); // set stroke color
         
         while (angle <= Math.PI * 2) { 
             // calculate start point of line segment

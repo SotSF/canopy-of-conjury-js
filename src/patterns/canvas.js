@@ -23,6 +23,11 @@ export class PCanvas {
     static lerp = (a,b,c) => {
         return PCanvas.p.lerp(a,b,c);
     }
+
+    /* 
+        HTML5 canvas, and thus Processing canvas, loses alpha values, so we need to preserve original
+        color information to preserve transparency
+    */
     static color = (r,g,b,a) => {
         const trueColor = PCanvas.p.color(r,g,b,a);
         const mappedColor = PCanvas.p.color(r * a/255, g * a/255, b * a/255, 255);

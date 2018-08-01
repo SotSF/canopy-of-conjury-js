@@ -36,8 +36,7 @@ export class ConcentricCircles {
     }
 
     render (canopy) {
-        // apply this.params.Brightness
-        //this.params.Color.a = this.params.Brightness / 100;
+        // create RGB color to apply this.params.Brightness
         const color = new RGB(this.params.Color.r, this.params.Color.g, this.params.Color.b, this.params.Brightness / 100);
         // for each position in this.circles, updateColor() for the corresponding LED in each canopy.strips
         this.circles.forEach((circle) => {
