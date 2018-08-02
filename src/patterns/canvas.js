@@ -12,7 +12,7 @@ class AlphaMap {
 export class PCanvas {
     static menuParams = [];
     static displayName = "Canvas";
-    static dimension = 200;
+    static dimension = 100;
     static mapMemo = {}; // faster mapping from Cartesian to Canopy-Polar
     static alphaMap = new AlphaMap(); // bug in HTML5 Canvas that loses RGBA alpha values; keep map of true values for rendering
     static p = new Processing(document.getElementById('idCanvas'), (processing) => {

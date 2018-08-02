@@ -9,7 +9,7 @@ export class SineRing {
         {name: "Weight", defaultVal: 2, min: 1, max: 10}, // stroke weight of the line
         {name: "Frequency", defaultVal: 6, min: 1, max: 16}, // how many waves
         {name: "Amplitude", defaultVal: 10, min: 0, max: 30}, // how big the waves
-        {name: "Radius", defaultVal: 10, min: 5, max: 60}, // radius of concentric circle
+        {name: "Radius", defaultVal: 10, min: 5, max: 30}, // radius of concentric circle
         {name: "Velocity", defaultVal: 1, min: 0, max: 10}, // rate of change of wave motion
         {name: "Rotate", defaultVal: 0, min: -10, max: 10}, // rate of change of rotation
         {name: "Brightness", defaultVal: 100, min: 0, max: 100} // brightness/opacity of pattern

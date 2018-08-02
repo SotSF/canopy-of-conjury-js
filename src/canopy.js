@@ -224,7 +224,7 @@ function _mapToCanopy(x,y) {
     let thetaDegrees = theta * 180 / Math.PI;
     if (thetaDegrees < 0) { thetaDegrees += 360; }
     const s = parseInt(thetaDegrees * NUM_STRIPS / 360);
-    const l = parseInt(radius / 3);
+    const l = parseInt(radius / 1.5);
     return { strip: s, led: l};
 }
 

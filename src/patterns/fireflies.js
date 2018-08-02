@@ -78,9 +78,10 @@ export class Fireflies {
         if (firefly.age >= this.params.Lifespan) _.without(this.fireflies, firefly);
 
         if (this.params.Velocity > 0) {
-            firefly.radius += 0.1 * this.params.Velocity * firefly.dir[1];
+            const v = this.params.Velocity / 2;
+            firefly.radius += 0.1 * v * firefly.dir[1];
             if (firefly.radius > 20 || Math.random() > 0.99) { firefly.dir[1] *= -1; }
-            firefly.theta += 0.1 * this.params.Velocity * firefly.dir[2];
+            firefly.theta += 0.1 * v * firefly.dir[2];
             if (Math.random() > 0.99) { firefly.dir[2] *= -1; }
         }
     }
