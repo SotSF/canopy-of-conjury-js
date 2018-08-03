@@ -67,60 +67,30 @@ const hsvToHexString = ({h,s,v}) => {
     return rgbToHexString(hsvToRgb({h,s,v}));
 }
 
+/* HSV 100 to RGB 255 */
 export const hsvToRgb = ({h,s,v}) => {
-    const i = Math.floor(h * 6);
-        const f = h * 6 - i;
-        const p = v * (1 - s);
-        const q = v * (1 - f * s);
-        const t = v * (1 - (1 - f) * s);
+    h /= 100;
+    s /= 100;
+    v /= 100;
 
-        let r = 0;
-        let g = 0;
-        let b = 0;
-
-        switch (i % 6) {
-            case 0:
-                r = v;
-                g = t;
-                b = p;
-                break;
-
-            case 1:
-                r = q;
-                g = v;
-                b = p;
-                break;
-
-            case 2:
-                r = p;
-                g = v;
-                b = t;
-                break;
-
-            case 3:
-                r = p;
-                g = q;
-                b = v;
-                break;
-
-            case 4:
-                r = t;
-                g = p;
-                b = v;
-                break;
-
-            case 5:
-                r = v;
-                g = p;
-                b = q;
-                break;
-        }
-
-        return {
-            r: Math.round(r * 255),
-            g: Math.round(g * 255),
-            b: Math.round(b * 255)
-        };
+    var r, g, b;
+    
+      var i = Math.floor(h * 6);
+      var f = h * 6 - i;
+      var p = v * (1 - s);
+      var q = v * (1 - f * s);
+      var t = v * (1 - (1 - f) * s);
+    
+      switch (i % 6) {
+        case 0: r = v, g = t, b = p; break;
+        case 1: r = q, g = v, b = p; break;
+        case 2: r = p, g = v, b = t; break;
+        case 3: r = p, g = q, b = v; break;
+        case 4: r = t, g = p, b = v; break;
+        case 5: r = v, g = p, b = q; break;
+      }
+    
+      return [ r * 255, g * 255, b * 255 ];
 }
 
 export const modifyBrightness = (b, hex) => {

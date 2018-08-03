@@ -47,9 +47,7 @@ const styles = theme => ({
 @withStyles(styles)
 class Menu extends React.Component {
     static presets = [
-        { pattern: patterns.TestLEDs, name: 'Test LEDs' },
-        { pattern: patterns.AlphaTest, name: 'Test Alpha' },
-        { pattern: patterns.PCanvas, name: 'Draw Canvas'}
+        { pattern: patterns.TestLEDs, name: 'Test LEDs' }
     ];
     currentId = 0;
     state = {
@@ -151,10 +149,6 @@ class Menu extends React.Component {
                             </List>
                         </ExpansionPanelDetails>
                     </ExpansionPanel>
-
-                    <Brushes
-                      activateBrush={this.activateBrush}
-                    />
 
                     <Patterns addLayer={this.addLayer} />
                     

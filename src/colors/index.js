@@ -1,5 +1,5 @@
 
-import { rgbToHex, rgbToHsv } from './util';
+import { rgbToHex, rgbToHsv, hsvToRgb } from './util';
 
 export * from './util';
 
@@ -46,6 +46,7 @@ export class HSV {
     }
 
     toRgb () {
-        return hsvToRgb({h:this.h, s:this.s, v:this.v});
+        const rgb = hsvToRgb({h:this.h, s:this.s, v:this.v});
+        return new RGB(rgb[0],rgb[1],rgb[2]);
     }
 }
