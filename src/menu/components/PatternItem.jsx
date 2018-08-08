@@ -97,7 +97,8 @@ export class PatternItem extends React.Component {
 
     renderControls = () => {
         const { key, pattern } = this.props;
-        if (pattern.menuParams == null) return;
+        if (pattern.menuParams == null || pattern.displayName == "Map of BRC") return;
+      
         const controls = [];
         pattern.menuParams.map(control => {
             if (control.type == "GIF") {
@@ -112,9 +113,9 @@ export class PatternItem extends React.Component {
                     />
                 )
             }
-            else if (typeof control.defaultVal == "string") {
+            else if (typeof control.defaultVal == "object") {
                 controls.push(<ChromePicker key={key + "-" + control.name} disableAlpha={true} color={this.state.params[control.name]} 
-                    onChange={(val) => this.updateParam(control.name,val.hex)} />)
+                    onChange={(val) => this.updateParam(control.name,val.rgb)} />)
             }
             else if (typeof control.defaultVal == "number") {
                 controls.push(

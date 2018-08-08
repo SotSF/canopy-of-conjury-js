@@ -1,11 +1,41 @@
-import { RGB, rgbToHexString } from '../colors';
-import { NUM_STRIPS } from '../canopy';
-
 // Pattern Canvas - for Free Drawing
+class AlphaMap {
+    map = {};
+    add = (key, value) => {
+        this.map[key] = value;
+    }
+    get = (key) => {
+        return this.map[key];
+    }
+}
+
 export class PCanvas {
     static menuParams = [];
     static displayName = "Canvas";
-    static dimension = 200;
+    static dimension = 100;
+    static mapMemo = {}; // faster mapping from Cartesian to Canopy-Polar
+    static alphaMap = new AlphaMap(); // bug in HTML5 Canvas that loses RGBA alpha values; keep map of true values for rendering
+    static p = new Processing(document.getElementById('idCanvas'), (processing) => {
+        processing.setup = () => {
+            processing.size(1,1);
+        }
+    });
+    static lerp = (a,b,c) => {
+        return PCanvas.p.lerp(a,b,c);
+    }
+
+    /* 
+        HTML5 canvas, and thus Processing canvas, loses alpha values, so we need to preserve original
+        color information to preserve transparency
+    */
+    static color = (r,g,b,a) => {
+        const trueColor = PCanvas.p.color(r,g,b,a);
+        const mappedColor = PCanvas.p.color(r * a/255, g * a/255, b * a/255, 255);
+        if (!PCanvas.alphaMap[mappedColor]) {
+            PCanvas.alphaMap.add(mappedColor, trueColor);
+        }
+        return mappedColor;
+    }
 
     brushLife = 200;
     
@@ -35,23 +65,28 @@ export class PCanvas {
 
     _renderProcessing(canopy, processing) {
         const colorData = processing.pg.get();
-        const pixels = colorData.imageData.data;
+        const pixels = colorData.pixels.toArray();
+    
+
         const mapToCanopy = (x,y,processing,canopy) => {
             const x2 = Math.floor(processing.map(x,0,PCanvas.dimension,-PCanvas.dimension/2,PCanvas.dimension/2));
             const y2 = Math.floor(processing.map(y,0,PCanvas.dimension,-PCanvas.dimension/2,PCanvas.dimension/2));
-            return mapMemo[x2 + "-" + y2];
+            return PCanvas.mapMemo[x2 + "-" + y2];
         }
-            
-        for(let i = 0; i < pixels.length; i += 4) {
-            const pixel = Math.floor((i + 1) / 4);
-            const x = pixel % PCanvas.dimension;
-            const y = Math.floor(pixel / PCanvas.dimension);
-            const co = mapToCanopy(x,y,processing,canopy);
-            let l = co.led - 35;
-            if (l < 0 || l >= canopy.numLedsPerStrip) { continue; }
-            if (pixels[i] == 0 && pixels[i + 1] == 0 && pixels[i + 2] == 0) continue;
-            const c = new RGB(pixels[i], pixels[i+1], pixels[i+2]);
-            canopy.strips[co.strip].updateColor(l, rgbToHexString(c))
+
+        for (let x = 0; x < PCanvas.dimension; x++) {
+            for (let y = 0; y < PCanvas.dimension; y++) {
+                const c = pixels[y * PCanvas.dimension + x];
+                if (c == -16777216) continue; // if black, skip it
+                const c2 = PCanvas.alphaMap.get(c);
+                const b = c2 & 0xFF,
+                    g = (c2 & 0xFF00) >>> 8,
+                    r = (c2 & 0xFF0000) >>> 16,
+                    a = ( (c2 & 0xFF000000) >>> 24 ) / 255;
+                const co = mapToCanopy(x,y,processing,canopy);
+                let l = co.led - 35;
+                canopy.strips[co.strip].updateColor(l, {r,g,b,a})
+            }
         }
     }
 
@@ -62,32 +97,4 @@ export class PCanvas {
             processing.pg.background(0);
         }
     }
-}
-
-var mapMemo = {};
-(function(){
-    for(let x = -PCanvas.dimension/2;x <= PCanvas.dimension/2;x++) {
-        for(let y = -PCanvas.dimension/2;y <= PCanvas.dimension/2;y++) {
-            mapMemo[x + "-" + y] = _mapToCanopy(x,y);
-        }
-    }
-})();
-
-
-
-function _mapToCanopy(x,y) {
-    let theta = 0;
-    if (x == 0) {
-        if (y > 0) theta = Math.PI / 2;
-        if (y < 0) theta = -Math.PI / 2;
-        if (y == 0) theta = 0;
-    } else {
-        theta = Math.atan2(y,x);
-    }
-    const radius = Math.sqrt(x * x + y * y) * 3;
-    let thetaDegrees = theta * 180 / Math.PI;
-    if (thetaDegrees < 0) { thetaDegrees += 360; }
-    const s = parseInt(thetaDegrees * NUM_STRIPS / 360);
-    const l = parseInt(radius / 3);
-    return { strip: s, led: l};
 }

@@ -1,12 +1,12 @@
 import _ from 'lodash';
 import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
-import { modifyBrightness } from '../colors';
+import { modifyBrightness, RGB } from '../colors';
 
 export class ShootingStars {
     static menuParams = [
         { name: "FromApex", defaultVal: true },
         { name: "Velocity", defaultVal: 2, min: 0, max: 5 },
-        { name: "Color", defaultVal: "#ffffff" },
+        { name: "Color", defaultVal: {r:255,g:255,b:255} },
         { name: "Brightness", defaultVal: 100, min: 0, max: 100}
     ]
     static displayName = 'Shooting Stars';
@@ -30,7 +30,7 @@ export class ShootingStars {
         });
     }
     render(canopy) {
-        const color = modifyBrightness(this.params.Brightness, this.params.Color);
+        const color = new RGB(this.params.Color.r, this.params.Color.g, this.params.Color.b, this.params.Brightness / 100);
         this.stars.forEach(star => {
             canopy.strips[star[0]].updateColor(star[1], color);
         });

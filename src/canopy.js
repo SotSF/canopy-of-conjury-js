@@ -1,7 +1,8 @@
 
 import _ from 'lodash';
 import catenary from './catenary';
-import { hexStringToRgb } from './colors';
+import { BLACK } from './colors';
+import { PCanvas } from './patterns';
 
 // Constants. Length units are in feet unless otherwise specified
 const FEET_PER_METER = 3.28084;
@@ -10,7 +11,6 @@ const BASE_RADIUS = 8;
 const APEX_RADIUS = 0.5;
 const STRIP_LENGTH_METERS = 2.5;
 const STRIP_LENGTH = STRIP_LENGTH_METERS * FEET_PER_METER;
-var COLOR_MEMO = {};
 export const NUM_STRIPS = 96;
 export const NUM_LEDS_PER_STRIP = TOTAL_LEDS / NUM_STRIPS;
 
@@ -80,7 +80,7 @@ class Canopy {
 
     /** Clears all the LEDs */
     clear () {
-        this.strips.forEach(strip => strip.updateColors("#000000"));
+        this.strips.forEach(strip => strip.updateColors(BLACK));
     }
 
     /**
@@ -181,20 +181,57 @@ class LedStrip {
         this.string.geometry.setFromPoints(points);
     }
 
-    /** Updates the color of a single pixel in the string */
-    updateColor (i, color) {
-        this.colors[i] = hexStringToRgb(color);
+    /** Updates the color of a single pixel in the string 
+     * color as RGB
+    */
 
-        this.particleSystem.geometry.attributes.color.array[i * 3] = this.colors[i].r / 255;
-        this.particleSystem.geometry.attributes.color.array[i * 3 + 1] = this.colors[i].g / 255;
-        this.particleSystem.geometry.attributes.color.array[i * 3 + 2] = this.colors[i].b / 255;
-        this.particleSystem.geometry.attributes.color.needsUpdate = true;
+    updateColor (i, newColor) {
+        const { color } = this.particleSystem.geometry.attributes;
+        this.colors[i] = { 
+            r: PCanvas.lerp(color.array[i*3] * 255, newColor.r, newColor.a),
+            g: PCanvas.lerp(color.array[i*3 + 1] * 255, newColor.g, newColor.a),
+            b: PCanvas.lerp(color.array[i*3 + 2] * 255, newColor.b, newColor.a)
+        };
+
+        // expects a float between 0.0 and 1.0
+        color.array[i * 3] = this.colors[i].r / 255;
+        color.array[i * 3 + 1] = this.colors[i].g / 255;
+        color.array[i * 3 + 2] = this.colors[i].b / 255;
+        color.needsUpdate = true;
+        
     }
 
-    /** Shorthand for updating the color of the entire strip */
-    updateColors (color) {
-        _.range(this.leds.length).forEach(i => this.updateColor(i, color));
+    /** Shorthand for updating the color of the entire strip 
+     * color as RGB
+    */
+    updateColors (newColor) {
+        _.range(this.leds.length).forEach(i => this.updateColor(i, newColor));
     }
 }
 
 export default new Canopy;
+
+function _mapToCanopy(x,y) {
+    let theta = 0;
+    if (x == 0) {
+        if (y > 0) theta = Math.PI / 2;
+        if (y < 0) theta = -Math.PI / 2;
+        if (y == 0) theta = 0;
+    } else {
+        theta = Math.atan2(y,x);
+    }
+    const radius = Math.sqrt(x * x + y * y) * 3;
+    let thetaDegrees = theta * 180 / Math.PI;
+    if (thetaDegrees < 0) { thetaDegrees += 360; }
+    const s = parseInt(thetaDegrees * NUM_STRIPS / 360);
+    const l = parseInt(radius / 1.5);
+    return { strip: s, led: l};
+}
+
+(function(){
+    for(let x = -PCanvas.dimension/2;x <= PCanvas.dimension/2;x++) {
+        for(let y = -PCanvas.dimension/2;y <= PCanvas.dimension/2;y++) {
+            PCanvas.mapMemo[x + "-" + y] = _mapToCanopy(x,y);
+        }
+    }
+})();

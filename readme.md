@@ -5,7 +5,7 @@
 ```javascript
 export class PatternName {
     static menuParams = [
-        { name: "ColorParam", defaultVal: "#ff0000" }, // defaultVal for colors must be a hex string
+        { name: "ColorParam", defaultVal: {r: 255, g:0, b:0} }, // default color vals must be RGB or RGBA
         { name: "NumberParam", defaultVal: 1, min: 1, max: 10 },
         { name: "CheckboxParam", defaultVal: true }
     ];
@@ -27,24 +27,26 @@ export class PatternName {
     render(canopy) {
         /*
             apply colors to canopy.strips here, e.g., 
+            const color = new RGB(r,g,b,a); // where a is typically this.params.Brightness or related
             canopy.strips.forEach(strip => 
-                strip.updateColor("#ff0000")
+                strip.updateColors(color)
             )
         */
     }
 }
 ```
 
-- `strip.updateColor(i, color)` and `strip.updateColors(color)` expects color to be a hex value (0xff0000) or hex string ("#ff0000");
+- `strip.updateColor(i, color)` and `strip.updateColors(color)` expects color to be an RGBA value
 =============
 
 #### Using Processing Canvas (for utilizing ProcessingJS drawing functions)
 ------
 - See `/src/patterns/sine_ring.js` for example
 ```javascript
+import { PCanvas } from '.';
 export class PatternName {
     static menuParams = [
-        { name: "ColorParam", defaultVal: "#ff0000" },
+        { name: "ColorParam", defaultVal: {r: 255, g:0, b:0} }, // default color vals must be RGB or RGBA
         { name: "NumberParam", defaultVal: 1, min: 1, max: 10 },
         { name: "CheckboxParam", defaultVal: true }
     ];
@@ -63,8 +65,9 @@ export class PatternName {
         /*
             any properties dependent on this.params should be set here
             apply processing functions here, e.g.
-            processing.stroke(255);
-            processing.line(0,0,200,200);
+            const c = PCanvas.color(255,0,0,this.params.Brightness); // red with parametrized Brightness
+            processing.pg.stroke(c);
+            processing.pg.line(0,0,200,200);
         */
         processing.pg.endDraw();
         /* update pattern params */

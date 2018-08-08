@@ -1,18 +1,15 @@
 
-import { rgbToHex, rgbToHsv } from './util';
+import { rgbToHex, rgbToHsv, hsvToRgb } from './util';
 
 export * from './util';
-export const pColor = new Processing(document.getElementById('idCanvas'), (processing) => {
-    processing.setup = () => {
-        processing.size(1,1);
-    }
-});
 
 export class RGB {
-    constructor (r, g, b) {
+    constructor (r, g, b, a) {
         this.r = r;
         this.g = g;
         this.b = b;
+
+        this.a = (arguments.length == 4) ? a : 1;
     }
 
     /**
@@ -28,6 +25,8 @@ export class RGB {
         return rgbToHsv({r: this.r, g: this.g, b: this.b});
     }
 }
+
+export const BLACK = new RGB(0,0,0);
 
 
 export class HSV {
@@ -47,6 +46,7 @@ export class HSV {
     }
 
     toRgb () {
-        return hsvToRgb({h:this.h, s:this.s, v:this.v});
+        const rgb = hsvToRgb({h:this.h, s:this.s, v:this.v});
+        return new RGB(rgb[0],rgb[1],rgb[2]);
     }
 }

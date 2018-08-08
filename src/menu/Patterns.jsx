@@ -48,11 +48,6 @@ export default class Patterns extends React.Component {
                         <List dense disablePadding classes={{
                             root: classes.list
                         }}>
-                            <PatternItem key={patterns.Gif.displayName} 
-                                pattern={patterns.Gif} 
-                                addLayer={this.props.addLayer} 
-                                isBrush={false}
-                            />
                             <PatternItem key={patterns.ConcentricCircles.displayName} 
                                 pattern={patterns.ConcentricCircles} 
                                 addLayer={this.props.addLayer} 
@@ -68,6 +63,16 @@ export default class Patterns extends React.Component {
                                 addLayer={this.props.addLayer} 
                                 isBrush={false}
                             />
+                            <PatternItem key={patterns.Map.displayName} 
+                                pattern={patterns.Map} 
+                                addLayer={this.props.addLayer} 
+                                isBrush={false}
+                            />
+                            <PatternItem key={patterns.Radar.displayName} 
+                                pattern={patterns.Radar} 
+                                addLayer={this.props.addLayer} 
+                                isBrush={false}
+                            />
                             <PatternItem key={patterns.ShootingStars.displayName} 
                                 pattern={patterns.ShootingStars} 
                                 addLayer={this.props.addLayer} 
@@ -75,6 +80,11 @@ export default class Patterns extends React.Component {
                             />
                             <PatternItem key={patterns.SineRing.displayName} 
                                 pattern={patterns.SineRing} 
+                                addLayer={this.props.addLayer} 
+                                isBrush={false}
+                            />
+                            <PatternItem key={patterns.Snake.displayName} 
+                                pattern={patterns.Snake} 
                                 addLayer={this.props.addLayer} 
                                 isBrush={false}
                             />

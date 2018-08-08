@@ -1,7 +1,8 @@
 
 import _ from 'lodash';
 import { NUM_LEDS_PER_STRIP } from '../canopy';
-import { pColor, hexStringToRgb, rgbToHexString, modifyBrightness } from '../colors';
+import { RGB } from '../colors';
+import { PCanvas } from '.';
 
 /**
  * Emits pulse rings from center - each ring is a different color, following a gradient color scheme
@@ -9,8 +10,8 @@ import { pColor, hexStringToRgb, rgbToHexString, modifyBrightness } from '../col
 export class GradientPulse {
     // define tuning params
     static menuParams = [
-        {name: "Color1", defaultVal: "#ff0000"},
-        {name: "Color2", defaultVal: "#0000ff"},
+        {name: "Color1", defaultVal: {r: 255, g: 0, b: 0}},
+        {name: "Color2", defaultVal: {r: 0, g: 0, b: 255}},
         {name: "Brightness", defaultVal: 100, min: 0, max: 100}
     ];
     // define display name
@@ -28,16 +29,16 @@ export class GradientPulse {
     update () {
         // any consts dependent on tunable params need to be set here
         // to account for dynamic changes
-        const color1 = hexStringToRgb(this.params.Color1);
-        const color2 = hexStringToRgb(this.params.Color2);
+        const color1 = this.params.Color1;
+        const color2 = this.params.Color2;
 
         // pattern-logic: randomly add new ring is <25 rings total
         const r = Math.floor(Math.random() * 100);
         if (r > 50 && this.beatList.length < 25) {
             const c = {
-                r: pColor.lerp(color1.r, color2.r, this.offset),
-                g: pColor.lerp(color1.g, color2.g, this.offset),
-                b: pColor.lerp(color1.b, color2.b, this.offset)
+                r: PCanvas.lerp(color1.r, color2.r, this.offset),
+                g: PCanvas.lerp(color1.g, color2.g, this.offset),
+                b: PCanvas.lerp(color1.b, color2.b, this.offset)
             };
             this.beatList.push({ pos: 0, c });
             this.offset += 0.05 * this.dir;
@@ -60,7 +61,7 @@ export class GradientPulse {
     render (canopy) {
         this.beatList.forEach((beat) => {
             // apply brightness mod
-            const color = modifyBrightness(this.params.Brightness, rgbToHexString(beat.c));
+            const color = new RGB(beat.c.r, beat.c.g, beat.c.b, this.params.Brightness / 100);
             canopy.strips.forEach((strip) => {
                 strip.updateColor(beat.pos, color);
             });
