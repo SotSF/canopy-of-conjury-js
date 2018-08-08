@@ -1,4 +1,10 @@
 
+export interface EnumType {
+    values () : string[]
+    value (index: number) : string
+    index (value: string) : number
+}
+
 export interface LedInterface {
     r: number,
     b: number,

@@ -1,41 +1,55 @@
 
+import * as _ from 'lodash';
 import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
 import { RGB, BLACK } from '../colors';
-import { pattern, PatternPropType, CanopyInterface } from '../types';
-import { PCanvas } from '.';
+import { pattern, CanopyInterface } from '../types';
+import * as util from '../util';
+import { PatternPropTypes } from './utils';
 
+enum StreetNames {
+    Esplanade,
+    Algorithm,
+    Bender,
+    Cylon,
+    Dewey,
+    Elektro,
+    Fribo,
+    Gort,
+    HAL,
+    'Iron Giant',
+    'Johnny 5',
+    Kinoshita,
+    Leon,
+}
 
 interface MapProps {
-    block: number,
+    letter: number,
     time: number
 }
 
 @pattern()
 export class Map {
+    static displayName = 'Map of BRC';
+
     static propTypes = {
-        block: PatternPropType.Range,
-        time: PatternPropType.Range
+        time: new PatternPropTypes.Range(0, 12, 0.25),
+        letter: new PatternPropTypes.Enum(StreetNames)
     };
 
     static defaultProps () {
         return {
-            block: 7,
+            letter: StreetNames.Gort,
             time: 8.75
         };
     }
 
-    static displayName = 'Map of BRC';
-    
     static getStripIndexForTime (time, canopy) {
-        return Math.round(PCanvas.lerp(canopy.strips.length, 0, time / 12));
+        return Math.round(util.lerp(canopy.strips.length, 0, time / 12));
     };
 
     static getStripIndexForLetter (l, canopy: CanopyInterface) {
         const blockSize = canopy.stripLength / 25;
-
-        return l === 0
-            ? blockSize
-            : Math.round((l + 2) * blockSize);
+        return Math.round((l + 1) * blockSize);
     }
 
     colors = {
@@ -52,12 +66,10 @@ export class Map {
 
     // 8:45 & G
     HOME = [8.75, 7];
-    letter = 7;
-    time = 8.75;
+    props: MapProps = Map.defaultProps();
 
     updateProps (properties: MapProps) {
-        this.letter = properties.block;
-        this.time = properties.time;
+        _.merge(this.props, properties);
     }
 
     progress () {
@@ -65,8 +77,8 @@ export class Map {
     }
 
     render (canopy) {
-        const esplanadeIndex = Math.ceil(canopy.stripLength / 25);
         // esplanade
+        const esplanadeIndex = Math.ceil(canopy.stripLength / 25);
         for (let s = Map.getStripIndexForTime(10, canopy); s <= Map.getStripIndexForTime(2, canopy); s++) {
             canopy.strips[s].updateColor(esplanadeIndex, this.colors.hour);
         }
@@ -115,8 +127,8 @@ export class Map {
 
         // highlight selection
         if (this.blink) {
-            const strip = Map.getStripIndexForTime(this.time, canopy);
-            const led = Map.getStripIndexForLetter(this.letter, canopy);
+            const strip = Map.getStripIndexForTime(this.props.time, canopy);
+            const led = Map.getStripIndexForLetter(this.props.letter, canopy);
             canopy.strips[strip].updateColor(led, this.colors.poi);
             canopy.strips[strip].updateColor(led + 1, this.colors.poi);
         }

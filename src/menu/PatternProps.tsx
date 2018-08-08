@@ -1,7 +1,7 @@
 
 import * as React from 'react';
-import { ColorPicker, Slider } from './components';
-import { PatternPropType } from '../types';
+import { PatternPropTypes } from '../patterns/utils';
+import { ColorPicker, EnumeratedList, Slider } from './components';
 
 
 interface PatternPropsProps {
@@ -23,27 +23,36 @@ export default class PatternProps extends React.Component<PatternPropsProps> {
         const components = [];
 
         Object.entries(propTypes).forEach(([prop, type]) => {
-            switch (type) {
-                case PatternPropType.Color:
-                    components.push(
-                        <ColorPicker
-                          color={values[prop]}
-                          key={prop}
-                          onChange={(color) => this.updateProp(prop, color)}
-                        />
-                    );
-                    break;
-                case PatternPropType.Range:
-                    components.push(
-                        <Slider
-                          key={prop}
-                          onChange={value => this.updateProp(prop, value)}
-                          min={1}
-                          max={10}
-                          step={1}
-                          value={values[prop]}
-                        />
-                    )
+            if (type instanceof PatternPropTypes.Color) {
+                components.push(
+                    <ColorPicker
+                      color={values[prop]}
+                      key={prop}
+                      onChange={(color) => this.updateProp(prop, color)}
+                    />
+                );
+            } else if (type instanceof PatternPropTypes.Enum) {
+                components.push(
+                    <EnumeratedList
+                      key={prop}
+                      enumeration={type}
+                      onChange={value => this.updateProp(prop, value)}
+                      value={values[prop]}
+                    />
+                );
+            } else if (type instanceof PatternPropTypes.Range) {
+                const { min, max, step } = type;
+                components.push(
+                    <Slider
+                      key={prop}
+                      label={prop}
+                      onChange={value => this.updateProp(prop, value)}
+                      min={min}
+                      max={max}
+                      step={step}
+                      value={values[prop]}
+                    />
+                );
             }
         });
 
