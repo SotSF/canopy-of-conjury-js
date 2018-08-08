@@ -2,7 +2,8 @@
 import * as _ from 'lodash';
 import { NUM_LEDS_PER_STRIP } from '../canopy';
 import { Color, RGB } from '../colors';
-import { pattern, PatternPropType } from '../types';
+import { pattern } from '../types';
+import { PatternPropTypes } from './utils';
 
 
 interface ConcentricCirclesProps {
@@ -15,25 +16,23 @@ interface ConcentricCirclesProps {
  */
 @pattern()
 export class ConcentricCircles {
-    circles = [];
-    iteration = 0;
-
-    props = {
-        color: null,
-        period: null
-    };
+    static displayName = 'Concentric Circles';
 
     static propTypes = {
-        color: PatternPropType.Color,
-        period: PatternPropType.Range
+        color: new PatternPropTypes.Color(),
+        period: new PatternPropTypes.Range(0, 30)
     };
 
-    static defaultProps () {
+    static defaultProps () : ConcentricCirclesProps {
         return {
             color: RGB.random(),
             period: 5
         };
     }
+
+    props = ConcentricCircles.defaultProps();
+    circles = [];
+    iteration = 0;
 
     updateProps (properties: ConcentricCirclesProps) {
         this.props = properties;
