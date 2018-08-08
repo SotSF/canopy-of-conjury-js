@@ -225,33 +225,3 @@ class LedStrip implements StripInterface {
         _.range(this.leds.length).forEach(i => this.updateColor(i, newColor));
     }
 }
-
-const _mapToCanopy = (x, y) => {
-    let theta = 0;
-    if (x === 0) {
-        if (y > 0) theta = Math.PI / 2;
-        if (y < 0) theta = -Math.PI / 2;
-        if (y === 0) theta = 0;
-    } else {
-        theta = Math.atan2(y,x);
-    }
-
-    let thetaDegrees = theta * 180 / Math.PI;
-    if (thetaDegrees < 0) {
-        thetaDegrees += 360;
-    }
-
-    const radius = Math.sqrt(x * x + y * y) * 3;
-    return {
-        strip: Math.round(thetaDegrees * NUM_STRIPS / 360),
-        led: Math.round(radius / 1.5)
-    };
-};
-
-(() => {
-    for (let x = -PCanvas.dimension / 2; x <= PCanvas.dimension / 2; x++) {
-        for (let y = -PCanvas.dimension / 2; y <= PCanvas.dimension / 2; y++) {
-            PCanvas.mapMemo[x + "-" + y] = _mapToCanopy(x, y);
-        }
-    }
-})();
