@@ -5,6 +5,7 @@ import { RGB, BLACK } from '../colors';
 import { pattern, CanopyInterface } from '../types';
 import * as util from '../util';
 import { PatternPropTypes } from './utils';
+import BasePattern from './BasePattern';
 
 enum StreetNames {
     Esplanade,
@@ -28,7 +29,7 @@ interface MapProps {
 }
 
 @pattern()
-export class Map {
+export class Map extends BasePattern {
     static displayName = 'Map of BRC';
 
     static propTypes = {
@@ -66,13 +67,13 @@ export class Map {
 
     // 8:45 & G
     HOME = [8.75, 7];
-    props: MapProps = Map.defaultProps();
 
     updateProps (properties: MapProps) {
         _.merge(this.props, properties);
     }
 
     progress () {
+        super.progress();
         this.blink = !this.blink;
     }
 

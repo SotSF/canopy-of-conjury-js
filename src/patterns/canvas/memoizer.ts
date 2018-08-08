@@ -7,7 +7,7 @@ class MemoizedMap implements IMemoizedMap {
     map = {};
 
     constructor (canvasSize: number, canopy: CanopyInterface) {
-        this._memoize(canvasSize, canopy);
+        this.memoize(canvasSize, canopy);
     }
 
     /**
@@ -18,7 +18,7 @@ class MemoizedMap implements IMemoizedMap {
         return this.map[`${x}.${y}`];
     }
 
-    _memoize (canvasSize: number, canopy: CanopyInterface) {
+    private memoize (canvasSize: number, canopy: CanopyInterface) {
         const numStrips = canopy.strips.length;
 
         // Maps a single pixel in the canvas to the strip and LED in the canopy

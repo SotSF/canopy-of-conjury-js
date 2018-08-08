@@ -70,20 +70,21 @@ class Menu extends React.Component {
         else {
             this.setActiveLayer(this.state.layers.indexOf(drawLayer));
         }
-    }
+    };
 
     addLayer = (pattern, params) => {
-        const newLayers = [{ 
-                key: this.currentId, 
-                pattern: new pattern(Object.assign({}, params)), 
-                name: pattern.displayName, 
-                menuParams: pattern.menuParams 
-            }, 
-            ...this.state.layers];
+        const newLayers = [{
+            key: this.currentId,
+            pattern: new pattern(Object.assign({}, params)),
+            name: pattern.displayName,
+            menuParams: pattern.menuParams
+        }, ...this.state.layers];
+
         this.currentId++;
-        this.setState({layers: newLayers}, 
-            () => { this.setActiveLayer(0); this.props.updateLayers(newLayers)});
-        
+        this.setState({ layers: newLayers }, () => {
+            this.setActiveLayer(0);
+            this.props.updateLayers(newLayers)
+        });
     };
 
     removeLayer = (i) => {

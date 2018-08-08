@@ -67,10 +67,11 @@ class PatternOption extends React.Component {
     };
 
     handleClick = event => {
+        const patternProps = this.props.pattern.defaultProps();
         this.setState({
             anchorEl: event.currentTarget,
-            patternInstance: new this.props.pattern(),
-            patternProps: this.props.pattern.defaultProps()
+            patternInstance: new this.props.pattern(patternProps),
+            patternProps
         });
     };
 

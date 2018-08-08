@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import { RGB, Color } from '../colors';
 import { pattern } from '../types';
 import { PCanvas } from './canvas';
+import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 
 
@@ -18,7 +19,8 @@ interface FireFliesPropTypes {
 
 
 @pattern()
-export class Fireflies {
+export class Fireflies extends BasePattern {
+    static displayName = 'Fireflies';
     static propTypes = {
         brightness: new PatternPropTypes.Range(0, 100),
         color     : new PatternPropTypes.Color(),
@@ -40,19 +42,15 @@ export class Fireflies {
             brightness: 100
         };
     }
-    
-    static displayName = 'Fireflies';
 
-    props: FireFliesPropTypes = Fireflies.defaultProps();
     fireflies = [];
-
-    r = 1;
     canvas = null;
 
-    constructor () {
+    constructor (props) {
+        super(props);
+
         this.canvas = new PCanvas();
 
-        this.r = 1;
         for (let i = 0; i <= 10; i++) {
             this.addFirefly()
         }
@@ -63,13 +61,14 @@ export class Fireflies {
     }
 
     progress () {
-        const { processing } = this.canvas;
+        super.progress();
 
+        const { processing } = this.canvas;
         processing.pg.beginDraw();
         processing.pg.background(0);
         processing.pg.pushMatrix();
         processing.pg.translate(PCanvas.dimension / 2, PCanvas.dimension / 2);
-        processing.pg.rotate(processing.radians(this.r * this.props.rotation));
+        processing.pg.rotate(processing.radians(this.iteration * this.props.rotation));
 
         this.fireflies.forEach((firefly) => {
             this.renderFirefly(firefly);
@@ -79,7 +78,6 @@ export class Fireflies {
         processing.pg.popMatrix();
         processing.pg.endDraw();
 
-        this.r++;
         if (this.fireflies.length < this.props.quantity) {
             this.addFirefly();
         } else if (this.fireflies.length > this.props.quantity) {
@@ -87,11 +85,11 @@ export class Fireflies {
         }
     }
 
-    render(canopy) {
+    render (canopy) {
       this.canvas.render(canopy);
     }
 
-    addFirefly() {
+    addFirefly () {
         const size = this.props.size + Math.random() * 5 - 5;
         const x = Math.random() * PCanvas.dimension;
         const y = Math.random() * PCanvas.dimension;
@@ -111,7 +109,7 @@ export class Fireflies {
         });
     }
 
-    renderFirefly(firefly) {
+    renderFirefly (firefly) {
         const { processing } = this.canvas;
 
         processing.pg.pushMatrix();

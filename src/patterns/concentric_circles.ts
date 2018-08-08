@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import { NUM_LEDS_PER_STRIP } from '../canopy';
 import { Color, RGB } from '../colors';
 import { pattern } from '../types';
+import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 
 
@@ -15,7 +16,7 @@ interface ConcentricCirclesProps {
  * Emits pulse rings from center - each ring is a different color, following a gradient color scheme
  */
 @pattern()
-export class ConcentricCircles {
+export class ConcentricCircles extends BasePattern {
     static displayName = 'Concentric Circles';
 
     static propTypes = {
@@ -30,16 +31,16 @@ export class ConcentricCircles {
         };
     }
 
-    props = ConcentricCircles.defaultProps();
     circles = [];
-    iteration = 0;
 
     updateProps (properties: ConcentricCirclesProps) {
         this.props = properties;
     }
 
     progress () {
-        if (this.iteration++ % this.props.period === 0) {
+        super.progress();
+
+        if (this.iteration % this.props.period === 0) {
             this.circles.push({ pos: 0, color: this.props.color });
         }
 

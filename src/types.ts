@@ -22,11 +22,6 @@ export interface CanopyInterface {
     stripLength: number
 }
 
-export enum PatternPropType {
-    Color,
-    Range
-}
-
 export interface PatternInstance {
     progress () : void,
     updateProps (o: object) : void,
@@ -35,7 +30,7 @@ export interface PatternInstance {
 
 /** Crazy trickery... see https://stackoverflow.com/questions/13955157/how-to-define-static-property-in-typescript-interface */
 export interface PatternInterface {
-    new(): PatternInstance,
+    new(o?: any): PatternInstance,
     propTypes: object,
     defaultProps (): object
 }
