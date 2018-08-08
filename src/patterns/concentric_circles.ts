@@ -18,6 +18,11 @@ export class ConcentricCircles {
     circles = [];
     iteration = 0;
 
+    props = {
+        color: null,
+        period: null
+    };
+
     static propTypes = {
         color: PatternPropType.Color,
         period: PatternPropType.Range
@@ -30,9 +35,13 @@ export class ConcentricCircles {
         };
     }
 
-    update (properties: ConcentricCirclesProps) {
-        if (this.iteration++ % properties.period === 0) {
-            this.circles.push({ pos: 0, color: properties.color });
+    updateProps (properties: ConcentricCirclesProps) {
+        this.props = properties;
+    }
+
+    progress () {
+        if (this.iteration++ % this.props.period === 0) {
+            this.circles.push({ pos: 0, color: this.props.color });
         }
 
         // go through every position in beatList, and light up the corresponding LED in all strips

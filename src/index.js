@@ -53,7 +53,7 @@ function animate() {
         controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
         canopy.clear();
         for (let layer of Array.from(layers).reverse()) {
-            layer.pattern.update();
+            layer.pattern.progress();
             layer.pattern.render(canopy);
         }
         renderer.render(scene, camera);

@@ -84,14 +84,14 @@ export default class CanopySvg extends React.Component<CanopySvgProps, CanopySvg
     }
 
     updatePattern = () => {
-        const { pattern, patternProps } = this.props;
+        const { pattern } = this.props;
 
         // If the component no longer has a pattern (e.g. if it is in the process of unmounting)
         // then do not attempt to update or render
         if (!pattern) return;
 
         const canopy = this.makeCanopy();
-        pattern.update(patternProps);
+        pattern.progress();
         pattern.render(canopy);
 
         this.setState({ canopy });

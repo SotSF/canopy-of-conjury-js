@@ -21,10 +21,15 @@ class Catenary {
     update () {
         const apexCoord = { x: this.canopy.apexRadius, y: this.canopy.apexHeight };
         const baseCoord = { x: this.canopy.baseRadius, y: 0 };
+
+        const feetPerMeter = 3.28084;
+        const stripLengthMeters = 2.5;
+        const stripLength = stripLengthMeters * feetPerMeter;
+
         const newCoords = compute(
             baseCoord,
             apexCoord,
-            this.canopy.stripLength,
+            stripLength,
             this.canopy.numLedsPerStrip
         );
 

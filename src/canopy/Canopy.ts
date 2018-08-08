@@ -13,6 +13,10 @@ class Strip implements StripInterface {
         }));
     }
 
+    get length () {
+        return this.leds.length;
+    }
+
     updateColor (index, color) {
         this.leds[index] = color;
     }
@@ -23,5 +27,9 @@ export default class Canopy implements CanopyInterface {
 
     constructor (numStrips, numLedsPerStrip) {
         this.strips = _.range(numStrips).map(() => new Strip(numLedsPerStrip));
+    }
+
+    get stripLength () {
+        return this.strips[0].length;
     }
 }

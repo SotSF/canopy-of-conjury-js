@@ -8,11 +8,8 @@ import Catenary from './catenary';
 import { NUM_STRIPS, NUM_LEDS_PER_STRIP} from './constants';
 
 // Constants. Length units are in feet unless otherwise specified
-const FEET_PER_METER = 3.28084;
 const BASE_RADIUS = 8;
 const APEX_RADIUS = 0.5;
-const STRIP_LENGTH_METERS = 2.5;
-const STRIP_LENGTH = STRIP_LENGTH_METERS * FEET_PER_METER;
 
 /**
  * Contains much of the state of the physical canopy, including the height of the apex, the catenary
@@ -24,7 +21,6 @@ export default class CanopyThreeJs implements CanopyInterface {
     baseRadius = BASE_RADIUS;
     numLedsPerStrip = NUM_LEDS_PER_STRIP;
     numStrips = NUM_STRIPS;
-    stripLength = STRIP_LENGTH;
     ledParticles = [];
     ledHitBoxes = []; // hit boxes for click interaction
 
@@ -33,6 +29,10 @@ export default class CanopyThreeJs implements CanopyInterface {
     base = null;
     catenary = null;
     strips = null;
+
+    get stripLength () {
+        return this.strips[0].length;
+    }
 
     /**
      * Initializes the components of the canopy. This includes
@@ -160,6 +160,10 @@ class LedStrip implements StripInterface {
         // Rotate the group according to the offset
         group.rotateZ(offset);
         this.group = group;
+    }
+
+    get length () {
+        return this.leds.length;
     }
 
     _initializeString () {

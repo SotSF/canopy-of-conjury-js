@@ -6,12 +6,14 @@ export interface LedInterface {
 }
 
 export interface StripInterface {
-    leds: LedInterface[]
+    leds: LedInterface[],
+    length: number,
     updateColor (position: number, color: string): void
 }
 
 export interface CanopyInterface {
     strips: StripInterface[]
+    stripLength: number
 }
 
 export enum PatternPropType {
@@ -20,7 +22,8 @@ export enum PatternPropType {
 }
 
 export interface PatternInstance {
-    update (o?: object) : void,
+    progress () : void,
+    updateProps (o: object) : void,
     render (canopy: CanopyInterface) : void
 }
 
