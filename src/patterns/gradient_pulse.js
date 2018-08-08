@@ -2,7 +2,7 @@
 import _ from 'lodash';
 import { NUM_LEDS_PER_STRIP } from '../canopy';
 import { RGB } from '../colors';
-import { PCanvas } from '.';
+import * as util from '../util';
 
 /**
  * Emits pulse rings from center - each ring is a different color, following a gradient color scheme
@@ -36,9 +36,9 @@ export class GradientPulse {
         // pattern-logic: randomly add new ring is <25 rings total
         if (Math.random() > 0.5 && this.beatList.length < 25) {
             const c = {
-                r: PCanvas.lerp(color1.r, color2.r, this.offset),
-                g: PCanvas.lerp(color1.g, color2.g, this.offset),
-                b: PCanvas.lerp(color1.b, color2.b, this.offset)
+                r: util.lerp(color1.r, color2.r, this.offset),
+                g: util.lerp(color1.g, color2.g, this.offset),
+                b: util.lerp(color1.b, color2.b, this.offset)
             };
 
             this.beatList.push({ pos: 0, c });

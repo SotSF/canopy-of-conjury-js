@@ -1,5 +1,7 @@
+
 import { NUM_STRIPS } from '../canopy';
 import { RGB, alphaMap } from '../colors';
+import * as util from '../util';
 import { PCanvas } from '.';
 
 /**
@@ -41,7 +43,7 @@ export class AlphaTest {
         processing.pg.beginDraw();
         processing.pg.background(0);
         for (let x = 0; x < PCanvas.dimension; x++) {
-            const alpha = PCanvas.lerp(255,0,x / PCanvas.dimension);
+            const alpha = util.lerp(255,0,x / PCanvas.dimension);
             const c = PCanvas.color(255,0,0,alpha);
             processing.pg.stroke(c);
             processing.pg.line(x,0,x,PCanvas.dimension);

@@ -4,6 +4,7 @@ import * as _ from 'lodash';
 import { BLACK } from '../colors';
 import { PCanvas } from '../patterns';
 import { CanopyInterface, StripInterface } from '../types';
+import * as util from '../util';
 import Catenary from './catenary';
 import { NUM_STRIPS, NUM_LEDS_PER_STRIP} from './constants';
 
@@ -204,9 +205,9 @@ class LedStrip implements StripInterface {
     updateColor (i, newColor) {
         const { color } = this.particleSystem.geometry.attributes;
         this.colors[i] = { 
-            r: PCanvas.lerp(color.array[i*3] * 255, newColor.r, newColor.a),
-            g: PCanvas.lerp(color.array[i*3 + 1] * 255, newColor.g, newColor.a),
-            b: PCanvas.lerp(color.array[i*3 + 2] * 255, newColor.b, newColor.a)
+            r: util.lerp(color.array[i*3] * 255, newColor.r, newColor.a),
+            g: util.lerp(color.array[i*3 + 1] * 255, newColor.g, newColor.a),
+            b: util.lerp(color.array[i*3 + 2] * 255, newColor.b, newColor.a)
         };
 
         // expects a float between 0.0 and 1.0
