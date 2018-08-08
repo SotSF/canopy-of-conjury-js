@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "webpack": "webpack --watch",
+    "webpack": "./build_config.js; webpack --watch",
     "serve": "python -m SimpleHTTPServer",
     "start": "node ./bin/www",
     "devstart": "nodemon ./bin/www"
@@ -33,7 +33,8 @@
     "react-color": "^2.14.1",
     "react-dom": "^16.4.1",
     "request": "^2.87.0",
-    "serve-favicon": "^2.5.0"
+    "serve-favicon": "^2.5.0",
+    "superagent": "^3.8.3"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
