@@ -18,10 +18,13 @@ export class SwirlyZig {
         this.timer = 0;
     }
 
-    update() {
-        this.swirly.update();
+    progress () {
+        this.swirly.progress();
 
-        if (this.timer % this.params.Velocity == 0) { this.swirly.params.RotateClockwise = !this.swirly.params.RotateClockwise; } 
+        if (this.timer % this.params.Velocity === 0) {
+            this.swirly.params.RotateClockwise = !this.swirly.params.RotateClockwise;
+        }
+
         this.timer++;
     }
 

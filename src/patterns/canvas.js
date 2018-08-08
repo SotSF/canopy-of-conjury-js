@@ -46,14 +46,16 @@ export class PCanvas {
             Brightness: 100
         }
     }
-    update() {
+
+    progress() {
         this.processing.pg.background(0);
         for (let i = this.brushes.length - 1; i >= 0; i--) {
             this.brushes[i].render(this.processing);
             this.brushes[i].timer += 1;
             if (this.brushes[i].timer >= this.brushLife) { this.brushes.splice(i, 1); }
         }
-    };
+    }
+
     render(canopy) { 
         this._renderProcessing(canopy, this.processing);
     }

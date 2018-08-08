@@ -9,6 +9,9 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -17,12 +20,11 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import { CanopySvg } from '../canopy';
 import * as patterns from '../patterns';
-import { ConcentricCircles } from '../patterns';
 import { PatternItem } from './components/PatternItem';
 import PatternProps from './PatternProps';
 
 
-const concentricCirclesStyles = {
+const patternOptionStyles = {
     canopy: {
         marginLeft: '0.2rem',
     },
@@ -51,15 +53,15 @@ const concentricCirclesStyles = {
     },
 };
 
-@withStyles(concentricCirclesStyles)
-class ConcentricCirclesPattern extends React.Component {
+@withStyles(patternOptionStyles)
+class PatternOption extends React.Component {
     static propTypes = {
-        addPattern: PropTypes.func.isRequired
+        addPattern: PropTypes.func.isRequired,
+        pattern: PropTypes.func.isRequired
     };
     
     state = {
         anchorEl: null,
-        pattern: null,
         patternInstance: null,
         patternProps: null
     };
@@ -67,32 +69,31 @@ class ConcentricCirclesPattern extends React.Component {
     handleClick = event => {
         this.setState({
             anchorEl: event.currentTarget,
-            pattern: ConcentricCircles,
-            patternInstance: new ConcentricCircles(),
-            patternProps: ConcentricCircles.defaultProps()
+            patternInstance: new this.props.pattern(),
+            patternProps: this.props.pattern.defaultProps()
         });
     };
 
     handleClose = () => {
         this.setState({
             anchorEl: null,
-            pattern: null,
             patternInstance: null,
             patternProps: null
         });
     };
 
-    addPattern = () => {
-        this.props.addPattern();
+    addPattern = () => this.props.addPattern(this.props.pattern, this.state.patternProps);
+
+    updateProps = (patternProps) => {
+        this.setState({ patternProps });
+        this.state.patternInstance.updateProps(patternProps);
     };
 
-    updateProps = (patternProps) => this.setState({ patternProps });
-
     renderPattern () {
-        const { classes } = this.props;
-        const { pattern, patternInstance, patternProps } = this.state;
+        const { classes, pattern } = this.props;
+        const { patternInstance, patternProps } = this.state;
 
-        if (!pattern) return null;
+        if (!patternInstance) return null;
 
         return (
             <div className={classes.patternWrapper}>
@@ -122,13 +123,13 @@ class ConcentricCirclesPattern extends React.Component {
     }
 
     render () {
-        const { classes } = this.props;
+        const { classes, pattern } = this.props;
         const { anchorEl } = this.state;
 
         return (
             <ListItem key={name} button>
                 <ListItemText
-                  primary="Concentric Circles"
+                  primary={pattern.displayName}
                   onClick={this.handleClick}
                 />
                 <Popover
@@ -181,63 +182,53 @@ export default class Patterns extends React.Component {
                     <Typography className={classes.heading}>Patterns</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails classes={{
-                        root: classes.panelDetails
+                    root: classes.panelDetails
+                }}>
+                    <List dense disablePadding classes={{
+                        root: classes.list
                     }}>
-                        <List dense disablePadding classes={{
-                            root: classes.list
-                        }}>
-                            <PatternItem key={patterns.ConcentricCircles.displayName}
-                                pattern={patterns.ConcentricCircles} 
-                                addLayer={this.props.addLayer} 
-                                isBrush={false}
-                            />
-                            <PatternItem key={patterns.GradientPulse.displayName} 
-                                pattern={patterns.GradientPulse} 
-                                addLayer={this.props.addLayer} 
-                                isBrush={false}
-                            />
-                            <PatternItem key={patterns.Fireflies.displayName} 
-                                pattern={patterns.Fireflies} 
-                                addLayer={this.props.addLayer} 
-                                isBrush={false}
-                            />
-                            <PatternItem key={patterns.Map.displayName} 
-                                pattern={patterns.Map} 
-                                addLayer={this.props.addLayer} 
-                                isBrush={false}
-                            />
-                            <PatternItem key={patterns.Radar.displayName} 
-                                pattern={patterns.Radar} 
-                                addLayer={this.props.addLayer} 
-                                isBrush={false}
-                            />
-                            <PatternItem key={patterns.ShootingStars.displayName} 
-                                pattern={patterns.ShootingStars} 
-                                addLayer={this.props.addLayer} 
-                                isBrush={false}
-                            />
-                            <PatternItem key={patterns.SineRing.displayName} 
-                                pattern={patterns.SineRing} 
-                                addLayer={this.props.addLayer} 
-                                isBrush={false}
-                            />
-                            <PatternItem key={patterns.Snake.displayName} 
-                                pattern={patterns.Snake} 
-                                addLayer={this.props.addLayer} 
-                                isBrush={false}
-                            />
-                            <PatternItem key={patterns.Swirly.displayName} 
-                                pattern={patterns.Swirly} 
-                                addLayer={this.props.addLayer} 
-                                isBrush={false}
-                            />
-                            <PatternItem key={patterns.SwirlyZig.displayName} 
-                                pattern={patterns.SwirlyZig} 
-                                addLayer={this.props.addLayer} 
-                                isBrush={false}
-                            />
-                        </List>
-                    </ExpansionPanelDetails>
+                        <PatternOption
+                          pattern={patterns.ConcentricCircles}
+                          addPattern={this.props.addLayer}
+                        />
+                        <PatternOption
+                          pattern={patterns.GradientPulse}
+                          addPattern={this.props.addLayer}
+                        />
+                        <PatternOption
+                          pattern={patterns.Fireflies}
+                          addPattern={this.props.addLayer}
+                        />
+                        <PatternOption
+                          pattern={patterns.Map}
+                          addPattern={this.props.addLayer}
+                        />
+                        <PatternOption
+                          pattern={patterns.Radar}
+                          addPattern={this.props.addLayer}
+                        />
+                        <PatternOption
+                          pattern={patterns.ShootingStars}
+                          addPattern={this.props.addLayer}
+                        />
+                        <PatternOption
+                          pattern={patterns.SineRing}
+                          addPattern={this.props.addLayer}
+                        />
+                        <PatternOption
+                          pattern={patterns.Snake}
+                          addPattern={this.props.addLayer}
+                        />
+                        <PatternOption
+                          pattern={patterns.Swirly}
+                          addPattern={this.props.addLayer}
+                        />
+                        <PatternOption
+                          pattern={patterns.SwirlyZig}
+                          addPattern={this.props.addLayer}
+                        />
+                    </List>
+                </ExpansionPanelDetails>
             </ExpansionPanel>
         );
     }

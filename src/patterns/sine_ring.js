@@ -25,7 +25,8 @@ export class SineRing {
         this.dir = 1;
         this.r = 1;
     }
-    update() {
+
+    progress () {
         const { processing } = this.canvas;
         const radius = this.params.Radius + 20;
         let angle = 0;

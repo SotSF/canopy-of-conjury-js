@@ -40,7 +40,8 @@ export class Swirly {
             });
         }
     }
-    update() {
+
+    progress() {
         /*
             any properties dependent on this.params should be set here
             manipulate the pattern, update properties

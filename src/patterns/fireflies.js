@@ -25,7 +25,7 @@ export class Fireflies {
         }
     }
 
-    update() {
+    progress () {
         const { processing } = this.canvas;
         processing.pg.beginDraw();
         processing.pg.background(0);

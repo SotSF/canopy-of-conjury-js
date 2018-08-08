@@ -17,7 +17,7 @@ export class TestLEDs {
         new RGB(150,150,255),
         new RGB(255,150,150)
     ];
-    update() {}
+    progress() {}
     render(canopy) {
         var c = 0;
         for (let s = 0; s < NUM_STRIPS; s++) {
@@ -36,7 +36,7 @@ export class AlphaTest {
         this.canvas = new PCanvas();
     }
 
-    update() {
+    progress() {
         const { processing } = this.canvas;
         processing.pg.beginDraw();
         processing.pg.background(0);

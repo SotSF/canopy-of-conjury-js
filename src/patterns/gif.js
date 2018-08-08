@@ -39,7 +39,8 @@ export class Gif {
         processing.pg.updatePixels();
         
     }
-    update() {
+
+    progress () {
         if (this.frames.length == 0) return;
         const { processing } = this.canvas;
         processing.pg.beginDraw();
@@ -51,6 +52,7 @@ export class Gif {
         this.index++;
         if (this.index == this.frames.length) { this.index = 0; }
     }
+
     render(canopy) {
         this.canvas.render(canopy);
     }

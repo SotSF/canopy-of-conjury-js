@@ -27,7 +27,7 @@ export class GradientPulse {
         this.dir = 1;
     }
 
-    update () {
+    progress () {
         // any consts dependent on tunable params need to be set here
         // to account for dynamic changes
         const color1 = this.params.Color1;

@@ -17,7 +17,7 @@ export class Snake {
         this.hueOffset = -1;
     }
 
-    update() {
+    progress () {
         var lastPoint = [this.snake[0][0],this.snake[0][1]];
         if (this.tail.length > 0 && this.snake.length < this.params.MaxLength) {
             this.snake.push([this.tail[0][0], this.tail[0][1]]);

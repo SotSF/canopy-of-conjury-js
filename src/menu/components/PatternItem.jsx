@@ -8,17 +8,12 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions'
 import CardContent from '@material-ui/core/CardContent';
 import Checkbox from '@material-ui/core/Checkbox';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import { Gif } from '../../patterns';
 import Slider from '@material-ui/lab/Slider';
@@ -36,6 +31,14 @@ const patternMenustyles = {
 
 @withStyles(patternMenustyles)
 export class PatternItem extends React.Component {
+    static propTypes = {
+        isBrush: PropTypes.bool
+    };
+
+    static defaultProps = {
+        isBrush: false
+    };
+
     state = {
         anchorEl: null,
         params: {}

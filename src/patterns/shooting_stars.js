@@ -18,7 +18,8 @@ export class ShootingStars {
             this.stars.push([parseInt(Math.random() * NUM_STRIPS), this.params.FromApex ? 0 : NUM_LEDS_PER_STRIP - 1]);
         }
     }
-    update() {
+
+    progress () {
         let i = parseInt(Math.random() * 10);
         for(;i>=0;i--) {
             this.stars.push([parseInt(Math.random() * NUM_STRIPS), this.params.FromApex ? 0 : NUM_LEDS_PER_STRIP - 1]);
@@ -29,6 +30,7 @@ export class ShootingStars {
             if (star[1] >= NUM_LEDS_PER_STRIP || star[1] < 0) { this.stars = _.without(this.stars, star); }
         });
     }
+
     render(canopy) {
         const color = new RGB(this.params.Color.r, this.params.Color.g, this.params.Color.b, this.params.Brightness / 100);
         this.stars.forEach(star => {

@@ -23,7 +23,7 @@ export class Radar {
         this.length = 20;
     }
 
-    update () {
+    progress () {
         this.head += this.params.Clockwise ? -this.params.Velocity : this.params.Velocity;
         if (this.head > NUM_STRIPS - 1) this.head = 0;
         if (this.head < 0) this.head = NUM_STRIPS - 1;
