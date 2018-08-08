@@ -1,15 +1,16 @@
 
 import { Color } from './types';
-import {hsvToRgb, rgbToHex, rgbToHexString} from './util';
-
+import { hsvToRgb, rgbToHex, rgbToHexString, rgbToHsv } from './util';
 
 export * from './types';
 export * from './util';
+
 
 export class RGB implements Color {
     r = null;
     g = null;
     b = null;
+    a = null;
 
     static random () {
         return new RGB(
@@ -19,14 +20,19 @@ export class RGB implements Color {
         );
     }
 
-    constructor (r, g, b) {
+    constructor (r, g, b, a = 1) {
         this.r = r;
         this.g = g;
         this.b = b;
+        this.a = a;
     }
 
     toRgb () {
         return this;
+    }
+
+    toHSV () {
+        return rgbToHsv(this);
     }
 
     /**
@@ -72,3 +78,5 @@ export class HSV implements Color {
         return rgbToHexString(this.toRgb());
     }
 }
+
+export const BLACK = new RGB(0, 0, 0);

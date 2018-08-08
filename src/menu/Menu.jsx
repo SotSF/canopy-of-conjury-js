@@ -20,6 +20,7 @@ import theme from '../theme';
 import ActiveLayers from './ActiveLayers';
 import Brushes from './Brushes';
 import Patterns from './Patterns';
+import Filters from './Filters';
 import RenderSelection from './RenderSelection';
 
 
@@ -46,12 +47,9 @@ const styles = theme => ({
 @withStyles(styles)
 class Menu extends React.Component {
     static presets = [
-        { pattern: patterns.TestLEDs, name: 'Test LEDs' },
-        { pattern: patterns.TestCanvas, name: 'Test Canvas' },
-        { pattern: patterns.GradientPulse, name: 'Gradient Pulse' },
-        { pattern: patterns.PCanvas, name: 'Draw Canvas'}
+        { pattern: patterns.TestLEDs, name: 'Test LEDs' }
     ];
-
+    currentId = 0;
     state = {
         layers: [],
         activeLayer: {},
@@ -64,39 +62,53 @@ class Menu extends React.Component {
         this.props.updateLayers([]);
     };
 
-    addLayer = (pattern, name) => {
-        const newLayers = [{ pattern: new pattern(), name }, ...this.state.layers];
-        this.setState({ layers: newLayers });
-        this.props.updateLayers(newLayers);
+    activateBrush = (name) => {
+        this.setState({ activeBrush: name });
+        this.props.setBrush(name)
+        var drawLayer = this.state.layers.find((layer) => {return layer.pattern instanceof patterns.PCanvas});
+        if (drawLayer == null) {
+            this.addLayer(patterns.PCanvas, "Draw Canvas");
+        }
+        else {
+            this.setActiveLayer(this.state.layers.indexOf(drawLayer));
+        }
+    }
+
+    addLayer = (pattern, params) => {
+        const newLayers = [{ 
+                key: this.currentId, 
+                pattern: new pattern(Object.assign({}, params)), 
+                name: pattern.displayName, 
+                menuParams: pattern.menuParams 
+            }, 
+            ...this.state.layers];
+        this.currentId++;
+        this.setState({layers: newLayers}, 
+            () => { this.setActiveLayer(0); this.props.updateLayers(newLayers)});
+        
     };
 
     removeLayer = (i) => {
         const newLayers = [...this.state.layers];
         newLayers.splice(i, 1);
-
-        this.setState({ layers: newLayers });
-        this.props.updateLayers(newLayers);
+        this.setState({ layers: newLayers }, () =>  this.props.updateLayers(newLayers));
     };
 
     moveLayerUp = (i) => {
         const newLayers = [...this.state.layers];
         [newLayers[i], newLayers[i - 1]] = [newLayers[i - 1], newLayers[i]];
-
-        this.setState({ layers: newLayers });
-        this.props.updateLayers(newLayers);
+        this.setState({ layers: newLayers }, () =>  this.props.updateLayers(newLayers));
     };
 
     moveLayerDown = (i) => {
         const newLayers = [...this.state.layers];
         [newLayers[i], newLayers[i + 1]] = [newLayers[i + 1], newLayers[i]];
-
-        this.setState({ layers: newLayers });
-        this.props.updateLayers(newLayers);
+        this.setState({ layers: newLayers }, () =>  this.props.updateLayers(newLayers));
     };
 
     setActiveLayer = (i) => {
-        this.setState({ activeLayer: this.state.layers[i] });
-        this.props.setActiveLayer(i);
+        this.setState({ activeLayer: this.state.layers[i] }, () => this.props.setActiveLayer(i));
+        
     };
 
     getActiveLayer = () => this.state.layers.indexOf(this.state.activeLayer);
@@ -138,15 +150,8 @@ class Menu extends React.Component {
                         </ExpansionPanelDetails>
                     </ExpansionPanel>
 
-                    <Brushes
-                      activateBrush={(name) => {
-                          this.setState({ activeBrush: name });
-                          this.props.setBrush(name)
-                      }}
-                    />
-
                     <Patterns addLayer={this.addLayer} />
-
+                    
                     <ActiveLayers
                       layers={this.state.layers}
                       moveLayerUp={this.moveLayerUp}
@@ -154,6 +159,7 @@ class Menu extends React.Component {
                       removeLayer={this.removeLayer}
                       setLayer={this.setActiveLayer}
                       activeLayer={this.getActiveLayer()}
+                      updatePattern={this.props.updatePattern}
                     />
 
                     <RenderSelection />

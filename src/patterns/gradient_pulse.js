@@ -1,21 +1,55 @@
 
 import _ from 'lodash';
 import { NUM_LEDS_PER_STRIP } from '../canopy';
-import { HSV } from '../colors';
-
+import { RGB } from '../colors';
+import { PCanvas } from '.';
 
 /**
  * Emits pulse rings from center - each ring is a different color, following a gradient color scheme
  */
 export class GradientPulse {
-    beatList = [];
-    currHue = 0;
+    // define tuning params
+    static menuParams = [
+        { name: "Color1", defaultVal: {r: 255, g: 0, b: 0} },
+        { name: "Color2", defaultVal: {r: 0, g: 0, b: 255} },
+        { name: "Brightness", defaultVal: 100, min: 0, max: 100 }
+    ];
+
+    // define display name
+    static displayName = "Gradient Pulse";
+
+    constructor(params) {
+        // set instance params
+        this.params = params;
+
+        this.beatList = [];
+        this.offset = 0;
+        this.dir = 1;
+    }
 
     update () {
+        // any consts dependent on tunable params need to be set here
+        // to account for dynamic changes
+        const color1 = this.params.Color1;
+        const color2 = this.params.Color2;
+
+        // pattern-logic: randomly add new ring is <25 rings total
         if (Math.random() > 0.5 && this.beatList.length < 25) {
-            const c = new HSV(this.currHue / 100, 1, Math.random());
-            this.currHue = (this.currHue + 1) % 360;
+            const c = {
+                r: PCanvas.lerp(color1.r, color2.r, this.offset),
+                g: PCanvas.lerp(color1.g, color2.g, this.offset),
+                b: PCanvas.lerp(color1.b, color2.b, this.offset)
+            };
+
             this.beatList.push({ pos: 0, c });
+            this.offset += 0.05 * this.dir;
+            if (this.offset >= 1) {
+                this.offset = 1;
+                this.dir = -1;
+            } else if (this.offset <= 0) {
+                this.offset = 0;
+                this.dir = 1;
+            }
         }
 
         // go through every position in beatList, and light up the corresponding LED in all strips
@@ -32,9 +66,10 @@ export class GradientPulse {
 
     render (canopy) {
         this.beatList.forEach((beat) => {
-            canopy.strips.forEach((strip) => {
-                strip.updateColor(beat.pos, beat.c.toRgb());
-            });
+            // apply brightness mod
+            const { r, g, b } = beat.c;
+            const color = new RGB(r, g, b, this.params.Brightness / 100);
+            canopy.strips.forEach((strip) => strip.updateColor(beat.pos, color));
         });
     }
 }

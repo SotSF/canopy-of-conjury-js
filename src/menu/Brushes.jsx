@@ -10,9 +10,10 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
-
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
+import { PatternItem } from './components/PatternItem';
+import * as brushes from '../brushes';
 
 const styles = theme => ({
     heading: {
@@ -41,7 +42,7 @@ export default class Brushes extends React.Component {
         return (
             <ExpansionPanel>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography className={classes.heading}>Brushes</Typography>
+                    <Typography className={classes.heading}>Click to Draw</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails classes={{
                         root: classes.panelDetails
@@ -49,24 +50,26 @@ export default class Brushes extends React.Component {
                         <List dense disablePadding classes={{
                             root: classes.list
                         }}>
-                            <ListItem button>
-                                <ListItemText
-                                  primary="Ring"
-                                  onClick={() => this.activateBrush('ring')}
-                                />
-                            </ListItem>
-                            <ListItem button>
-                                <ListItemText
-                                  primary="Radial"
-                                  onClick={() => this.activateBrush('radial')}
-                                />
-                            </ListItem>
-                            <ListItem button>
-                                <ListItemText
-                                  primary="Line"
-                                  onClick={() => this.activateBrush('line')}
-                                />
-                            </ListItem>
+                            <PatternItem key={brushes.BubbleBrush.displayName} 
+                                pattern={brushes.BubbleBrush} 
+                                isBrush={true}
+                                activateBrush={() => this.activateBrush('bubbles')}
+                            />
+                            <PatternItem key={brushes.RingBrush.displayName} 
+                                pattern={brushes.RingBrush} 
+                                isBrush={true}
+                                activateBrush={() => this.activateBrush('ring')}
+                            />
+                            <PatternItem key={brushes.RadialBrush.displayName} 
+                                pattern={brushes.RadialBrush} 
+                                isBrush={true}
+                                activateBrush={() => this.activateBrush('radial')}
+                            />
+                            <PatternItem key={brushes.LineBrush.displayName} 
+                                pattern={brushes.LineBrush} 
+                                isBrush={true}
+                                activateBrush={() => this.activateBrush('line')}
+                            />
                         </List>
                     </ExpansionPanelDetails>
             </ExpansionPanel>

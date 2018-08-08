@@ -1,11 +1,12 @@
 import { NUM_STRIPS } from '../canopy';
-import { RGB } from '../colors';
+import { RGB, alphaMap } from '../colors';
 import { PCanvas } from '.';
 
 /**
  * Test pattern to determine order of strips
  */
 export class TestLEDs {
+    static displayName = "Test LEDs";
     colors = [
         new RGB(255,0,0),
         new RGB(255,255,0),
@@ -20,50 +21,34 @@ export class TestLEDs {
     render(canopy) {
         var c = 0;
         for (let s = 0; s < NUM_STRIPS; s++) {
-            canopy.strips[s].updateColors(this.colors[c].toHex());
+            canopy.strips[s].updateColors(this.colors[c]);
             if ((s + 1) % 8 == 0) c++;
             if (c >= this.colors.length) { c = 0; }
         }
     }
 }
 
-export class TestCanvas {
-    constructor() {
-        this.canvas = new PCanvas();
-        this.offset = 0;
-    }
-    update() {
-        this.canvas.processing.pg.beginDraw();
-        this.canvas.processing.pg.background(0);
-        this.canvas.processing.pg.fill(255);
-        this.canvas.processing.pg.rect(50,this.offset,50,50);
-        this.offset += 3;
-        if (this.offset > this.canvas.processing.width) { this.offset = 0; }
-        this.canvas.processing.pg.endDraw();
-    }
-    render(canopy) {
-        this.canvas.render(canopy);
-    }
-}
+export class AlphaTest {
+    static menuParams = [];
+    static displayName = "Alpha Test";
 
-export class TestCanvasLayout {
-     constructor(processing) {
+    constructor(params) {
         this.canvas = new PCanvas();
-        this.offset = 0;
     }
+
     update() {
-        this.canvas.processing.pg.beginDraw();
-        this.canvas.processing.pg.background(255);
-        this.canvas.processing.pg.fill(255,0,0);
-        this.canvas.processing.pg.rect(40,40,20,20);
-        this.canvas.processing.pg.fill(255,255,0);
-        this.canvas.processing.pg.rect(140,140,20,20);
-        this.canvas.processing.pg.fill(255,0,255);
-        this.canvas.processing.pg.rect(40,140,20,20);
-        this.canvas.processing.pg.fill(0,0,255);
-        this.canvas.processing.pg.rect(140,40,20,20);
-        this.canvas.processing.pg.endDraw();
+        const { processing } = this.canvas;
+        processing.pg.beginDraw();
+        processing.pg.background(0);
+        for (let x = 0; x < PCanvas.dimension; x++) {
+            const alpha = PCanvas.lerp(255,0,x / PCanvas.dimension);
+            const c = PCanvas.color(255,0,0,alpha);
+            processing.pg.stroke(c);
+            processing.pg.line(x,0,x,PCanvas.dimension);
+        }
+        processing.pg.endDraw();
     }
+
     render(canopy) {
         this.canvas.render(canopy);
     }

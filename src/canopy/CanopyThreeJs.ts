@@ -1,8 +1,10 @@
 
 import * as THREE from 'three';
 import * as _ from 'lodash';
-import Catenary from './catenary';
+import { BLACK } from '../colors';
+import { PCanvas } from '../patterns';
 import { CanopyInterface, StripInterface } from '../types';
+import Catenary from './catenary';
 import { NUM_STRIPS, NUM_LEDS_PER_STRIP} from './constants';
 
 // Constants. Length units are in feet unless otherwise specified
@@ -11,7 +13,6 @@ const BASE_RADIUS = 8;
 const APEX_RADIUS = 0.5;
 const STRIP_LENGTH_METERS = 2.5;
 const STRIP_LENGTH = STRIP_LENGTH_METERS * FEET_PER_METER;
-const COLOR_MEMO = {};
 
 /**
  * Contains much of the state of the physical canopy, including the height of the apex, the catenary
@@ -51,7 +52,7 @@ export default class CanopyThreeJs implements CanopyInterface {
         const group = new THREE.Group();
         const ledGroups = _.map(this.strips, 'group');
 
-        group.add(this.base, this.apex, ...ledGroups);
+        group.add(...ledGroups);
         scene.add(group);
     }
 
@@ -73,9 +74,8 @@ export default class CanopyThreeJs implements CanopyInterface {
         const radialInterval = Math.PI * 2 / NUM_STRIPS;
 
         for (let i = 0; i < NUM_STRIPS; i++) {
-            var s = new LedStrip(i * radialInterval, this.catenary);
-            this.ledHitBoxes = this.ledHitBoxes.concat(s.ledHitBoxes);
-            this.ledParticles = this.ledParticles.concat(s.leds);
+            const s = new LedStrip(i * radialInterval, this.catenary);
+            this.ledHitBoxes.push(s.particleSystem);
             strips.push(s);
         }
 
@@ -84,7 +84,7 @@ export default class CanopyThreeJs implements CanopyInterface {
 
     /** Clears all the LEDs */
     clear () {
-        this.strips.forEach(strip => strip.updateColors(0x000000));
+        this.strips.forEach(strip => strip.updateColors(BLACK));
     }
 
     /**
@@ -104,9 +104,6 @@ export default class CanopyThreeJs implements CanopyInterface {
  * the colors of the LEDs within it
  */
 class LedStrip implements StripInterface {
-    // Invariant geometry used for all LEDs
-    static boxGeometry = new THREE.BoxGeometry( 0.05,0.05,0.05);
-
     // The color of the string, NOT the LEDs
     color = 0xcccccc;
 
@@ -127,14 +124,27 @@ class LedStrip implements StripInterface {
         this._initializeLeds();
         this.updatePositions();
 
+        const particleSystemGeometry = new THREE.BufferGeometry();
+        const positions = new Float32Array( NUM_LEDS_PER_STRIP * 3 );
+        const colors = new Float32Array( NUM_LEDS_PER_STRIP * 3 );
 
-        const particleSystemGeometry = new THREE.Geometry();
-        this.leds.forEach(function(val) {
-            particleSystemGeometry.vertices.push(val);
+        this.leds.forEach((led, i) => {
+            const indexStart = i * 3;
+            positions[indexStart] = led.x;
+            positions[indexStart + 1] = led.y;
+            positions[indexStart + 2] = led.z;
+
+            colors[indexStart] = 0;
+            colors[indexStart + 1] = 0;
+            colors[indexStart + 2] = 0;
         });
+        
+        particleSystemGeometry.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
+        particleSystemGeometry.addAttribute( 'color', new THREE.BufferAttribute( colors, 3 ) );
 
         const particleSystemMat = new THREE.PointsMaterial({
             size: 0.1,
+            opacity: 1,
             vertexColors: THREE.VertexColors
         });
 
@@ -145,7 +155,7 @@ class LedStrip implements StripInterface {
 
         // Create a group so all the strip's components are relatively positioned
         const group = new THREE.Group();
-        group.add(this.string, this.particleSystem, ...this.ledHitBoxes);
+        group.add(this.string, this.particleSystem);
 
         // Rotate the group according to the offset
         group.rotateZ(offset);
@@ -163,17 +173,6 @@ class LedStrip implements StripInterface {
     _initializeLeds () {
         this.leds = this.catenary.coordinates.map(() => new THREE.Vector3(0, 0, 0));
         this.colors = this.catenary.coordinates.map(() => 0x000000);
-
-        this.ledHitBoxes = this.catenary.coordinates.map((coordinate) => {
-            const [x, y] = coordinate;
-            let factor = Math.sqrt(x ** 2 + y ** 2);
-            if (factor < 1.5) factor = 1.5;
-
-            return new THREE.Mesh(
-                new THREE.BoxGeometry( 0.08, 0.07 * factor, 0.07 * factor),
-                new THREE.MeshBasicMaterial({ opacity: 0, transparent: true })
-            );
-        });
     }
 
     /** Updates the positions of the LEDs and the string */
@@ -183,7 +182,6 @@ class LedStrip implements StripInterface {
             const led = this.leds[i];
             const [x, z] = this.catenary.coordinates[i];
             [led.x, led.z] = [x,-z];
-            this.ledHitBoxes[i].position.set(x, 0, -z);
         }
 
         // String
@@ -195,16 +193,60 @@ class LedStrip implements StripInterface {
         this.string.geometry.setFromPoints(points);
     }
 
-    /** Updates the color of a single pixel in the string */
-    updateColor (i, color) {
-        this.colors[i] = color;
-        if (!COLOR_MEMO[color]) { COLOR_MEMO[color] = new THREE.Color(color); }
-        this.particleSystem.geometry.colors[i] = COLOR_MEMO[color];
-        this.particleSystem.geometry.colorsNeedUpdate = true;
+    /** Updates the color of a single pixel in the string 
+     * color as RGB
+    */
+
+    updateColor (i, newColor) {
+        const { color } = this.particleSystem.geometry.attributes;
+        this.colors[i] = { 
+            r: PCanvas.lerp(color.array[i*3] * 255, newColor.r, newColor.a),
+            g: PCanvas.lerp(color.array[i*3 + 1] * 255, newColor.g, newColor.a),
+            b: PCanvas.lerp(color.array[i*3 + 2] * 255, newColor.b, newColor.a)
+        };
+
+        // expects a float between 0.0 and 1.0
+        color.array[i * 3] = this.colors[i].r / 255;
+        color.array[i * 3 + 1] = this.colors[i].g / 255;
+        color.array[i * 3 + 2] = this.colors[i].b / 255;
+        color.needsUpdate = true;
+        
     }
 
-    /** Shorthand for updating the color of the entire strip */
-    updateColors (color) {
-        _.range(this.leds.length).forEach(i => this.updateColor(i, color));
+    /** Shorthand for updating the color of the entire strip 
+     * color as RGB
+    */
+    updateColors (newColor) {
+        _.range(this.leds.length).forEach(i => this.updateColor(i, newColor));
     }
 }
+
+const _mapToCanopy = (x, y) => {
+    let theta = 0;
+    if (x === 0) {
+        if (y > 0) theta = Math.PI / 2;
+        if (y < 0) theta = -Math.PI / 2;
+        if (y === 0) theta = 0;
+    } else {
+        theta = Math.atan2(y,x);
+    }
+
+    let thetaDegrees = theta * 180 / Math.PI;
+    if (thetaDegrees < 0) {
+        thetaDegrees += 360;
+    }
+
+    const radius = Math.sqrt(x * x + y * y) * 3;
+    return {
+        strip: Math.round(thetaDegrees * NUM_STRIPS / 360),
+        led: Math.round(radius / 1.5)
+    };
+};
+
+(() => {
+    for (let x = -PCanvas.dimension / 2; x <= PCanvas.dimension / 2; x++) {
+        for (let y = -PCanvas.dimension / 2; y <= PCanvas.dimension / 2; y++) {
+            PCanvas.mapMemo[x + "-" + y] = _mapToCanopy(x, y);
+        }
+    }
+})();

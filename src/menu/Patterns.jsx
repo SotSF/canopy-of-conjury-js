@@ -1,8 +1,7 @@
 
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import * as _ from 'lodash';
 
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
@@ -10,9 +9,6 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -20,7 +16,9 @@ import AddIcon from '@material-ui/icons/Add';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import { CanopySvg } from '../canopy';
+import * as patterns from '../patterns';
 import { ConcentricCircles } from '../patterns';
+import { PatternItem } from './components/PatternItem';
 import PatternProps from './PatternProps';
 
 
@@ -188,7 +186,56 @@ export default class Patterns extends React.Component {
                         <List dense disablePadding classes={{
                             root: classes.list
                         }}>
-                            <ConcentricCirclesPattern addPattern={this.props.addLayer} />
+                            <PatternItem key={patterns.ConcentricCircles.displayName}
+                                pattern={patterns.ConcentricCircles} 
+                                addLayer={this.props.addLayer} 
+                                isBrush={false}
+                            />
+                            <PatternItem key={patterns.GradientPulse.displayName} 
+                                pattern={patterns.GradientPulse} 
+                                addLayer={this.props.addLayer} 
+                                isBrush={false}
+                            />
+                            <PatternItem key={patterns.Fireflies.displayName} 
+                                pattern={patterns.Fireflies} 
+                                addLayer={this.props.addLayer} 
+                                isBrush={false}
+                            />
+                            <PatternItem key={patterns.Map.displayName} 
+                                pattern={patterns.Map} 
+                                addLayer={this.props.addLayer} 
+                                isBrush={false}
+                            />
+                            <PatternItem key={patterns.Radar.displayName} 
+                                pattern={patterns.Radar} 
+                                addLayer={this.props.addLayer} 
+                                isBrush={false}
+                            />
+                            <PatternItem key={patterns.ShootingStars.displayName} 
+                                pattern={patterns.ShootingStars} 
+                                addLayer={this.props.addLayer} 
+                                isBrush={false}
+                            />
+                            <PatternItem key={patterns.SineRing.displayName} 
+                                pattern={patterns.SineRing} 
+                                addLayer={this.props.addLayer} 
+                                isBrush={false}
+                            />
+                            <PatternItem key={patterns.Snake.displayName} 
+                                pattern={patterns.Snake} 
+                                addLayer={this.props.addLayer} 
+                                isBrush={false}
+                            />
+                            <PatternItem key={patterns.Swirly.displayName} 
+                                pattern={patterns.Swirly} 
+                                addLayer={this.props.addLayer} 
+                                isBrush={false}
+                            />
+                            <PatternItem key={patterns.SwirlyZig.displayName} 
+                                pattern={patterns.SwirlyZig} 
+                                addLayer={this.props.addLayer} 
+                                isBrush={false}
+                            />
                         </List>
                     </ExpansionPanelDetails>
             </ExpansionPanel>
