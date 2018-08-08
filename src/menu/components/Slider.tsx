@@ -6,6 +6,7 @@ import PropWindow from './PropWindow';
 
 
 interface SliderProps {
+    label: string,
     value: number
     min?: number,
     max?: number,
@@ -25,7 +26,7 @@ export default class Slider extends React.Component<SliderProps> {
     };
 
     render () {
-        const { value, min, max, step, onChange } = this.props;
+        const { label, value, min, max, step, onChange } = this.props;
 
         const positionalProps = {
             anchorOrigin:{
@@ -40,7 +41,7 @@ export default class Slider extends React.Component<SliderProps> {
         };
 
         return (
-            <PropWindow buttonText="Period" {...positionalProps}>
+            <PropWindow buttonText={label} {...positionalProps}>
                 <div style={styles}>
                     <MaterialSlider
                       onChange={(e, value) => onChange(value)}
