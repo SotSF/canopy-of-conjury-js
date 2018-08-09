@@ -11,10 +11,10 @@ import { PatternPropTypes } from './utils';
 interface SwirlyProps {
     color1: Color,
     color2: Color,
-    fromApex: boolean,
-    clockwise: boolean,
     quantity: number,
-    brightness: number
+    brightness: number,
+    fromApex: boolean,
+    clockwise: boolean
 }
 
 @pattern()
@@ -23,20 +23,20 @@ export class Swirly extends BasePattern {
     static propTypes = {
         color1: new PatternPropTypes.Color(),
         color2: new PatternPropTypes.Color(),
-        fromApex: new PatternPropTypes.Boolean(),
-        clockwise: new PatternPropTypes.Boolean(),
         quantity: new PatternPropTypes.Range(1, 100),
-        brightness: new PatternPropTypes.Range(0, 100)
+        brightness: new PatternPropTypes.Range(0, 100),
+        fromApex: new PatternPropTypes.Boolean(),
+        clockwise: new PatternPropTypes.Boolean()
     };
 
     static defaultProps () : SwirlyProps {
         return {
             color1: new RGB(200, 200, 15),
             color2: new RGB(200, 30, 30),
-            fromApex: true,
-            clockwise: true,
             quantity: 10,
-            brightness: 100
+            brightness: 100,
+            fromApex: true,
+            clockwise: true
         };
     }
 
