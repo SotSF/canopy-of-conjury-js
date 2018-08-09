@@ -16,13 +16,15 @@ export default class Checkbox extends React.Component<CheckboxProps> {
     render () {
         const { checked, label } = this.props;
         return (
-            <FormControlLabel label={label} control={
-                <CheckboxComponent
-                  checked={checked}
-                  color="primary"
-                  onChange={this.toggleSelection}
-                />
-            } />
+            <div>
+                <FormControlLabel label={label} control={
+                    <CheckboxComponent
+                      checked={checked}
+                      color="primary"
+                      onChange={this.toggleSelection}
+                    />
+                } />
+            </div>
         );
     }
 }
