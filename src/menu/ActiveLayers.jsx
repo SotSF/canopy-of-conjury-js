@@ -73,7 +73,12 @@ class Layer extends React.Component {
         this.setState({ anchorEl: null });
     };
 
-    updateProps = (props) => this.props.layer.pattern.updateProps(props);
+    updateProps = (props) => {
+        this.props.layer.pattern.updateProps(props);
+
+        // Force an update because the props have changed, but React doesn't know about it
+        this.forceUpdate();
+    };
 
     removeFilter (filter) {
         const { pattern } = this.props.layer;
