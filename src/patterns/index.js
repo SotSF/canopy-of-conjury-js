@@ -2,7 +2,7 @@ export { ConcentricCircles } from './ConcentricCircles';
 export { GradientPulse } from './GradientPulse';
 export { Fireflies } from './Fireflies';
 export { Map } from './Map';
-export { Radar } from './radar';
+export { Radar } from './Radar';
 export { ShootingStars } from './shooting_stars';
 export { SineRing } from './sine_ring';
 export { Snake } from './snake';
