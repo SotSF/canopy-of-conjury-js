@@ -12,7 +12,8 @@ interface ShootingStarsProps {
     color: Color,
     velocity: number,
     brightness: number
-    fromApex: boolean
+    fromApex: boolean,
+    vortex: boolean
 }
 
 @pattern()
@@ -22,7 +23,8 @@ export class ShootingStars extends BasePattern {
         color: new PatternPropTypes.Color(),
         velocity: new PatternPropTypes.Range(0, 5),
         brightness: new PatternPropTypes.Range(0, 100),
-        fromApex: new PatternPropTypes.Boolean()
+        fromApex: new PatternPropTypes.Boolean(),
+        vortex: new PatternPropTypes.Boolean()
     };
 
     static defaultProps () : ShootingStarsProps {
@@ -30,7 +32,8 @@ export class ShootingStars extends BasePattern {
             color: RGB.random(),
             velocity: 2,
             brightness: 100,
-            fromApex: true
+            fromApex: true,
+            vortex: false
         };
     }
 
@@ -58,6 +61,10 @@ export class ShootingStars extends BasePattern {
         this.stars.forEach((star) => {
             const directionalMultiplier = this.props.fromApex ? 1 : -1;
             star.led += this.props.velocity * directionalMultiplier;
+
+            if (this.props.vortex) {
+                star.strip = (star.strip + 1) % NUM_STRIPS;
+            }
 
             if (star.led >= NUM_LEDS_PER_STRIP || star.led < 0) {
                 this.stars = _.without(this.stars, star);
