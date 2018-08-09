@@ -1,7 +1,7 @@
 
 import * as React from 'react';
 import { PatternPropTypes } from '../patterns/utils';
-import { ColorPicker, EnumeratedList, Slider } from './components';
+import { Checkbox, ColorPicker, EnumeratedList, Slider } from './components';
 
 
 interface PatternPropsProps {
@@ -51,6 +51,14 @@ export default class PatternProps extends React.Component<PatternPropsProps> {
                       max={max}
                       step={step}
                       value={values[prop]}
+                    />
+                );
+            } else if (type instanceof PatternPropTypes.Boolean) {
+                components.push(
+                    <Checkbox
+                      checked={values[prop]}
+                      label={prop}
+                      onChange={checked => this.updateProp(prop, checked)}
                     />
                 );
             }

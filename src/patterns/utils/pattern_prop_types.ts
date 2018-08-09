@@ -42,4 +42,6 @@ export namespace PatternPropTypes {
             return this.options[value];
         }
     }
+
+    export class Boolean {}
 }
