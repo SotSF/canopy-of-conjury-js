@@ -1,6 +1,7 @@
 
+import * as _ from 'lodash';
 import { CanopyInterface, PatternInstance } from '../types';
-import * as _ from "lodash";
+import { PCanvas } from './canvas';
 
 
 export default abstract class BasePattern implements PatternInstance {
@@ -21,5 +22,14 @@ export default abstract class BasePattern implements PatternInstance {
     }
     updateProps (props) {
         _.merge(this.props, props);
+    }
+}
+
+export abstract class BaseProcessingPattern extends BasePattern {
+    canvas = null;
+
+    constructor (props) {
+        super(props);
+        this.canvas = new PCanvas();
     }
 }

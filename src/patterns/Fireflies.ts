@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { RGB, Color } from '../colors';
 import { pattern } from '../types';
 import { PCanvas } from './canvas';
-import BasePattern from './BasePattern';
+import { BaseProcessingPattern } from './BasePattern';
 import { PatternPropTypes } from './utils';
 
 
@@ -19,7 +19,7 @@ interface FireFliesPropTypes {
 
 
 @pattern()
-export class Fireflies extends BasePattern {
+export class Fireflies extends BaseProcessingPattern {
     static displayName = 'Fireflies';
     static propTypes = {
         brightness: new PatternPropTypes.Range(0, 100),
@@ -44,12 +44,9 @@ export class Fireflies extends BasePattern {
     }
 
     fireflies = [];
-    canvas = null;
 
     constructor (props) {
         super(props);
-
-        this.canvas = new PCanvas();
 
         for (let i = 0; i <= 10; i++) {
             this.addFirefly()
