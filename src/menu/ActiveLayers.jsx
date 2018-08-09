@@ -1,32 +1,26 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ChromePicker } from 'react-color';
+import classNames from 'classnames';
 
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions'
-import CardContent from '@material-ui/core/CardContent';
-import Checkbox from '@material-ui/core/Checkbox';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import Popover from '@material-ui/core/Popover';
-import Select from '@material-ui/core/Select';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
-
 import DeleteIcon from '@material-ui/icons/Delete';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 
-import Slider from '@material-ui/lab/Slider';
+import PatternProps from './PatternProps';
 
 
 const styles = theme => ({
@@ -51,20 +45,17 @@ const styles = theme => ({
     }
 });
 
-const LayerStyles = theme => ({
+const LayerStyles = {
     topText: {
         verticalAlign: "top"
     },
     card: {
         display: "inline-block"
     }
-})
+};
+
 @withStyles(LayerStyles)
 class Layer extends React.Component {
-    state = {
-        anchorEl: null
-    }
-
     static propTypes = {
         layer: PropTypes.shape({
             name: PropTypes.string
@@ -74,10 +65,9 @@ class Layer extends React.Component {
         }))
     };
 
-    constructor(props) {
-        super(props);
-        this.state.pattern = props.layer.pattern;
-    }
+    state = {
+        anchorEl: null,
+    };
 
     handleClick = event => {
         this.setState({ anchorEl: event.currentTarget });
@@ -99,140 +89,46 @@ class Layer extends React.Component {
 
         return (
             <div>
-                {buttons.map(button =>
-                    <IconButton>
-                        {button}
-                    </IconButton>
-                )}
+                {buttons.map(button => <IconButton key={button}>{button}</IconButton>)}
             </div>
         );
     }
 
-    getIndex() {
+    getIndex () {
         return this.props.layers.indexOf(this.props.layer);
     }
 
-    // NEED TO PASS THESE CHANGES UP TO INDEX
-    updateParam(name, val) {
-        this.setState((prevState) => {
-            prevState.pattern.params[name] = val;
-            return { pattern: prevState.pattern }
-        });
-    }
+    updateProp = (props) => this.props.layer.pattern.updateProps(props);
 
-    removeFilter(filter) {
-        const {pattern} = this.props.layer;
+    removeFilter (filter) {
+        const { pattern } = this.props.layer;
         const i = pattern.filters.indexOf(filter);
         pattern.filters.splice(i, 1);
     }
 
-    renderControls = () => {
-        const { pattern, key } = this.props.layer;
-        if (pattern.constructor.menuParams == null) return;
-        const controls = [];
-        if (pattern.constructor.displayName == "Map of BRC") {
-            controls.push(
-                <div>
-                <Typography variant="caption">Letter Street</Typography>
-                <Select defaultValue={pattern.constructor.menuParams["Letter"]} value={pattern.params["Letter"]} onChange={(e) => {this.updateParam("Letter", e.target.value)}}>
-                    <option value={0}>Esplanade</option>
-                    <option value={1}>A</option>
-                    <option value={2}>B</option>
-                    <option value={3}>C</option>
-                    <option value={4}>D</option>
-                    <option value={5}>E</option>
-                    <option value={6}>F</option>
-                    <option value={7}>G</option>
-                    <option value={8}>H</option>
-                    <option value={9}>I</option>
-                    <option value={10}>J</option>
-                    <option value={11}>K</option>
-                    <option value={12}>L</option>
-                </Select>
-                </div>
-            );
-            const hours = () => {
-                const options = [];
-                for (let i = 2; i <= 10; i += 0.25) {
-                    options.push(
-                        <option value={i}>{parseInt(i).toString() + ":" + parseInt(i % 1 * 60).toString()}</option>
-                    )
-                }
-                return options;
-            }
-            controls.push(
-                <div>
-                <Typography variant="caption">Hour Street</Typography>
-                <Select defaultValue={pattern.constructor.menuParams["Time"]} value={pattern.params["Time"]} onChange={(e) => {this.updateParam("Time", e.target.value)}}>
-                    {hours()}
-                </Select>
-                </div>
-            );
-        }
-        else {
-            pattern.constructor.menuParams.map(control => {
-                if (control.type == "GIF" || control.type == "HIDDEN") return;
-                if (typeof control.defaultVal == "object") {
-                    controls.push(<ChromePicker key={key + "-" + control.name} disableAlpha={true} color={pattern.params[control.name]} 
-                        onChange={(val) => this.updateParam(control.name,val.rgb)} />)
-                }
-                else if (typeof control.defaultVal == "number") {
-                    controls.push(
-                    <div key={key + "-" + control.name}>
-                        <Typography variant="caption">{control.name}: {pattern.params[control.name]}</Typography>
-                        <Slider value={pattern.params[control.name]} min={control.min} max={control.max} step={1} 
-                            onChange={(e,val)=>this.updateParam(control.name, val)}/>
-                    </div>
-                    )
-                }
-                else if (typeof control.defaultVal == "boolean") {
-                    controls.push(
-                        <FormControlLabel key={key + "-" + control.name} label={control.name} control={
-                            <Checkbox label={control.name} checked={pattern.params[control.name]} color="primary" 
-                            onChange={() => this.updateParam(control.name,!pattern.params[control.name])} />} 
-                        />
-                    )
-            }});
-        }
-        return controls;
-    }
-/*
-    renderFilters() {
-        const {pattern} = this.props.layer;
-        if (pattern.filters.length == 0) return;
-        return(<Card className={[this.props.classes.card, this.props.classes.topText]}>
-            <CardContent>
-                {pattern.filters.map(filter => 
-                <IconButton>
-                    <Typography>{filter.constructor.displayName}</Typography>
-                    <DeleteIcon key="delete" onClick={() => this.removeFilter(filter)}/>
-                </IconButton>
-                )}
-            </CardContent>
-        </Card>);
-    }
-*/
-
     renderPopover() {
-        const { pattern } = this.props.layer;
+        const { layer } = this.props;
         const { anchorEl } = this.state;
-        return (<Popover
-                open={!!anchorEl}
-                anchorEl={anchorEl}
-                onClose={this.handleClose}
-                anchorOrigin={{
-                    vertical: 'center',
-                    horizontal: 'right',
-                }}
-                transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'left',
-                }}
+        return (
+            <Popover
+              open={!!anchorEl}
+              anchorEl={anchorEl}
+              onClose={this.handleClose}
+              anchorOrigin={{
+                  vertical: 'center',
+                  horizontal: 'right',
+              }}
+              transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'left',
+              }}
             >
                 <Card className={this.props.classes.card}>
-                    <CardContent>
-                        {this.renderControls()}
-                    </CardContent>
+                    <PatternProps
+                      propTypes={layer.pattern.constructor.propTypes}
+                      values={layer.pattern.props}
+                      onChange={this.updateProp}
+                    />
                 </Card>
             </Popover>
         )
@@ -241,14 +137,17 @@ class Layer extends React.Component {
     render () {
         const { key, name } = this.props.layer;
         const i = this.getIndex();
+        const className = classNames('layer', {
+            active: this.props.isActive
+        });
+
         return (
-            <ListItem className={this.props.isActive ? "layer active" : "layer"} onClick={() => this.props.setLayer(i)}>
-                <ListItemText primary={name + ":" + key} onClick={this.handleClick} />
+            <ListItem className={className} onClick={() => this.props.setLayer(i)}>
+                <ListItemText primary={`${name}: ${key}`} onClick={this.handleClick} />
                 <ListItemSecondaryAction>
                     {this.renderButtons()}
                 </ListItemSecondaryAction>
                 {this.renderPopover()}
-                
             </ListItem>
         );
     }
@@ -273,25 +172,25 @@ export default class ActiveLayers extends React.Component {
                     </div>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails classes={{
-                        root: classes.panelDetails
+                    root: classes.panelDetails
+                }}>
+                    <List dense disablePadding classes={{
+                        root: classes.list
                     }}>
-                        <List dense disablePadding classes={{
-                            root: classes.list
-                        }}>
-                            {layers.map((layer,i) => 
-                                <Layer 
-                                    key={layer.key}
-                                    layer={layer} 
-                                    layers={layers} 
-                                    isActive={this.props.activeLayer == i}
-                                    moveLayerUp={this.props.moveLayerUp} 
-                                    moveLayerDown={this.props.moveLayerDown} 
-                                    removeLayer={this.props.removeLayer}
-                                    setLayer={this.props.setLayer}
-                                />
-                            )}
-                        </List>
-                    </ExpansionPanelDetails>
+                        {layers.map((layer, i) =>
+                            <Layer
+                              key={layer.key}
+                              layer={layer}
+                              layers={layers}
+                              isActive={this.props.activeLayer === i}
+                              moveLayerUp={this.props.moveLayerUp}
+                              moveLayerDown={this.props.moveLayerDown}
+                              removeLayer={this.props.removeLayer}
+                              setLayer={this.props.setLayer}
+                            />
+                        )}
+                    </List>
+                </ExpansionPanelDetails>
             </ExpansionPanel>
         );
     }
