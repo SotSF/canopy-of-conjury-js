@@ -9,6 +9,7 @@ import { PatternPropTypes } from './utils';
 
 interface ConcentricCirclesProps {
     color: Color,
+    width: number,
     period: number
 }
 
@@ -21,12 +22,14 @@ export class ConcentricCircles extends BasePattern {
 
     static propTypes = {
         color: new PatternPropTypes.Color(),
+        width: new PatternPropTypes.Range(1, 10),
         period: new PatternPropTypes.Range(1, 100)
     };
 
     static defaultProps () : ConcentricCirclesProps {
         return {
             color: RGB.random(),
+            width: 1,
             period: 10
         };
     }
@@ -37,7 +40,7 @@ export class ConcentricCircles extends BasePattern {
         super.progress();
 
         if (this.iteration % this.props.period === 0) {
-            this.circles.push({ pos: 0, color: this.props.color });
+            this.circles.push({ pos: 0, color: this.props.color, width: this.props.width });
         }
 
         // go through every position in beatList, and light up the corresponding LED in all strips
@@ -46,16 +49,24 @@ export class ConcentricCircles extends BasePattern {
             circle.pos++;
 
             // remove if the position is too big
-            if (circle.pos >= NUM_LEDS_PER_STRIP) {
+            const circleEdge = circle.pos - circle.width;
+            if (circleEdge >= NUM_LEDS_PER_STRIP) {
                 this.circles = _.without(this.circles, circle);
             }
         });
     }
 
     render (canopy) {
+        const stripLength = canopy.stripLength;
+
         this.circles.forEach((circle) => {
             canopy.strips.forEach((strip) => {
-                strip.updateColor(circle.pos, circle.color.toRgb());
+                _.range(circle.width).forEach((i) => {
+                    const position = circle.pos - i;
+                    if (position < 0 || position >= stripLength) return;
+
+                    strip.updateColor(position, circle.color.toRgb())
+                });
             });
         });
     }
