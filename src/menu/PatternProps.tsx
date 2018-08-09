@@ -27,52 +27,105 @@ export default class PatternProps extends React.Component<PatternPropsProps> {
         });
     }
 
-    render () {
-        const { propTypes, values } = this.props;
-        const components = [];
+    static renderColor (prop, value, onChange) {
+        return (
+            <ColorPicker
+              color={value}
+              key={prop}
+              onChange={onChange}
+            />
+        );
+    }
 
-        Object.entries(propTypes).forEach(([prop, type]) => {
-            if (type instanceof PatternPropTypes.Color) {
-                components.push(
-                    <ColorPicker
-                      color={values[prop]}
-                      key={prop}
-                      onChange={(color) => this.updateProp(prop, color)}
-                    />
-                );
-            } else if (type instanceof PatternPropTypes.Enum) {
-                components.push(
-                    <EnumeratedList
-                      key={prop}
-                      enumeration={type}
-                      onChange={value => this.updateProp(prop, value)}
-                      value={values[prop]}
-                    />
-                );
-            } else if (type instanceof PatternPropTypes.Range) {
-                const { min, max, step } = type;
-                components.push(
-                    <Slider
-                      key={prop}
-                      label={prop}
-                      onChange={value => this.updateProp(prop, value)}
-                      min={min}
-                      max={max}
-                      step={step}
-                      value={values[prop]}
-                    />
-                );
-            } else if (type instanceof PatternPropTypes.Boolean) {
-                components.push(
-                    <Checkbox
-                      checked={values[prop]}
-                      key={prop}
-                      label={prop}
-                      onChange={checked => this.updateProp(prop, checked)}
-                    />
-                );
-            }
+    static renderEnumeration (prop, type, value, onChange) {
+        return (
+            <EnumeratedList
+              key={prop}
+              enumeration={type}
+              onChange={onChange}
+              value={value}
+            />
+        );
+    }
+
+    static renderSlider (prop, type, value, onChange) {
+        const { min, max, step } = type;
+        return (
+            <Slider
+              key={prop}
+              label={prop}
+              onChange={onChange}
+              min={min}
+              max={max}
+              step={step}
+              value={value}
+            />
+        );
+    }
+
+    static renderBoolean (prop, value, onChange) {
+        return (
+            <Checkbox
+              checked={value}
+              key={prop}
+              label={prop}
+              onChange={onChange}
+            />
+        );
+    }
+
+    renderArray (prop, type, values, onChange) {
+        const existing = values.map((value, i) => {
+            const changeExisting = (newValue) => {
+                const newValues = [...values];
+                newValues.splice(i, 1, newValue);
+                onChange(newValues);
+            };
+
+            return this.renderProp(`${prop} ${i}`, type, value, changeExisting);
         });
+
+        const addNew = newValue => onChange([...values, newValue]);
+        const newest = this.renderProp(prop, type, null, addNew);
+
+        return (
+            <div className="pattern-prop">
+                {existing}
+                {newest}
+            </div>
+        );
+    }
+
+    renderProp (prop, type, value, onChange = (newVal => this.updateProp(prop, newVal))) {
+        if (type instanceof PatternPropTypes.Color) {
+            return PatternProps.renderColor(prop, value, onChange);
+        }
+
+        if (type instanceof PatternPropTypes.Enum) {
+            return PatternProps.renderEnumeration(prop, type, value, onChange);
+        }
+
+        if (type instanceof PatternPropTypes.Range) {
+            return PatternProps.renderSlider(prop, type, value, onChange);
+        }
+
+        if (type instanceof PatternPropTypes.Boolean) {
+            return PatternProps.renderBoolean(prop, value, onChange);
+        }
+
+        if (type instanceof PatternPropTypes.Array) {
+            return this.renderArray(prop, type.types, value, onChange);
+        }
+
+        // Shouldn't get here...
+        return null;
+    }
+
+    render () {
+        const { propTypes } = this.props;
+        const components = Object.entries(propTypes).map(([prop, type]) =>
+            this.renderProp(prop, type, this.props.values[prop])
+        );
 
         return (
             <Card style={styles.parameters} raised>

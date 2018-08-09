@@ -44,4 +44,12 @@ export namespace PatternPropTypes {
     }
 
     export class Boolean {}
+
+    export class Array {
+        types = null;
+
+        constructor (types) {
+            this.types = new types();
+        }
+    }
 }
