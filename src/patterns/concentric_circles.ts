@@ -27,7 +27,7 @@ export class ConcentricCircles extends BasePattern {
     static defaultProps () : ConcentricCirclesProps {
         return {
             color: RGB.random(),
-            period: 5
+            period: 10
         };
     }
 
