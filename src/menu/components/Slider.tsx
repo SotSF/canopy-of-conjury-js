@@ -14,19 +14,45 @@ interface SliderProps {
     onChange (value: number): void
 }
 
+interface SliderState {
+    value: number
+}
+
 const styles = {
     height: '200px'
 };
 
-export default class Slider extends React.Component<SliderProps> {
+export default class Slider extends React.Component<SliderProps, SliderState> {
     static defaultProps = {
         min: 1,
         max: 10,
         step: 1
     };
 
+    constructor (props) {
+        super(props);
+        this.state = {
+            value: props.value
+        };
+    }
+
+    /**
+     * When the value of the slider is changed externally, update the state
+     */
+    componentWillReceiveProps (nextProps) {
+        if (nextProps.value !== this.props.value) {
+            this.setState({ value: nextProps.value });
+        }
+    }
+
+    updateValue = (e, value) => {
+        this.props.onChange(value);
+        this.setState({ value });
+    };
+
     render () {
-        const { label, value, min, max, step, onChange } = this.props;
+        const { label, min, max, step } = this.props;
+        const { value } = this.state;
 
         const positionalProps = {
             anchorOrigin:{
@@ -44,7 +70,7 @@ export default class Slider extends React.Component<SliderProps> {
             <PropWindow buttonText={label} {...positionalProps}>
                 <div style={styles}>
                     <MaterialSlider
-                      onChange={(e, value) => onChange(value)}
+                      onChange={this.updateValue}
                       min={min}
                       max={max}
                       step={step}
