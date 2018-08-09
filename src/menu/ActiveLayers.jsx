@@ -27,6 +27,7 @@ import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 
 import Slider from '@material-ui/lab/Slider';
+import PatternProps from './PatternProps';
 
 
 const styles = theme => ({
@@ -112,106 +113,10 @@ class Layer extends React.Component {
         return this.props.layers.indexOf(this.props.layer);
     }
 
-    // NEED TO PASS THESE CHANGES UP TO INDEX
-    updateParam(name, val) {
-        this.setState((prevState) => {
-            prevState.pattern.params[name] = val;
-            return { pattern: prevState.pattern }
-        });
+    updateProp = (patternProps, prop, value) => {
+        const { pattern } = this.props.layer;
+        pattern.props[prop] = value;
     }
-
-    removeFilter(filter) {
-        const {pattern} = this.props.layer;
-        const i = pattern.filters.indexOf(filter);
-        pattern.filters.splice(i, 1);
-    }
-
-    renderControls = () => {
-        const { pattern, key } = this.props.layer;
-        if (pattern.constructor.menuParams == null) return;
-        const controls = [];
-        if (pattern.constructor.displayName == "Map of BRC") {
-            controls.push(
-                <div>
-                <Typography variant="caption">Letter Street</Typography>
-                <Select defaultValue={pattern.constructor.menuParams["Letter"]} value={pattern.params["Letter"]} onChange={(e) => {this.updateParam("Letter", e.target.value)}}>
-                    <option value={0}>Esplanade</option>
-                    <option value={1}>A</option>
-                    <option value={2}>B</option>
-                    <option value={3}>C</option>
-                    <option value={4}>D</option>
-                    <option value={5}>E</option>
-                    <option value={6}>F</option>
-                    <option value={7}>G</option>
-                    <option value={8}>H</option>
-                    <option value={9}>I</option>
-                    <option value={10}>J</option>
-                    <option value={11}>K</option>
-                    <option value={12}>L</option>
-                </Select>
-                </div>
-            );
-            const hours = () => {
-                const options = [];
-                for (let i = 2; i <= 10; i += 0.25) {
-                    options.push(
-                        <option value={i}>{parseInt(i).toString() + ":" + parseInt(i % 1 * 60).toString()}</option>
-                    )
-                }
-                return options;
-            }
-            controls.push(
-                <div>
-                <Typography variant="caption">Hour Street</Typography>
-                <Select defaultValue={pattern.constructor.menuParams["Time"]} value={pattern.params["Time"]} onChange={(e) => {this.updateParam("Time", e.target.value)}}>
-                    {hours()}
-                </Select>
-                </div>
-            );
-        }
-        else {
-            pattern.constructor.menuParams.map(control => {
-                if (control.type == "GIF" || control.type == "HIDDEN") return;
-                if (typeof control.defaultVal == "object") {
-                    controls.push(<ChromePicker key={key + "-" + control.name} disableAlpha={true} color={pattern.params[control.name]} 
-                        onChange={(val) => this.updateParam(control.name,val.rgb)} />)
-                }
-                else if (typeof control.defaultVal == "number") {
-                    controls.push(
-                    <div key={key + "-" + control.name}>
-                        <Typography variant="caption">{control.name}: {pattern.params[control.name]}</Typography>
-                        <Slider value={pattern.params[control.name]} min={control.min} max={control.max} step={1} 
-                            onChange={(e,val)=>this.updateParam(control.name, val)}/>
-                    </div>
-                    )
-                }
-                else if (typeof control.defaultVal == "boolean") {
-                    controls.push(
-                        <FormControlLabel key={key + "-" + control.name} label={control.name} control={
-                            <Checkbox label={control.name} checked={pattern.params[control.name]} color="primary" 
-                            onChange={() => this.updateParam(control.name,!pattern.params[control.name])} />} 
-                        />
-                    )
-            }});
-        }
-        return controls;
-    }
-/*
-    renderFilters() {
-        const {pattern} = this.props.layer;
-        if (pattern.filters.length == 0) return;
-        return(<Card className={[this.props.classes.card, this.props.classes.topText]}>
-            <CardContent>
-                {pattern.filters.map(filter => 
-                <IconButton>
-                    <Typography>{filter.constructor.displayName}</Typography>
-                    <DeleteIcon key="delete" onClick={() => this.removeFilter(filter)}/>
-                </IconButton>
-                )}
-            </CardContent>
-        </Card>);
-    }
-*/
 
     renderPopover() {
         const { pattern } = this.props.layer;
@@ -231,7 +136,11 @@ class Layer extends React.Component {
             >
                 <Card className={this.props.classes.card}>
                     <CardContent>
-                        {this.renderControls()}
+                        <PatternProps
+                        propTypes={pattern.constructor.propTypes}
+                        values={pattern.props}
+                        onChange={this.updateProp}
+                        />
                     </CardContent>
                 </Card>
             </Popover>

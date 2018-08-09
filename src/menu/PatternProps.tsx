@@ -5,7 +5,7 @@ import { Checkbox, ColorPicker, EnumeratedList, Slider } from './components';
 
 
 interface PatternPropsProps {
-    onChange (props: object): void
+    onChange (props: object, prop: object, value: object): void
     propTypes: object,
     values: object
 }
@@ -15,7 +15,7 @@ export default class PatternProps extends React.Component<PatternPropsProps> {
         this.props.onChange({
             ...this.props.values,
             [prop]: value
-        });
+        }, prop, value);
     }
 
     render () {
