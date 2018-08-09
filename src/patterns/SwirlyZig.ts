@@ -1,5 +1,6 @@
 
-import { RGB, Color } from '../colors';
+import * as _ from 'lodash';
+import { Color } from '../colors';
 import { pattern, PatternInstance } from '../types';
 import BasePattern from './BasePattern';
 import { Swirly } from './Swirly';
@@ -28,13 +29,10 @@ export class SwirlyZig extends BasePattern {
     };
 
     static defaultProps () : SwirlyZigProps {
+        const swirlyDefaults = Swirly.defaultProps();
         return {
-            color1: new RGB(200, 200, 15),
-            color2: new RGB(200, 30, 30),
-            quantity: 10,
-            velocity: 10,
-            brightness: 100,
-            fromApex: true
+            ..._.omit(swirlyDefaults, 'clockwise'),
+            velocity: 10
         };
     }
 
@@ -47,6 +45,12 @@ export class SwirlyZig extends BasePattern {
             ...props,
             clockwise: true
         });
+    }
+
+    /** The props need to be passed along to the `swirly` pattern */
+    updateProps (props) {
+        super.updateProps(props);
+        this.swirly.updateProps(this.props);
     }
 
     progress () {
