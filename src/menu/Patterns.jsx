@@ -20,7 +20,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import { CanopySvg } from '../canopy';
 import * as patterns from '../patterns';
-import { PatternItem } from './components/PatternItem';
 import PatternProps from './PatternProps';
 
 
