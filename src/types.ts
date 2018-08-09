@@ -15,6 +15,7 @@ export interface StripInterface {
     leds: LedInterface[],
     length: number,
     updateColor (position: number, color: string): void
+    updateColors (color: string): void
 }
 
 export interface CanopyInterface {

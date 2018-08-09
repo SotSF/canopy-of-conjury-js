@@ -2,6 +2,7 @@
 import * as _ from 'lodash';
 import { CanopyInterface, StripInterface } from '../types';
 
+
 class Strip implements StripInterface {
     leds = null;
 
@@ -19,6 +20,10 @@ class Strip implements StripInterface {
 
     updateColor (index, color) {
         this.leds[index] = color;
+    }
+
+    updateColors(color) {
+        _.range(this.leds.length).forEach(i => this.updateColor(i, color));
     }
 }
 
