@@ -25,7 +25,6 @@ const canopy = new CanopyThreeJs;
 canopy.initialize(scene);
 
 var brush; // active freedraw brush
-var activeLayer;
 var layers = [];
 var mapFromCanopyMemo = {};
 window.onload = function () {  
@@ -119,11 +118,8 @@ const setBrush = function(val) {
 const updateLayers = function(val) {
     layers = val;
 }
-const setActiveLayer = function(val) {
-    activeLayer = layers[val];
-}
 $(document).ready(function () {
-    Menu.initialize(updateLayers, setBrush, setActiveLayer);
+    Menu.initialize(updateLayers, setBrush, canopy);
     $(document).on('click', '#idRenderer', canopyClick);
 });
 
@@ -132,8 +128,8 @@ var doubleBrush;
 const ray = new THREE.Raycaster();
 ray.params.Points.threshold = 0.5;
 function canopyClick( event ) {
-    if (brush && activeLayer && activeLayer.pattern instanceof Patterns.PCanvas) {
-        const pattern = activeLayer.pattern;
+    if (brush) {
+        const pattern = null; // FIXME: re-enable brushing
         const x = ((event.clientX - 300) / (window.innerWidth - 300) ) * 2 - 1;
         const y = - ( event.clientY / window.innerHeight ) * 2 + 1;
         const vector = new THREE.Vector2( x, y );

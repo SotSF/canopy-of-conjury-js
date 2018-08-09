@@ -45,7 +45,7 @@ export class Map extends BasePattern {
     }
 
     static getStripIndexForTime (time, canopy) {
-        return Math.round(util.lerp(canopy.strips.length, 0, time / 12));
+        return Math.round(util.lerp(canopy.strips.length - 1, 0, time / 12));
     };
 
     static getStripIndexForLetter (l, canopy: CanopyInterface) {

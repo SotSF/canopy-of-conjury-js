@@ -1,7 +1,6 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 
 import Card from '@material-ui/core/Card';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -94,11 +93,7 @@ class Layer extends React.Component {
         );
     }
 
-    getIndex () {
-        return this.props.layers.indexOf(this.props.layer);
-    }
-
-    updateProp = (props) => this.props.layer.pattern.updateProps(props);
+    updateProps = (props) => this.props.layer.pattern.updateProps(props);
 
     removeFilter (filter) {
         const { pattern } = this.props.layer;
@@ -127,7 +122,7 @@ class Layer extends React.Component {
                     <PatternProps
                       propTypes={layer.pattern.constructor.propTypes}
                       values={layer.pattern.props}
-                      onChange={this.updateProp}
+                      onChange={this.updateProps}
                     />
                 </Card>
             </Popover>
@@ -135,15 +130,10 @@ class Layer extends React.Component {
     }
 
     render () {
-        const { key, name } = this.props.layer;
-        const i = this.getIndex();
-        const className = classNames('layer', {
-            active: this.props.isActive
-        });
-
+        const { name } = this.props.layer;
         return (
-            <ListItem className={className} onClick={() => this.props.setLayer(i)}>
-                <ListItemText primary={`${name}: ${key}`} onClick={this.handleClick} />
+            <ListItem button className="layer">
+                <ListItemText onClick={this.handleClick} primary={name} />
                 <ListItemSecondaryAction>
                     {this.renderButtons()}
                 </ListItemSecondaryAction>
@@ -177,16 +167,14 @@ export default class ActiveLayers extends React.Component {
                     <List dense disablePadding classes={{
                         root: classes.list
                     }}>
-                        {layers.map((layer, i) =>
+                        {layers.map((layer) =>
                             <Layer
-                              key={layer.key}
+                              key={layer.pattern.constructor.displayName}
                               layer={layer}
                               layers={layers}
-                              isActive={this.props.activeLayer === i}
                               moveLayerUp={this.props.moveLayerUp}
                               moveLayerDown={this.props.moveLayerDown}
                               removeLayer={this.props.removeLayer}
-                              setLayer={this.props.setLayer}
                             />
                         )}
                     </List>

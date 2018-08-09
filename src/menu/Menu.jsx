@@ -13,7 +13,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
 import { MuiThemeProvider, withStyles } from '@material-ui/core/styles';
 
-import canopy from '../canopy';
 import * as patterns from '../patterns';
 import theme from '../theme';
 
@@ -50,25 +49,21 @@ class Menu extends React.Component {
     currentId = 0;
     state = {
         layers: [],
-        activeLayer: {},
         activeBrush: ''
     };
 
     clear = () => {
-        canopy.clear();
+        this.props.canopy.clear();
         this.setState({ layers: [] });
         this.props.updateLayers([]);
     };
 
     activateBrush = (name) => {
         this.setState({ activeBrush: name });
-        this.props.setBrush(name)
+        this.props.setBrush(name);
         var drawLayer = this.state.layers.find((layer) => {return layer.pattern instanceof patterns.PCanvas});
         if (drawLayer == null) {
             this.addLayer(patterns.PCanvas, "Draw Canvas");
-        }
-        else {
-            this.setActiveLayer(this.state.layers.indexOf(drawLayer));
         }
     };
 
@@ -82,7 +77,6 @@ class Menu extends React.Component {
 
         this.currentId++;
         this.setState({ layers: newLayers }, () => {
-            this.setActiveLayer(0);
             this.props.updateLayers(newLayers)
         });
     };
@@ -104,12 +98,6 @@ class Menu extends React.Component {
         [newLayers[i], newLayers[i + 1]] = [newLayers[i + 1], newLayers[i]];
         this.setState({ layers: newLayers }, () =>  this.props.updateLayers(newLayers));
     };
-
-    setActiveLayer = (i) => {
-        this.setState({ activeLayer: this.state.layers[i] }, () => this.props.setActiveLayer(i));
-    };
-
-    getActiveLayer = () => this.state.layers.indexOf(this.state.activeLayer);
 
     render () {
         const { classes } = this.props;
@@ -155,8 +143,6 @@ class Menu extends React.Component {
                       moveLayerUp={this.moveLayerUp}
                       moveLayerDown={this.moveLayerDown}
                       removeLayer={this.removeLayer}
-                      setLayer={this.setActiveLayer}
-                      activeLayer={this.getActiveLayer()}
                       updatePattern={this.props.updatePattern}
                     />
 
@@ -167,9 +153,13 @@ class Menu extends React.Component {
     }
 }
 
-export const initialize = (updateLayers, setBrush, setActiveLayer) => {
+export const initialize = (updateLayers, setBrush, canopy) => {
     ReactDOM.render(
-        <Menu updateLayers={updateLayers} setBrush={setBrush} setActiveLayer={setActiveLayer}/>,
+        <Menu
+          canopy={canopy}
+          setBrush={setBrush}
+          updateLayers={updateLayers}
+        />,
         document.getElementById('idControls')
     );
 };
