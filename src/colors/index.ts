@@ -32,7 +32,8 @@ export class RGB implements Color {
     }
 
     toHSV () {
-        return rgbToHsv(this);
+        const { h, s, v } = rgbToHsv(this);
+        return new HSV(h, s, v);
     }
 
     /**
@@ -71,15 +72,16 @@ export class HSV implements Color {
      * left-shifted by 2, and adding the `b` value unchanged. The shifting is done in base 16.
      */
     toHex () {
-        return rgbToHex(this.toRgb());
+        return this.toRgb().toHex();
     }
 
     toRgb () {
-        return hsvToRgb(this);
+        const { r, g, b } = hsvToRgb(this);
+        return new RGB(r, g, b);
     }
 
     toString () {
-        return rgbToHexString(this.toRgb());
+        return this.toRgb().toString();
     }
 }
 

@@ -75,16 +75,8 @@ export class ShootingStars extends BasePattern {
     render (canopy) {
         const color = this.props.color.withAlpha(this.props.brightness / 100);
         this.stars.forEach((star) => {
-            // Scale the star's strip and LED to match the current canopy
-            const canopyStrip = Math.round(
-                util.scale(star.strip, 0, NUM_STRIPS - 1, 0, canopy.strips.length - 1)
-            );
-
-            const canopyLed = Math.round(
-                util.scale(star.led, 0, NUM_LEDS_PER_STRIP - 1, 0, canopy.stripLength - 1)
-            );
-
-            canopy.strips[canopyStrip].updateColor(canopyLed, color);
+            const converted = ShootingStars.convertCoordinate(star, canopy);
+            canopy.strips[converted.strip].updateColor(converted.led, color);
         });
     }
 }

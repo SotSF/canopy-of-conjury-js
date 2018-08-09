@@ -5,7 +5,7 @@ export { Map } from './Map';
 export { Radar } from './Radar';
 export { ShootingStars } from './ShootingStars';
 export { SineRing } from './SineRing';
-export { Snake } from './snake';
+export { Snake } from './Snake';
 export { Swirly } from './swirly';
 export { SwirlyZig } from './swirly_zig';
 export { TestLEDs, AlphaTest } from './test';
