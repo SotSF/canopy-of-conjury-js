@@ -6,7 +6,7 @@ export { Radar } from './Radar';
 export { ShootingStars } from './ShootingStars';
 export { SineRing } from './SineRing';
 export { Snake } from './Snake';
-export { Swirly } from './swirly';
+export { Swirly } from './Swirly';
 export { SwirlyZig } from './swirly_zig';
 export { TestLEDs, AlphaTest } from './test';
 export { PCanvas } from './canvas';

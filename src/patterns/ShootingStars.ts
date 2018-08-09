@@ -3,7 +3,6 @@ import * as _ from 'lodash';
 import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
 import { RGB, Color } from '../colors';
 import { pattern } from '../types';
-import * as util from '../util';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 
