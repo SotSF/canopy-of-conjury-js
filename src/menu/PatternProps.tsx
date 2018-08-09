@@ -66,6 +66,7 @@ export default class PatternProps extends React.Component<PatternPropsProps> {
                 components.push(
                     <Checkbox
                       checked={values[prop]}
+                      key={prop}
                       label={prop}
                       onChange={checked => this.updateProp(prop, checked)}
                     />
