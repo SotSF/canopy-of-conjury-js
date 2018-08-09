@@ -87,18 +87,6 @@ class Menu extends React.Component {
         this.setState({ layers: newLayers }, () =>  this.props.updateLayers(newLayers));
     };
 
-    moveLayerUp = (i) => {
-        const newLayers = [...this.state.layers];
-        [newLayers[i], newLayers[i - 1]] = [newLayers[i - 1], newLayers[i]];
-        this.setState({ layers: newLayers }, () =>  this.props.updateLayers(newLayers));
-    };
-
-    moveLayerDown = (i) => {
-        const newLayers = [...this.state.layers];
-        [newLayers[i], newLayers[i + 1]] = [newLayers[i + 1], newLayers[i]];
-        this.setState({ layers: newLayers }, () =>  this.props.updateLayers(newLayers));
-    };
-
     render () {
         const { classes } = this.props;
         return (
@@ -140,8 +128,6 @@ class Menu extends React.Component {
                     
                     <ActiveLayers
                       layers={this.state.layers}
-                      moveLayerUp={this.moveLayerUp}
-                      moveLayerDown={this.moveLayerDown}
                       removeLayer={this.removeLayer}
                       updatePattern={this.props.updatePattern}
                     />

@@ -58,10 +58,7 @@ class Layer extends React.Component {
     static propTypes = {
         layer: PropTypes.shape({
             name: PropTypes.string
-        }).isRequired,
-        layers: PropTypes.arrayOf(PropTypes.shape({
-            name: PropTypes.string
-        }))
+        }).isRequired
     };
 
     state = {
@@ -75,23 +72,6 @@ class Layer extends React.Component {
     handleClose = () => {
         this.setState({ anchorEl: null });
     };
-
-    renderButtons () {
-        const { layer, layers } = this.props;
-        const index = layers.indexOf(layer);
-
-        const buttons = [];
-
-        if (index !== 0) buttons.push(<KeyboardArrowUp key="up" onClick={() => this.props.moveLayerUp(index)}/>);
-        if (index !== layers.length - 1) buttons.push(<KeyboardArrowDown key="down" onClick={() => this.props.moveLayerDown(index)}/>);
-        buttons.push(<DeleteIcon key="delete" onClick={() => this.props.removeLayer(index)}/>);
-
-        return (
-            <div>
-                {buttons.map(button => <IconButton key={button}>{button}</IconButton>)}
-            </div>
-        );
-    }
 
     updateProps = (props) => this.props.layer.pattern.updateProps(props);
 
@@ -130,12 +110,12 @@ class Layer extends React.Component {
     }
 
     render () {
-        const { name } = this.props.layer;
+        const { layer } = this.props;
         return (
             <ListItem button className="layer">
-                <ListItemText onClick={this.handleClick} primary={name} />
+                <ListItemText onClick={this.handleClick} primary={layer.name} />
                 <ListItemSecondaryAction>
-                    {this.renderButtons()}
+                    <DeleteIcon onClick={() => this.props.removeLayer(layer)} />
                 </ListItemSecondaryAction>
                 {this.renderPopover()}
             </ListItem>
@@ -167,13 +147,10 @@ export default class ActiveLayers extends React.Component {
                     <List dense disablePadding classes={{
                         root: classes.list
                     }}>
-                        {layers.map((layer) =>
+                        {layers.map((layer, i) =>
                             <Layer
-                              key={layer.pattern.constructor.displayName}
+                              key={i}
                               layer={layer}
-                              layers={layers}
-                              moveLayerUp={this.props.moveLayerUp}
-                              moveLayerDown={this.props.moveLayerDown}
                               removeLayer={this.props.removeLayer}
                             />
                         )}
