@@ -10,9 +10,9 @@ import { PatternPropTypes } from './utils';
 interface ShootingStarsProps {
     color: Color,
     velocity: number,
+    vortex: number,
     brightness: number
     fromApex: boolean,
-    vortex: boolean
 }
 
 @pattern()
@@ -21,18 +21,18 @@ export class ShootingStars extends BasePattern {
     static propTypes = {
         color: new PatternPropTypes.Color(),
         velocity: new PatternPropTypes.Range(0, 5),
+        vortex: new PatternPropTypes.Range(-2, 2, 0.1),
         brightness: new PatternPropTypes.Range(0, 100),
         fromApex: new PatternPropTypes.Boolean(),
-        vortex: new PatternPropTypes.Boolean()
     };
 
     static defaultProps () : ShootingStarsProps {
         return {
             color: RGB.random(),
             velocity: 2,
+            vortex: 0,
             brightness: 100,
             fromApex: true,
-            vortex: false
         };
     }
 
@@ -60,11 +60,16 @@ export class ShootingStars extends BasePattern {
         this.stars.forEach((star) => {
             const directionalMultiplier = this.props.fromApex ? 1 : -1;
             star.led += this.props.velocity * directionalMultiplier;
+            star.strip = (star.strip + this.props.vortex) % NUM_STRIPS;
 
-            if (this.props.vortex) {
-                star.strip = (star.strip + 1) % NUM_STRIPS;
+            // Wrap the star if necessary
+            if (star.strip < 0) {
+                star.strip += NUM_STRIPS;
+            } else if (star.strip >= NUM_STRIPS) {
+                star.strip -= NUM_STRIPS;
             }
 
+            // Remove it when it has traversed the canopy
             if (star.led >= NUM_LEDS_PER_STRIP || star.led < 0) {
                 this.stars = _.without(this.stars, star);
             }
@@ -75,7 +80,8 @@ export class ShootingStars extends BasePattern {
         const color = this.props.color.withAlpha(this.props.brightness / 100);
         this.stars.forEach((star) => {
             const converted = ShootingStars.convertCoordinate(star, canopy);
-            canopy.strips[converted.strip].updateColor(converted.led, color);
+            const strip = Math.round(converted.strip) % NUM_STRIPS;
+            canopy.strips[strip].updateColor(converted.led, color);
         });
     }
 }
