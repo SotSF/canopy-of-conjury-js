@@ -15,7 +15,6 @@ export default class ColorPicker extends React.Component {
     constructor (props) {
         super(props);
         this.state = {
-            anchorEl: null,
             color: props.color || {
                 r: Math.floor(Math.random() * 256),
                 g: Math.floor(Math.random() * 256),

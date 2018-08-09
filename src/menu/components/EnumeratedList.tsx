@@ -15,7 +15,6 @@ interface EnumeratedListProps {
 }
 
 interface EnumeratedListState {
-    anchorEl: any,
     selection: string
 }
 
@@ -23,7 +22,6 @@ export default class EnumeratedList extends React.Component<EnumeratedListProps,
     constructor (props) {
         super(props);
         this.state = {
-            anchorEl: null,
             selection: props.enumeration.value(props.value)
         };
     }
