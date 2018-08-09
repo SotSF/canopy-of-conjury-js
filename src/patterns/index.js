@@ -1,5 +1,5 @@
 export { ConcentricCircles } from './ConcentricCircles';
-export { GradientPulse } from './gradient_pulse';
+export { GradientPulse } from './GradientPulse';
 export { Fireflies } from './Fireflies';
 export { Map } from './Map';
 export { Radar } from './radar';

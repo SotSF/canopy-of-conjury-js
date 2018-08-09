@@ -47,6 +47,10 @@ export class RGB implements Color {
     toString () {
         return rgbToHexString(this.toRgb());
     }
+
+    withAlpha (a) {
+        return new RGB(this.r, this.g, this.b, a);
+    }
 }
 
 
