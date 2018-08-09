@@ -24,6 +24,7 @@ export interface CanopyInterface {
 }
 
 export interface PatternInstance {
+    props: any,
     progress () : void,
     updateProps (o: object) : void,
     render (canopy: CanopyInterface) : void
