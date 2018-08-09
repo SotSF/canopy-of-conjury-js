@@ -21,6 +21,6 @@ module.exports = {
         alias: {
             three: path.resolve(__dirname, 'lib/three.js')
         },
-        extensions: ['.ts', '.tsx', '.jsx', '.js']
+        extensions: ['.ts', '.tsx', '.jsx', '.js', '.json']
     }
 };
