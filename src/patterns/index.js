@@ -3,7 +3,7 @@ export { GradientPulse } from './GradientPulse';
 export { Fireflies } from './Fireflies';
 export { Map } from './Map';
 export { Radar } from './Radar';
-export { ShootingStars } from './shooting_stars';
+export { ShootingStars } from './ShootingStars';
 export { SineRing } from './sine_ring';
 export { Snake } from './snake';
 export { Swirly } from './swirly';
