@@ -36,9 +36,6 @@ const patternOptionStyles = {
         right: '-20px',
         top: '10px',
     },
-    parameters: {
-        padding: '1rem'
-    },
     patternWrapper: {
         display: 'flex',
         alignItems: 'flex-start',
@@ -98,13 +95,11 @@ class PatternOption extends React.Component {
 
         return (
             <div className={classes.patternWrapper}>
-                <Card className={classNames(classes.card, classes.parameters)} raised>
-                    <PatternProps
-                      propTypes={pattern.propTypes}
-                      values={patternProps}
-                      onChange={this.updateProps}
-                    />
-                </Card>
+                <PatternProps
+                  propTypes={pattern.propTypes}
+                  values={patternProps}
+                  onChange={this.updateProps}
+                />
 
                 <Card className={classNames(classes.card, classes.canopy)} raised>
                     <CanopySvg mini pattern={patternInstance} patternProps={patternProps} />

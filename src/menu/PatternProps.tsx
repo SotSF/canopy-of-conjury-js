@@ -1,8 +1,17 @@
 
 import * as React from 'react';
+import Card from '@material-ui/core/Card';
+
 import { PatternPropTypes } from '../patterns/utils';
 import { Checkbox, ColorPicker, EnumeratedList, Slider } from './components';
 
+
+const styles = {
+    parameters: {
+        backgroundColor: '#626262',
+        padding: '1rem'
+    },
+};
 
 interface PatternPropsProps {
     onChange (props: object): void
@@ -64,6 +73,10 @@ export default class PatternProps extends React.Component<PatternPropsProps> {
             }
         });
 
-        return <div>{components}</div>;
+        return (
+            <Card style={styles.parameters} raised>
+                {components}
+            </Card>
+        );
     }
 }
