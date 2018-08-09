@@ -31,9 +31,9 @@ export class Swirly extends BasePattern {
 
     static defaultProps () : SwirlyProps {
         return {
-            color1: new RGB(200, 200, 15),
-            color2: new RGB(200, 30, 30),
-            quantity: 10,
+            color1: RGB.random(),
+            color2: RGB.random(),
+            quantity: 30,
             brightness: 100,
             fromApex: true,
             clockwise: true
