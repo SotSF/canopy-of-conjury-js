@@ -1,5 +1,6 @@
 
 import { CanopyInterface, PatternInstance } from '../types';
+import * as _ from "lodash";
 
 
 export default abstract class BasePattern implements PatternInstance {
@@ -7,7 +8,6 @@ export default abstract class BasePattern implements PatternInstance {
     iteration = 0;
 
     // These must each be implemented in inheriting classes
-    abstract updateProps (o: any);
     abstract render (canopy: CanopyInterface);
 
     constructor (props) {
@@ -18,5 +18,8 @@ export default abstract class BasePattern implements PatternInstance {
 
     progress () {
         this.iteration++;
+    }
+    updateProps (props) {
+        _.merge(this.props, props);
     }
 }

@@ -56,10 +56,6 @@ export class Fireflies extends BasePattern {
         }
     }
 
-    updateProps (properties: FireFliesPropTypes) {
-        _.merge(this.props, properties);
-    }
-
     progress () {
         super.progress();
 

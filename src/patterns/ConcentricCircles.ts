@@ -33,10 +33,6 @@ export class ConcentricCircles extends BasePattern {
 
     circles = [];
 
-    updateProps (properties: ConcentricCirclesProps) {
-        this.props = properties;
-    }
-
     progress () {
         super.progress();
 

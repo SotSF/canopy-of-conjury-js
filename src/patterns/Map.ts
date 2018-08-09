@@ -68,10 +68,6 @@ export class Map extends BasePattern {
     // 8:45 & G
     HOME = [8.75, 7];
 
-    updateProps (properties: MapProps) {
-        _.merge(this.props, properties);
-    }
-
     progress () {
         super.progress();
         this.blink = !this.blink;
