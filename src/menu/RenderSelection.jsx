@@ -10,10 +10,10 @@ import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
     formControl: {
-        bottom: 0,
+        flexShrink: 0,
         margin: theme.spacing.unit,
-        minWidth: 120,
-        position: 'absolute',
+        marginTop: theme.spacing.unit * 3,
+        minWidth: 120
     },
 });
 
