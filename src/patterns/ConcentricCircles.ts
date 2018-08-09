@@ -21,7 +21,7 @@ export class ConcentricCircles extends BasePattern {
 
     static propTypes = {
         color: new PatternPropTypes.Color(),
-        period: new PatternPropTypes.Range(0, 30)
+        period: new PatternPropTypes.Range(1, 100)
     };
 
     static defaultProps () : ConcentricCirclesProps {
