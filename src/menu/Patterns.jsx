@@ -191,6 +191,10 @@ export default class Patterns extends React.Component {
                           addPattern={this.props.addLayer}
                         />
                         <PatternOption
+                          pattern={patterns.Fade}
+                          addPattern={this.props.addLayer}
+                        />
+                        <PatternOption
                           pattern={patterns.Fireflies}
                           addPattern={this.props.addLayer}
                         />
