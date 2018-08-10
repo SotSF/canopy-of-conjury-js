@@ -94,15 +94,13 @@ class Layer extends React.Component {
                   horizontal: 'left',
               }}
             >
-                <Card className={this.props.classes.card}>
-                    <PatternProps
-                      propTypes={layer.pattern.constructor.propTypes}
-                      values={layer.pattern.props}
-                      onChange={this.updateProps}
-                    />
-                </Card>
+                <PatternProps
+                  propTypes={layer.pattern.constructor.propTypes}
+                  values={layer.pattern.props}
+                  onChange={this.updateProps}
+                />
             </Popover>
-        )
+        );
     }
 
     render () {
