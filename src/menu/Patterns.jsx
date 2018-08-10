@@ -79,7 +79,10 @@ class PatternOption extends React.Component {
         });
     };
 
-    addPattern = () => this.props.addPattern(this.props.pattern, this.state.patternProps);
+    addPattern = () => {
+        this.props.addPattern(this.props.pattern, this.state.patternProps);
+        this.handleClose();
+    };
 
     updateProps = (patternProps) => {
         this.setState({ patternProps });
