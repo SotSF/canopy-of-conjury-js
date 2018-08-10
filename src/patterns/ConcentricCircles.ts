@@ -10,7 +10,7 @@ import { PatternPropTypes } from './utils';
 interface ConcentricCirclesProps {
     color: Color,
     width: number,
-    period: number
+    frequency: number
 }
 
 /**
@@ -23,14 +23,14 @@ export class ConcentricCircles extends BasePattern {
     static propTypes = {
         color: new PatternPropTypes.Color(),
         width: new PatternPropTypes.Range(1, 10),
-        period: new PatternPropTypes.Range(1, 100)
+        frequency: new PatternPropTypes.Range(100, 1, -1)
     };
 
     static defaultProps () : ConcentricCirclesProps {
         return {
             color: RGB.random(),
             width: 1,
-            period: 10
+            frequency: 20
         };
     }
 
@@ -39,7 +39,7 @@ export class ConcentricCircles extends BasePattern {
     progress () {
         super.progress();
 
-        if (this.iteration % this.props.period === 0) {
+        if (this.iteration % this.props.frequency === 0) {
             this.circles.push({ pos: 0, color: this.props.color, width: this.props.width });
         }
 
