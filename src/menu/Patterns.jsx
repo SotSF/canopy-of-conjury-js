@@ -183,6 +183,10 @@ export default class Patterns extends React.Component {
                         root: classes.list
                     }}>
                         <PatternOption
+                          pattern={patterns.Bubbles}
+                          addPattern={this.props.addLayer}
+                        />
+                        <PatternOption
                           pattern={patterns.ConcentricCircles}
                           addPattern={this.props.addLayer}
                         />
