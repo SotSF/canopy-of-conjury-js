@@ -13,7 +13,7 @@ export const rgbToHex = ({ r, g, b }: RGB) => (
 const convertIntToHex = (int: number) => {
     const hexAlphabet = '0123456789ABCDEF';
     const quotient = Math.floor(int / 16);
-    const remainder = Math.round(int % 16);
+    const remainder = Math.floor(int % 16);
 
     return `${hexAlphabet[quotient]}${hexAlphabet[remainder]}`;
 };

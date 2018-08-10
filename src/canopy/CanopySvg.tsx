@@ -31,7 +31,7 @@ const Strip = ({ leds, length, rotation }) => {
         <g transform={transform}>
             {_.range(numToRender).map((i) =>
                 <circle
-                  fill={rgbToHexString(leds[i])}
+                  fill={leds[i].toString()}
                   fillOpacity={leds[i].a}
                   key={i}
                   r={LED_RADIUS}
