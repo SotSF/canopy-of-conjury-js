@@ -5,6 +5,7 @@ import * as _ from 'lodash';
 import { rgbToHexString } from '../colors';
 import { CanopyInterface, PatternInstance } from '../types';
 import Canopy from './Canopy';
+import * as util from "../util";
 
 
 // Rendering constants
@@ -31,6 +32,7 @@ const Strip = ({ leds, length, rotation }) => {
             {_.range(numToRender).map((i) =>
                 <circle
                   fill={rgbToHexString(leds[i])}
+                  fillOpacity={leds[i].a}
                   key={i}
                   r={LED_RADIUS}
                   cx={interval * i}
