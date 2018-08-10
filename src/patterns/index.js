@@ -1,7 +1,8 @@
 export { ConcentricCircles } from './ConcentricCircles';
-export { GradientPulse } from './GradientPulse';
 export { Fade } from './Fade';
 export { Fireflies } from './Fireflies';
+export { GradientFlow } from './GradientFlow';
+export { GradientPulse } from './GradientPulse';
 export { Map } from './Map';
 export { Radar } from './Radar';
 export { ShootingStars } from './ShootingStars';

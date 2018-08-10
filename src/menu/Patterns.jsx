@@ -187,6 +187,10 @@ export default class Patterns extends React.Component {
                           addPattern={this.props.addLayer}
                         />
                         <PatternOption
+                          pattern={patterns.GradientFlow}
+                          addPattern={this.props.addLayer}
+                        />
+                        <PatternOption
                           pattern={patterns.GradientPulse}
                           addPattern={this.props.addLayer}
                         />
