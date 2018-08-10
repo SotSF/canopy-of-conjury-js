@@ -23,17 +23,9 @@ class MemoizedMap implements IMemoizedMap {
 
         // Maps a single pixel in the canvas to the strip and LED in the canopy
         const mapToCanopy = (x, y) => {
-            let theta = 0;
-
-            if (x === 0) {
-                if (y > 0) theta = Math.PI / 2;
-                if (y < 0) theta = -Math.PI / 2;
-                if (y === 0) theta = 0;
-            } else {
-                theta = Math.atan2(y, x);
-            }
-
             const TWO_PI = Math.PI * 2;
+
+            let theta = Math.atan2(y, x);
             if (theta < 0) {
                 theta += TWO_PI
             }

@@ -15,7 +15,7 @@ class AlphaMap {
 export class PCanvas {
     static menuParams = [];
     static displayName = "Canvas";
-    static dimension = 100;
+    static dimension = 200;
     static alphaMap = new AlphaMap();
     static p = new Processing(document.getElementById('idCanvas'), (processing) => {
         processing.setup = () => {
