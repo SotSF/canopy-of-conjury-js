@@ -77,12 +77,6 @@ class Layer extends React.Component {
         this.forceUpdate();
     };
 
-    removeFilter (filter) {
-        const { pattern } = this.props.layer;
-        const i = pattern.filters.indexOf(filter);
-        pattern.filters.splice(i, 1);
-    }
-
     renderPopover() {
         const { layer } = this.props;
         const { anchorEl } = this.state;
