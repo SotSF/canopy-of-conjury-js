@@ -42,11 +42,11 @@ export class RGB implements Color {
      * left-shifted by 2, and adding the `b` value unchanged. The shifting is done in base 16.
      */
     toHex () {
-        return rgbToHex(this.toRgb());
+        return rgbToHex(this);
     }
 
     toString () {
-        return rgbToHexString(this.toRgb());
+        return rgbToHexString(this);
     }
 
     withAlpha (a) {
