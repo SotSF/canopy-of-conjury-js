@@ -26,7 +26,7 @@ export class Fireflies extends BaseProcessingPattern {
         color     : new PatternPropTypes.Color(),
         lifespan  : new PatternPropTypes.Range(10, 100),
         quantity  : new PatternPropTypes.Range(10, 100),
-        range     : new PatternPropTypes.Range(-10, 10),
+        rotation     : new PatternPropTypes.Range(-10, 10),
         size      : new PatternPropTypes.Range(1, 10),
         velocity  : new PatternPropTypes.Range(0, 10)
     };
