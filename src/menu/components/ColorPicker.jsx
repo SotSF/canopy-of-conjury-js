@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { ChromePicker } from 'react-color';
 
 import { RGB } from '../../colors';
-import PropWindow from './PropWindow';
+import Popover from '../../util/Popover';
 
 
 export default class ColorPicker extends React.Component {
@@ -36,13 +36,13 @@ export default class ColorPicker extends React.Component {
 
     render () {
         return (
-            <PropWindow buttonColor={this.color} buttonText="Color">
+            <Popover buttonColor={this.color} buttonText="Color">
                 <ChromePicker
                   color={this.state.color}
                   disableAlpha
                   onChangeComplete={this.updateColor}
                 />
-            </PropWindow>
+            </Popover>
         );
     }
 }

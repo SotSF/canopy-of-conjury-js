@@ -5,7 +5,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
 import { EnumType } from '../../types';
-import PropWindow from './PropWindow';
+import Popover from '../../util/Popover';
 
 
 interface EnumeratedListProps {
@@ -36,7 +36,7 @@ export default class EnumeratedList extends React.Component<EnumeratedListProps,
         const { enumeration } = this.props;
         const { selection } = this.state;
         return (
-            <PropWindow buttonText={selection}>
+            <Popover buttonText={selection}>
                 <List dense disablePadding>
                     {enumeration.values().map((value) =>
                         <ListItem button key={value}>
@@ -47,7 +47,7 @@ export default class EnumeratedList extends React.Component<EnumeratedListProps,
                         </ListItem>
                     )}
                 </List>
-            </PropWindow>
+            </Popover>
         );
     }
 }

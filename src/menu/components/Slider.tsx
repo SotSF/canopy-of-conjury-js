@@ -2,7 +2,7 @@
 import * as React from 'react';
 import MaterialSlider from '@material-ui/lab/Slider';
 
-import PropWindow from './PropWindow';
+import Popover from '../../util/Popover';
 
 
 interface SliderProps {
@@ -67,7 +67,7 @@ export default class Slider extends React.Component<SliderProps, SliderState> {
         };
 
         return (
-            <PropWindow buttonText={label} {...positionalProps}>
+            <Popover buttonText={label} {...positionalProps}>
                 <div style={styles}>
                     <MaterialSlider
                       onChange={this.updateValue}
@@ -78,7 +78,7 @@ export default class Slider extends React.Component<SliderProps, SliderState> {
                       vertical
                     />
                 </div>
-            </PropWindow>
+            </Popover>
         );
     }
 }

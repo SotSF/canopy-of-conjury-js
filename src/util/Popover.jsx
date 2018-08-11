@@ -2,15 +2,15 @@
 import * as React from 'react';
 
 import Button from '@material-ui/core/Button';
-import Popover  from '@material-ui/core/Popover';
+import MuiPopover  from '@material-ui/core/Popover';
 import { withTheme } from '@material-ui/core/styles';
 
-import { RGB } from '../../colors';
+import { RGB } from '../colors';
 import PropTypes from "prop-types";
 
 
 @withTheme()
-export default class PropWindow extends React.Component {
+export default class Popover extends React.Component {
     static propTypes = {
         anchorOrigin: PropTypes.shape({
             vertical: PropTypes.oneOf(['top', 'center', 'bottom']),
@@ -77,7 +77,7 @@ export default class PropWindow extends React.Component {
         return (
             <div className="pattern-prop">
                 {this.renderButton()}
-                <Popover
+                <MuiPopover
                   open={!!anchorEl}
                   anchorEl={anchorEl}
                   onClose={this.handleClose}
@@ -86,7 +86,7 @@ export default class PropWindow extends React.Component {
                   style={style}
                 >
                     {children}
-                </Popover>
+                </MuiPopover>
             </div>
         );
     }
