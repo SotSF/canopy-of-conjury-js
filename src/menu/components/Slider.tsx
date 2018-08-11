@@ -7,8 +7,7 @@ import Card from '@material-ui/core/Card';
 import { createStyles, withStyles, Theme, WithStyles } from '@material-ui/core/styles';
 import MaterialSlider from '@material-ui/lab/Slider';
 
-import { IOscillator} from '../../types';
-import * as util from '../../util';
+import { AccessibleProp, IOscillator } from '../../types';
 import Popover from '../../util/Popover';
 import { OscillatorWidget } from '../oscillators';
 
@@ -36,7 +35,7 @@ interface SliderProps extends WithStyles<typeof styles> {
     min?: number,
     max?: number,
     step?: number,
-    onChange (value: number): void,
+    onChange (value: AccessibleProp<number>): void,
     oscillation: boolean
 }
 
@@ -84,13 +83,8 @@ class Slider extends React.Component<SliderProps, SliderState> {
 
     subscribe = (oscillator: IOscillator) => {
         const { min, max } = this.props;
-        const token = oscillator.subscribe((value) => {
-            // Scale the value from [-1, 1] to the range of the slider
-            const newValue = util.scale(value, -1, 1, min, max);
-            this.updateValue(newValue);
-        });
-
-        this.unsubscribe = () => oscillator.unsubscribe(token);
+        const accessor = () => oscillator.scaled(min, max);
+        this.props.onChange(accessor);
     };
 
     renderOscillator () {

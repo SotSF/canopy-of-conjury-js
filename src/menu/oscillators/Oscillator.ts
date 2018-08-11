@@ -2,6 +2,7 @@
 import * as _ from 'lodash';
 import * as PubSub from 'pubsub-js';
 import { IOscillator } from '../../types';
+import * as util from '../../util';
 
 
 let oscillatorCount = 0;
@@ -12,7 +13,7 @@ export default class Oscillator implements IOscillator {
 
     private subscribers = [];
     private id = oscillatorCount++;
-    private interval = null;
+    private readonly interval = null;
 
     constructor (waveFunction) {
         this.waveFunction = waveFunction;
@@ -30,6 +31,10 @@ export default class Oscillator implements IOscillator {
 
     get value () {
         return this.waveFunction(this.theta);
+    }
+
+    scaled (min, max) {
+        return util.scale(this.value, -1, 1, min, max);
     }
 
     subscribe (fn) {

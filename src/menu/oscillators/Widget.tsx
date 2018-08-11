@@ -24,7 +24,7 @@ class WaveImage extends React.Component<WaveImageProps, WaveImageState> {
         return baseLine - value * (WaveImage.SVG_HEIGHT * 0.45);
     }
 
-    token = null;
+    interval = null;
 
     constructor (props) {
         super(props);
@@ -35,16 +35,16 @@ class WaveImage extends React.Component<WaveImageProps, WaveImageState> {
     }
 
     componentDidMount () {
-        this.token = this.props.oscillator.subscribe((value) => {
-            // Remove the first point and add the new value
+        this.interval = setInterval(() => {
+            const value = this.props.oscillator.value;
             this.setState({
                 points: this.state.points.slice(1).concat(WaveImage.scaleValue(value))
             });
-        });
+        }, 10);
     }
 
     componentWillUnmount () {
-        this.props.oscillator.unsubscribe(this.token);
+        clearInterval(this.interval);
     }
 
     getPoints () {
