@@ -17,6 +17,7 @@ import * as patterns from '../patterns';
 import theme from '../theme';
 
 import ActiveLayers from './ActiveLayers';
+import Oscillators from './oscillators';
 import Patterns from './Patterns';
 import RenderSelection from './RenderSelection';
 
@@ -35,6 +36,10 @@ const styles = theme => ({
     },
     list: {
         width: '100%',
+    },
+    menu: {
+        display: 'flex',
+        alignItems: 'flex-start'
     },
     panelDetails: {
         padding: 0,
@@ -91,49 +96,53 @@ class Menu extends React.Component {
         const { classes } = this.props;
         return (
             <MuiThemeProvider theme={theme}>
-                <Drawer
-                  variant="permanent"
-                  classes={{
-                      paper: classes.drawerPaper
-                  }}
-                  anchor="left"
-                >
-                    <ExpansionPanel>
-                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                            <Typography className={classes.heading}>Presets</Typography>
-                        </ExpansionPanelSummary>
-                        <ExpansionPanelDetails classes={{
-                            root: classes.panelDetails
-                        }}>
-                            <List dense disablePadding classes={{
-                                root: classes.list
+                <div className={classes.menu}>
+                    <Drawer
+                      variant="permanent"
+                      classes={{
+                          paper: classes.drawerPaper
+                      }}
+                      anchor="left"
+                    >
+                        <ExpansionPanel>
+                            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                                <Typography className={classes.heading}>Presets</Typography>
+                            </ExpansionPanelSummary>
+                            <ExpansionPanelDetails classes={{
+                                root: classes.panelDetails
                             }}>
-                                <ListItem button>
-                                    <ListItemText primary="Clear" onClick={this.clear} />
-                                </ListItem>
-
-                                {Menu.presets.map(({ pattern, name }) =>
-                                    <ListItem button key={name}>
-                                        <ListItemText
-                                          primary={name}
-                                          onClick={() => this.addLayer(pattern, name)}
-                                        />
+                                <List dense disablePadding classes={{
+                                    root: classes.list
+                                }}>
+                                    <ListItem button>
+                                        <ListItemText primary="Clear" onClick={this.clear} />
                                     </ListItem>
-                                )}
-                            </List>
-                        </ExpansionPanelDetails>
-                    </ExpansionPanel>
 
-                    <Patterns addLayer={this.addLayer} />
-                    
-                    <ActiveLayers
-                      layers={this.state.layers}
-                      removeLayer={this.removeLayer}
-                      updatePattern={this.props.updatePattern}
-                    />
+                                    {Menu.presets.map(({ pattern, name }) =>
+                                        <ListItem button key={name}>
+                                            <ListItemText
+                                              primary={name}
+                                              onClick={() => this.addLayer(pattern, name)}
+                                            />
+                                        </ListItem>
+                                    )}
+                                </List>
+                            </ExpansionPanelDetails>
+                        </ExpansionPanel>
 
-                    <RenderSelection />
-                </Drawer>
+                        <Patterns addLayer={this.addLayer} />
+
+                        <ActiveLayers
+                          layers={this.state.layers}
+                          removeLayer={this.removeLayer}
+                          updatePattern={this.props.updatePattern}
+                        />
+
+                        <RenderSelection />
+                    </Drawer>
+
+                    <Oscillators />
+                </div>
             </MuiThemeProvider>
         );
     }
