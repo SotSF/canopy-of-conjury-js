@@ -14,10 +14,10 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 50);
 camera.position.z = 11;
 
-const rendererContainer = document.getElementById('renderer-wrapper');
 const renderer = new THREE.WebGLRenderer({ antialias: true });
+const MENU_WIDTH = 240;
 renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setSize(window.innerWidth - MENU_WIDTH, window.innerHeight);
 renderer.domElement.id = "idRenderer";
 document.getElementById('renderer-wrapper').appendChild(renderer.domElement);
 
@@ -131,7 +131,7 @@ ray.params.Points.threshold = 0.5;
 function canopyClick( event ) {
     if (brush) {
         const pattern = null; // FIXME: re-enable brushing
-        const x = ((event.clientX - 300) / (window.innerWidth - 300) ) * 2 - 1;
+        const x = ((event.clientX - MENU_WIDTH) / (window.innerWidth - MENU_WIDTH) ) * 2 - 1;
         const y = - ( event.clientY / window.innerHeight ) * 2 + 1;
         const vector = new THREE.Vector2( x, y );
         ray.setFromCamera(vector, camera);

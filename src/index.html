@@ -18,30 +18,28 @@
 			height: 100%;
 		}
 
-		#container {
-			display: flex;
-			flex-flow: row nowrap;
-		}
-
 		#renderer-wrapper {
-			flex-grow: 1;
+			margin-left: 240px;
 		}
 
-		#idControls {
-			background-color: black;
-			height: -webkit-fill-available;
+		#controls {
+			position: absolute;
+			width: 100%;
+			top: 0;
+			bottom: 0;
+			display: flex;
+			align-items: flex-start;
 		}
 
 		.pattern-prop + .pattern-prop {
 			margin-top: 10px;
 		}
-
 	</style>
 </head>
 <body>
 
 <div id="container">
-	<div id="idControls"></div>
+	<div id="controls"></div>
 	<div id="renderer-wrapper"></div>
 </div>
 
