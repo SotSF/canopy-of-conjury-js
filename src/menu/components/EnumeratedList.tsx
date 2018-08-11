@@ -36,7 +36,7 @@ export default class EnumeratedList extends React.Component<EnumeratedListProps,
         const { enumeration } = this.props;
         const { selection } = this.state;
         return (
-            <Popover buttonText={selection}>
+            <Popover buttonText={selection} className="pattern-prop">
                 <List dense disablePadding>
                     {enumeration.values().map((value) =>
                         <ListItem button key={value}>

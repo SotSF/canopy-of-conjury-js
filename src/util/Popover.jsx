@@ -1,12 +1,12 @@
 
 import * as React from 'react';
+import PropTypes from 'prop-types';
 
 import Button from '@material-ui/core/Button';
 import MuiPopover  from '@material-ui/core/Popover';
 import { withTheme } from '@material-ui/core/styles';
 
 import { RGB } from '../colors';
-import PropTypes from "prop-types";
 
 
 @withTheme()
@@ -24,7 +24,8 @@ export default class Popover extends React.Component {
             toString: PropTypes.func
         }),
         buttonText: PropTypes.string.isRequired,
-        style: PropTypes.object
+        className: PropTypes.string,
+        style: PropTypes.object,
     };
 
     static defaultProps = {
@@ -38,6 +39,8 @@ export default class Popover extends React.Component {
         },
         buttonColor: new RGB(122, 122, 122),
         style: null
+        buttonProps: {},
+        paperProps: {},
     };
 
     state = {
@@ -72,10 +75,17 @@ export default class Popover extends React.Component {
     }
 
     render () {
-        const { anchorOrigin, transformOrigin, children, style } = this.props;
         const { anchorEl } = this.state;
+        const {
+            anchorOrigin,
+            children,
+            className,
+            style,
+            transformOrigin,
+        } = this.props;
+
         return (
-            <div className="pattern-prop">
+            <div className={className}>
                 {this.renderButton()}
                 <MuiPopover
                   open={!!anchorEl}

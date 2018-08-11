@@ -36,7 +36,7 @@ export default class ColorPicker extends React.Component {
 
     render () {
         return (
-            <Popover buttonColor={this.color} buttonText="Color">
+            <Popover buttonColor={this.color} buttonText="Color" className="pattern-prop">
                 <ChromePicker
                   color={this.state.color}
                   disableAlpha
