@@ -1,4 +1,7 @@
 
+import { Color } from './colors';
+
+
 export interface EnumType {
     values () : string[]
     value (index: number) : string
@@ -14,8 +17,8 @@ export interface LedInterface {
 export interface StripInterface {
     leds: LedInterface[],
     length: number,
-    updateColor (position: number, color: string): void
-    updateColors (color: string): void
+    updateColor (position: number, color: Color): void
+    updateColors (color: Color): void
 }
 
 export interface CanopyInterface {
