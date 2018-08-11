@@ -1,3 +1,4 @@
+export { Bubbles } from './Bubbles';
 export { ConcentricCircles } from './ConcentricCircles';
 export { Fade } from './Fade';
 export { Fireflies } from './Fireflies';
