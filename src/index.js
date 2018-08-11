@@ -14,11 +14,12 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 50);
 camera.position.z = 11;
 
+const rendererContainer = document.getElementById('renderer-wrapper');
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(window.innerWidth - 300, window.innerHeight);
+renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.domElement.id = "idRenderer";
-document.body.appendChild(renderer.domElement);
+document.getElementById('renderer-wrapper').appendChild(renderer.domElement);
 
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
 const canopy = new CanopyThreeJs;
