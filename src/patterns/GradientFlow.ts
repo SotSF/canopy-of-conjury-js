@@ -124,6 +124,8 @@ export class GradientFlow extends BasePattern {
     }
 
     progress () {
+        super.progress();
+
         const { ringColors } = this;
         const { direction, speed } = this.props;
 
