@@ -44,6 +44,9 @@ export interface IOscillator {
     waveFunction: (x: number) => number,
     theta: number
     value: number
+    scaled: (min: number, max: number) => number
     subscribe: (fn: (value: number) => void) => string
     unsubscribe: (token: string) => void
 }
+
+export type AccessibleProp<T> = T | (() => T);

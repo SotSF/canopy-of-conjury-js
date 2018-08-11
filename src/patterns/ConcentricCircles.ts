@@ -2,14 +2,14 @@
 import * as _ from 'lodash';
 import { NUM_LEDS_PER_STRIP } from '../canopy';
 import { Color, RGB } from '../colors';
-import { pattern } from '../types';
+import { AccessibleProp, pattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 
 
 interface ConcentricCirclesProps {
     color: Color,
-    width: number | (() => number),
+    width: AccessibleProp<number>,
     frequency: number
 }
 
