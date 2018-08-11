@@ -190,6 +190,14 @@ export default class Patterns extends React.Component {
                           addPattern={this.props.addLayer}
                         />
                         <PatternOption
+                          pattern={patterns.Fade}
+                          addPattern={this.props.addLayer}
+                        />
+                        <PatternOption
+                          pattern={patterns.Fireflies}
+                          addPattern={this.props.addLayer}
+                        />
+                        <PatternOption
                           pattern={patterns.GradientFlow}
                           addPattern={this.props.addLayer}
                         />
@@ -198,11 +206,7 @@ export default class Patterns extends React.Component {
                           addPattern={this.props.addLayer}
                         />
                         <PatternOption
-                          pattern={patterns.Fade}
-                          addPattern={this.props.addLayer}
-                        />
-                        <PatternOption
-                          pattern={patterns.Fireflies}
+                          pattern={patterns.Kaleidoscope}
                           addPattern={this.props.addLayer}
                         />
                         <PatternOption
