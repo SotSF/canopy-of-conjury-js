@@ -38,3 +38,12 @@ export interface PatternInterface {
 }
 
 export const pattern = () => (contsructor: PatternInterface) => {};
+
+/** Oscillators */
+export interface IOscillator {
+    waveFunction: (x: number) => number,
+    theta: number
+    value: number
+    subscribe: (fn: (value: number) => void) => string
+    unsubscribe: (token: string) => void
+}

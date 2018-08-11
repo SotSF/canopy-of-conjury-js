@@ -9,7 +9,7 @@ import { PatternPropTypes } from './utils';
 
 interface ConcentricCirclesProps {
     color: Color,
-    width: number,
+    width: number | (() => number),
     frequency: number
 }
 
@@ -22,7 +22,7 @@ export class ConcentricCircles extends BasePattern {
 
     static propTypes = {
         color: new PatternPropTypes.Color(),
-        width: new PatternPropTypes.Range(1, 10),
+        width: new PatternPropTypes.Range(1, 10).enableOscillation(),
         frequency: new PatternPropTypes.Range(100, 1, -1)
     };
 
@@ -40,7 +40,11 @@ export class ConcentricCircles extends BasePattern {
         super.progress();
 
         if (this.iteration % this.props.frequency === 0) {
-            this.circles.push({ pos: 0, color: this.props.color, width: this.props.width });
+            this.circles.push({
+                pos: 0,
+                color: this.props.color,
+                width: _.result(this.props, 'width')
+            });
         }
 
         // go through every position in beatList, and light up the corresponding LED in all strips

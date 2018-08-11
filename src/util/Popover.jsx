@@ -23,8 +23,10 @@ export default class Popover extends React.Component {
         buttonColor: PropTypes.shape({
             toString: PropTypes.func
         }),
+        buttonProps: PropTypes.object,
         buttonText: PropTypes.string.isRequired,
         className: PropTypes.string,
+        paperProps: PropTypes.object,
         style: PropTypes.object,
     };
 
@@ -38,9 +40,10 @@ export default class Popover extends React.Component {
             horizontal: 'center'
         },
         buttonColor: new RGB(122, 122, 122),
-        style: null
         buttonProps: {},
+        className: null,
         paperProps: {},
+        style: null,
     };
 
     state = {
@@ -51,7 +54,7 @@ export default class Popover extends React.Component {
     handleClose = () => this.setState({ anchorEl: null });
 
     renderButton () {
-        const { theme, buttonColor, buttonText } = this.props;
+        const { theme, buttonColor, buttonProps, buttonText } = this.props;
 
         const colorHex = buttonColor.toString();
         const style = {
@@ -68,6 +71,7 @@ export default class Popover extends React.Component {
               size="small"
               style={style}
               variant="contained"
+              {...buttonProps}
             >
                 {buttonText}
             </Button>
@@ -80,6 +84,7 @@ export default class Popover extends React.Component {
             anchorOrigin,
             children,
             className,
+            paperProps,
             style,
             transformOrigin,
         } = this.props;
@@ -94,6 +99,7 @@ export default class Popover extends React.Component {
                   anchorOrigin={anchorOrigin}
                   transformOrigin={transformOrigin}
                   style={style}
+                  PaperProps={paperProps}
                 >
                     {children}
                 </MuiPopover>

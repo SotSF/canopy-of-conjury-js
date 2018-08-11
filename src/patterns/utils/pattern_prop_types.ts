@@ -6,11 +6,17 @@ export namespace PatternPropTypes {
         min = null;
         max = null;
         step = null;
+        oscillation = false;
 
         constructor (min, max, step = 1) {
             this.min = min;
             this.max = max;
             this.step = step;
+        }
+
+        enableOscillation () {
+            this.oscillation = true;
+            return this;
         }
     }
 

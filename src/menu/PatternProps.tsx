@@ -54,9 +54,10 @@ export default class PatternProps extends React.Component<PatternPropsProps> {
             <Slider
               key={prop}
               label={prop}
-              onChange={onChange}
               min={min}
               max={max}
+              onChange={onChange}
+              oscillation={type.oscillation}
               step={step}
               value={value}
             />

@@ -11,7 +11,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { WithStyles, createStyles } from '@material-ui/core';
 
 import Popover from '../../util/Popover';
-import Oscillator from './Oscillator';
+import Oscillator from './Widget';
 
 
 const styles = createStyles({

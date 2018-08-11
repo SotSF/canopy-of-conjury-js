@@ -1,28 +1,53 @@
 
 import * as React from 'react';
+import classNames from 'classnames';
+import * as _ from 'lodash';
+
+import Card from '@material-ui/core/Card';
+import { createStyles, withStyles, Theme, WithStyles } from '@material-ui/core/styles';
 import MaterialSlider from '@material-ui/lab/Slider';
 
+import { IOscillator} from '../../types';
+import * as util from '../../util';
 import Popover from '../../util/Popover';
+import { OscillatorWidget } from '../oscillators';
 
 
-interface SliderProps {
+const styles = ({ spacing }: Theme) => createStyles({
+    slider: {
+        height: '200px'
+    },
+    oscillatorButton: {
+    },
+    spacer: {
+        marginLeft: spacing.unit,
+    },
+    popover: {
+        backgroundColor: 'transparent',
+        boxShadow: 'none',
+        display: 'flex',
+        overflow: 'visible',
+    }
+});
+
+interface SliderProps extends WithStyles<typeof styles> {
     label: string,
     value: number
     min?: number,
     max?: number,
     step?: number,
-    onChange (value: number): void
+    onChange (value: number): void,
+    oscillation: boolean
 }
 
 interface SliderState {
     value: number
 }
 
-const styles = {
-    height: '200px'
-};
+class Slider extends React.Component<SliderProps, SliderState> {
+    // Callback used to cancel an oscillator subscription
+    unsubscribe = null;
 
-export default class Slider extends React.Component<SliderProps, SliderState> {
     static defaultProps = {
         min: 1,
         max: 10,
@@ -45,40 +70,97 @@ export default class Slider extends React.Component<SliderProps, SliderState> {
         }
     }
 
-    updateValue = (e, value) => {
+    manualUpdate = (e, value) => {
+        this.updateValue(value);
+
+        // If there's an oscillator, cancel it
+        _.result(this, 'unsubscribe');
+    };
+
+    updateValue = (value) => {
         this.props.onChange(value);
         this.setState({ value });
     };
 
+    subscribe = (oscillator: IOscillator) => {
+        const { min, max } = this.props;
+        const token = oscillator.subscribe((value) => {
+            // Scale the value from [-1, 1] to the range of the slider
+            const newValue = util.scale(value, -1, 1, min, max);
+            this.updateValue(newValue);
+        });
+
+        this.unsubscribe = () => oscillator.unsubscribe(token);
+    };
+
+    renderOscillator () {
+        const { classes } = this.props;
+        const positionalProps = {
+            anchorOrigin:{
+                vertical: 'top',
+                horizontal: 'right',
+            },
+            transformOrigin: {
+                vertical: 'top',
+                horizontal: 'left',
+            },
+        };
+
+        return (
+            <Popover
+              buttonText="Oscillator"
+              buttonProps={{
+                  className: classNames(classes.spacer)
+              }}
+              paperProps={{
+                  classes: { root: classes.spacer }
+              }}
+              {...positionalProps}
+            >
+                <OscillatorWidget onCreate={this.subscribe} />
+            </Popover>
+        );
+    }
+
     render () {
-        const { label, min, max, step } = this.props;
+        const { classes, label, min, max, step } = this.props;
         const { value } = this.state;
 
         const positionalProps = {
             anchorOrigin:{
                 vertical: 'bottom',
-                horizontal: 'right'
+                horizontal: 'right',
             },
             transformOrigin: {
                 vertical: 'bottom',
-                horizontal: 'left'
+                horizontal: 'left',
             },
-            style: { marginLeft: '10px' }
         };
 
         return (
-            <Popover buttonText={label} {...positionalProps}>
-                <div style={styles}>
+            <Popover
+              buttonText={label}
+              {...positionalProps}
+              className="pattern-prop"
+              paperProps={{
+                  classes: { root: classNames(classes.popover, classes.spacer) }
+              }}
+            >
+                <Card className={classes.slider}>
                     <MaterialSlider
-                      onChange={this.updateValue}
-                      min={min}
-                      max={max}
-                      step={step}
+                      onChange={this.manualUpdate}
+                      min={max}
+                      max={min}
+                      step={-step}
                       value={value}
                       vertical
                     />
-                </div>
+                </Card>
+
+                {this.renderOscillator()}
             </Popover>
         );
     }
 }
+
+export default withStyles(styles)(Slider);
