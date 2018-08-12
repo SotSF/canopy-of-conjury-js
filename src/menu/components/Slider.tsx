@@ -83,7 +83,9 @@ class Slider extends React.Component<SliderProps, SliderState> {
     };
 
     renderOscillator () {
-        const { classes } = this.props;
+        const { classes, oscillation } = this.props;
+        if (!oscillation) return null;
+
         const positionalProps = {
             anchorOrigin:{
                 vertical: 'top',
