@@ -67,7 +67,7 @@ const transmit = () => {
     const colors = [];
     canopy.strips.forEach((strip) => {
         strip.colors.forEach((color, i) => {
-            if (i >= canopy.numLedsPerStrip) { return; }
+            if (i < 0 || i >= canopy.numLedsPerStrip) { return; }
             const { r, g, b } = color;
             colors.push(r, g, b);
         });
