@@ -12,8 +12,8 @@ export interface RGB {
 }
 
 export interface Color {
-    toHex (): number
-    toRgb (): RGB
-    toString (): string
-    withAlpha (alpha: number): Color
+    toHex: () => number
+    toRgb: () => RGB
+    toString: () => string
+    withAlpha: (alpha: number) => Color
 }
