@@ -124,9 +124,10 @@ export default class PatternProps extends React.Component<PatternPropsProps> {
 
     render () {
         const { propTypes } = this.props;
-        const components = Object.entries(propTypes).map(([prop, type]) =>
-            this.renderProp(prop, type, this.props.values[prop])
-        );
+        const components = Object.entries(propTypes).map(([prop, type]) => {
+            const component = this.renderProp(prop, type, this.props.values[prop]);
+            return React.cloneElement(component, { key: prop });
+        });
 
         return (
             <Card style={styles.parameters} raised>
