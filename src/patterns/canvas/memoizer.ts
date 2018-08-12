@@ -2,7 +2,6 @@
 import { CanopyInterface } from '../../types';
 import { IMemoizedMap, IMemoizer } from './types';
 
-
 class MemoizedMap implements IMemoizedMap {
     map = {};
 

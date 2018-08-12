@@ -28,11 +28,12 @@ canopy.initialize(scene);
 var brush; // active freedraw brush
 var layers = [];
 var mapFromCanopyMemo = {};
+/*
 window.onload = function () {  
     (function(){
         let _mapFromCanopy = (s, l, numStrips) => {
             let theta = s * 2 * Math.PI / numStrips;
-            let radius = l + 20;
+            let radius = l;
             let x = parseInt(radius * Math.cos(theta) + Patterns.PCanvas.dimension / 2);
             let y = parseInt(radius * Math.sin(theta) + Patterns.PCanvas.dimension / 2);
             return {x,y};
@@ -47,7 +48,7 @@ window.onload = function () {
 const mapFromCanopy = (s, l) => { 
     return mapFromCanopyMemo[s + "-" + l];
  }
-
+*/
 const clearCanopy = () => {
     for (let s in canopy.strips) {
         canopy.strips[s].updateColors("#000000");
@@ -66,7 +67,8 @@ const transmit = () => {
 
     const colors = [];
     canopy.strips.forEach((strip) => {
-        strip.colors.forEach((color) => {
+        strip.colors.forEach((color, i) => {
+            if (i < 0 || i >= canopy.numLedsPerStrip) { return; }
             const { r, g, b } = color;
             colors.push(r, g, b);
         });
@@ -121,13 +123,14 @@ const updateLayers = function(val) {
 }
 $(document).ready(function () {
     Menu.initialize(updateLayers, setBrush, canopy);
-    $(document).on('click', '#idRenderer', canopyClick);
+    //$(document).on('click', '#idRenderer', canopyClick);
 });
 
 var waitingOnTarget = false;
 var doubleBrush;
 const ray = new THREE.Raycaster();
 ray.params.Points.threshold = 0.5;
+/*
 function canopyClick( event ) {
     if (brush) {
         const pattern = null; // FIXME: re-enable brushing
@@ -172,3 +175,4 @@ function canopyClick( event ) {
     }
     
 }
+*/

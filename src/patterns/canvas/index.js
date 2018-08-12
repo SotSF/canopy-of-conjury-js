@@ -1,5 +1,7 @@
 
+import { RGB } from '../../colors';
 import Memoizer from './memoizer';
+
 
 /**
  * HTML5 canvas, and thus Processing canvas, loses alpha values, so we need to preserve original
@@ -77,9 +79,9 @@ export class PCanvas {
                     g = (c2 & 0xFF00) >>> 8,
                     r = (c2 & 0xFF0000) >>> 16,
                     a = ( (c2 & 0xFF000000) >>> 24 ) / 255;
+
                 const co = memoizedMap.mapCoords(x, y);
-                //let l = co.led - 35;
-                canopy.strips[co.strip].updateColor(co.led, { r, g, b, a })
+                canopy.strips[co.strip].updateColor(co.led, new RGB(r, g, b, a));
             }
         }
     }
