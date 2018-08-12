@@ -40,13 +40,28 @@ export interface PatternInterface {
 export const pattern = () => (contsructor: PatternInterface) => {};
 
 /** Oscillators */
+export enum WaveType {
+    'Sine',
+    'Square',
+    'Triangle',
+    'Saw'
+}
+
+export interface IWaveParams {
+    amplitude: number
+    frequency: number
+    type: WaveType
+}
+
 export interface IOscillator {
-    waveFunction: (x: number) => number,
-    theta: number
-    value: number
+    readonly params: IWaveParams
     scaled: (min: number, max: number) => number
     subscribe: (fn: (value: number) => void) => string
+    theta: number
     unsubscribe: (token: string) => void
+    updateWave: (params: { amplitude?: number, frequency?: number, type?: WaveType }) => void
+    value: number
+    waveFunction: (x: number) => number
 }
 
 export type AccessibleProp<T> = T | (() => T);

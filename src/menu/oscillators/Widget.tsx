@@ -1,9 +1,15 @@
 
 import * as React from 'react';
 import * as _ from 'lodash';
+
 import Card from '@material-ui/core/Card';
-import { IOscillator } from '../../types';
-import Oscillator from './Oscillator';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+
+import { IOscillator, WaveType } from '../../types';
+import Popover from '../../util/Popover';
+import Oscillator  from './Oscillator';
 
 
 interface WaveImageProps {
@@ -77,6 +83,47 @@ class WaveImage extends React.Component<WaveImageProps, WaveImageState> {
     }
 }
 
+interface WavePropsProps {
+    oscillator: IOscillator
+}
+
+class WaveProps extends React.Component<WavePropsProps> {
+    renderWaveTypes () {
+        const { oscillator } = this.props;
+        const waveTypes = [
+            WaveType.Sine,
+            WaveType.Square,
+            WaveType.Triangle,
+            WaveType.Saw,
+        ];
+
+        const updateWaveType = (type) => oscillator.updateWave({ type });
+
+        return (
+            <Popover buttonText={WaveType[oscillator.params.type]}>
+                <List dense disablePadding>
+                    {waveTypes.map((type) =>
+                        <ListItem button key={type}>
+                            <ListItemText
+                              primary={WaveType[type]}
+                              onClick={() => updateWaveType(type)}
+                            />
+                        </ListItem>
+                    )}
+                </List>
+            </Popover>
+        );
+    }
+
+    render () {
+        return (
+            <div>
+                {this.renderWaveTypes()}
+            </div>
+        );
+    }
+}
+
 interface WidgetProps {
     oscillator?: IOscillator
     onCreate?: (osc: IOscillator) => void
@@ -103,6 +150,7 @@ export default class Widget extends React.Component<WidgetProps, WidgetState> {
         return (
             <Card>
                 <WaveImage oscillator={this.state.oscillator} />
+                <WaveProps oscillator={this.state.oscillator} />
             </Card>
         );
     }
