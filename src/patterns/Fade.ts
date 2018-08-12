@@ -1,7 +1,8 @@
 
+import * as _ from 'lodash';
 import { NUM_LEDS_PER_STRIP } from '../canopy';
 import { Color, RGB } from '../colors';
-import { pattern } from '../types';
+import { AccessibleProp, pattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 
@@ -10,7 +11,8 @@ const LIFECYCLE_END = 500;
 
 interface FadeProps {
     colors: Color[],
-    speed: number
+    speed: AccessibleProp<number>
+    brightness: AccessibleProp<number>
 }
 
 /**
@@ -22,13 +24,16 @@ export class Fade extends BasePattern {
 
     static propTypes = {
         colors: new PatternPropTypes.Array(PatternPropTypes.Color),
-        speed: new PatternPropTypes.Range(1, 10)
+        speed: new PatternPropTypes.Range(1, 10).enableOscillation(),
+        brightness: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation(),
+
     };
 
     static defaultProps (): FadeProps {
         return {
             colors: [RGB.random(), RGB.random()],
-            speed: 2
+            speed: 2,
+            brightness: 1
         };
     }
 
@@ -77,7 +82,7 @@ export class Fade extends BasePattern {
 
         // If we've got a color in process...
         else if (this.currentColor) {
-            this.lifecycle += this.props.speed;
+            this.lifecycle += _.result<number>(this.props, 'speed');
         }
     }
 
@@ -86,7 +91,8 @@ export class Fade extends BasePattern {
         if (!this.currentColor) return;
 
         const amplitude = Math.sin(Math.PI * (this.lifecycle / LIFECYCLE_END));
-        const color = this.currentColor.withAlpha(amplitude);
+        const brightness = _.result<number>(this.props, 'brightness');
+        const color = this.currentColor.withAlpha(amplitude * brightness);
 
         canopy.strips.forEach((strip) => {
             strip.updateColors(color);

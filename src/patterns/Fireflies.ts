@@ -1,20 +1,20 @@
 
 import * as _ from 'lodash';
 import { RGB, Color } from '../colors';
-import { pattern } from '../types';
+import { AccessibleProp, pattern } from '../types';
 import { PCanvas } from './canvas';
 import { BaseProcessingPattern } from './BasePattern';
 import { PatternPropTypes } from './utils';
 
 
 interface FireFliesPropTypes {
-    brightness: number,
     color: Color,
+    brightness: number,
     lifespan: number,
     quantity: number,
     rotation: number,
     size: number,
-    velocity: number
+    velocity: AccessibleProp<number>
 }
 
 
@@ -22,13 +22,13 @@ interface FireFliesPropTypes {
 export class Fireflies extends BaseProcessingPattern {
     static displayName = 'Fireflies';
     static propTypes = {
-        brightness: new PatternPropTypes.Range(0, 100),
         color     : new PatternPropTypes.Color(),
+        brightness: new PatternPropTypes.Range(0, 100),
         lifespan  : new PatternPropTypes.Range(10, 100),
         quantity  : new PatternPropTypes.Range(10, 100),
         rotation     : new PatternPropTypes.Range(-10, 10),
         size      : new PatternPropTypes.Range(1, 10),
-        velocity  : new PatternPropTypes.Range(0, 10)
+        velocity  : new PatternPropTypes.Range(0, 10).enableOscillation()
     };
 
     static defaultProps () : FireFliesPropTypes {
@@ -125,8 +125,9 @@ export class Fireflies extends BaseProcessingPattern {
         firefly.age++;
         if (firefly.age >= this.props.lifespan) _.without(this.fireflies, firefly);
 
-        if (this.props.velocity > 0) {
-            const v = this.props.velocity / 2;
+        const velocity: number = _.result(this.props, 'velocity');
+        if (velocity > 0) {
+            const v = velocity / 2;
             firefly.radius += 0.1 * v * firefly.dir[1];
             if (firefly.radius > 20 || Math.random() > 0.99) { firefly.dir[1] *= -1; }
             firefly.theta += 0.1 * v * firefly.dir[2];

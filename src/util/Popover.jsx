@@ -35,7 +35,7 @@ export default class Popover extends React.Component {
         buttonProps: PropTypes.object,
         buttonText: PropTypes.string.isRequired,
         className: PropTypes.string,
-        paperClasses: PropTypes.object,
+        paperClasses: PropTypes.string,
         style: PropTypes.object,
         transparent: PropTypes.bool,
     };
@@ -52,7 +52,7 @@ export default class Popover extends React.Component {
         buttonColor: new RGB(122, 122, 122),
         buttonProps: {},
         className: null,
-        paperClasses: {},
+        paperClasses: null,
         style: null,
         transparent: false,
     };

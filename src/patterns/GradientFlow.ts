@@ -1,7 +1,8 @@
 
+import * as _ from 'lodash';
 import { NUM_LEDS_PER_STRIP } from '../canopy';
 import { RGB, Color, HSV } from '../colors';
-import { pattern } from '../types';
+import { AccessibleProp, pattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 
@@ -23,8 +24,8 @@ enum GradientPolarity {
 interface GradientFlowProps {
     color1: Color,
     color2: Color,
-    brightness: number,
-    speed: number,
+    brightness: AccessibleProp<number>,
+    speed: AccessibleProp<number>,
     direction: GradientTravelDirection
 }
 
@@ -37,8 +38,8 @@ export class GradientFlow extends BasePattern {
     static propTypes = {
         color1: new PatternPropTypes.Color(),
         color2: new PatternPropTypes.Color(),
-        brightness: new PatternPropTypes.Range(0, 100),
-        speed: new PatternPropTypes.Range(1, 15),
+        brightness: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation(),
+        speed: new PatternPropTypes.Range(1, 15).enableOscillation(),
         direction: new PatternPropTypes.Enum(GradientTravelDirection)
     };
 
@@ -46,7 +47,7 @@ export class GradientFlow extends BasePattern {
         return {
             color1: RGB.random(),
             color2: RGB.random(),
-            brightness: 100,
+            brightness: 1,
             speed: 1,
             direction: GradientTravelDirection.outwards
         };
@@ -127,7 +128,8 @@ export class GradientFlow extends BasePattern {
         super.progress();
 
         const { ringColors } = this;
-        const { direction, speed } = this.props;
+        const { direction } = this.props;
+        const speed: number = _.result<number>(this.props, 'speed');
 
         // move the colors along
         if (direction == GradientTravelDirection.outwards) {
@@ -160,7 +162,8 @@ export class GradientFlow extends BasePattern {
         this.ringColors.forEach((ringColor, i) => {
             if (!ringColor) return;
 
-            canopy.strips.forEach(strip => strip.updateColor(i, ringColor));
+            const color = ringColor.withAlpha(_.result(this.props, 'brightness'));
+            canopy.strips.forEach(strip => strip.updateColor(i, color));
         });
     }
 }

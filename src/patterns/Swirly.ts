@@ -2,7 +2,7 @@
 import * as _ from 'lodash';
 import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
 import { RGB, Color } from '../colors';
-import { pattern } from '../types';
+import { AccessibleProp, pattern } from '../types';
 import * as util from '../util';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
@@ -12,7 +12,7 @@ interface SwirlyProps {
     color1: Color,
     color2: Color,
     quantity: number,
-    brightness: number,
+    brightness: AccessibleProp<number>,
     fromApex: boolean,
     clockwise: boolean
 }
@@ -24,7 +24,7 @@ export class Swirly extends BasePattern {
         color1: new PatternPropTypes.Color(),
         color2: new PatternPropTypes.Color(),
         quantity: new PatternPropTypes.Range(1, 100),
-        brightness: new PatternPropTypes.Range(0, 100),
+        brightness: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation(),
         fromApex: new PatternPropTypes.Boolean(),
         clockwise: new PatternPropTypes.Boolean()
     };
@@ -34,7 +34,7 @@ export class Swirly extends BasePattern {
             color1: RGB.random(),
             color2: RGB.random(),
             quantity: 30,
-            brightness: 100,
+            brightness: 1,
             fromApex: true,
             clockwise: true
         };
@@ -126,10 +126,10 @@ export class Swirly extends BasePattern {
     }
 
     render (canopy) {
-        const b = this.props.brightness;
+        const b = _.result<number>(this.props, 'brightness');
         this.swirls.forEach((swirl) => {
             swirl.lights.forEach((light) => {
-                const color = swirl.color.withAlpha(b / 100);
+                const color = swirl.color.withAlpha(b);
                 const converted = Swirly.convertCoordinate(light, canopy);
                 canopy.strips[converted.strip].updateColor(converted.led, color);
             });

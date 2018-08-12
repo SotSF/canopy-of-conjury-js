@@ -2,7 +2,7 @@
 import * as _ from 'lodash';
 import { NUM_LEDS_PER_STRIP } from '../canopy';
 import { RGB, Color } from '../colors';
-import { pattern } from '../types';
+import { AccessibleProp, pattern } from '../types';
 import * as util from '../util';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
@@ -11,7 +11,7 @@ import { PatternPropTypes } from './utils';
 interface GradientPulseProps {
     color1: Color,
     color2: Color,
-    brightness: number
+    brightness: AccessibleProp<number>
 }
 
 /**
@@ -23,14 +23,14 @@ export class GradientPulse extends BasePattern {
     static propTypes = {
         color1: new PatternPropTypes.Color(),
         color2: new PatternPropTypes.Color(),
-        brightness: new PatternPropTypes.Range(0, 100)
+        brightness: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation()
     };
 
     static defaultProps () : GradientPulseProps {
         return {
-            color1: new RGB(255, 0, 0),
-            color2: new RGB(0, 0, 255),
-            brightness: 100
+            color1: RGB.random(),
+            color2: RGB.random(),
+            brightness: 1
         };
     }
 
@@ -78,8 +78,8 @@ export class GradientPulse extends BasePattern {
 
     render (canopy) {
         this.beatList.forEach((beat) => {
-            // apply brightness mod
-            const color = beat.c.withAlpha(this.props.brightness / 100);
+            const brightness = _.result<number>(this.props, 'brightness');
+            const color = beat.c.withAlpha(brightness);
             canopy.strips.forEach((strip) => strip.updateColor(beat.pos, color));
         });
     }

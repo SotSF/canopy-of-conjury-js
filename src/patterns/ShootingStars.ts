@@ -2,17 +2,17 @@
 import * as _ from 'lodash';
 import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
 import { RGB, Color } from '../colors';
-import { pattern } from '../types';
+import { AccessibleProp, pattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 
 
 interface ShootingStarsProps {
-    color: Color,
-    velocity: number,
-    vortex: number,
-    brightness: number
-    fromApex: boolean,
+    color: Color
+    velocity: AccessibleProp<number>
+    vortex: AccessibleProp<number>
+    brightness: AccessibleProp<number>
+    fromApex: boolean
 }
 
 @pattern()
@@ -20,9 +20,9 @@ export class ShootingStars extends BasePattern {
     static displayName = 'Shooting Stars';
     static propTypes = {
         color: new PatternPropTypes.Color(),
-        velocity: new PatternPropTypes.Range(0, 5),
-        vortex: new PatternPropTypes.Range(-2, 2, 0.1),
-        brightness: new PatternPropTypes.Range(0, 100),
+        velocity: new PatternPropTypes.Range(0, 5).enableOscillation(),
+        vortex: new PatternPropTypes.Range(-2, 2, 0.1).enableOscillation(),
+        brightness: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation(),
         fromApex: new PatternPropTypes.Boolean(),
     };
 
@@ -31,7 +31,7 @@ export class ShootingStars extends BasePattern {
             color: RGB.random(),
             velocity: 2,
             vortex: 0,
-            brightness: 100,
+            brightness: 1,
             fromApex: true,
         };
     }
@@ -57,10 +57,11 @@ export class ShootingStars extends BasePattern {
             });
         }
 
+        const velocity = _.result<number>(this.props, 'velocity');
         this.stars.forEach((star) => {
             const directionalMultiplier = this.props.fromApex ? 1 : -1;
-            star.led += this.props.velocity * directionalMultiplier;
-            star.strip = (star.strip + this.props.vortex) % NUM_STRIPS;
+            star.led += velocity * directionalMultiplier;
+            star.strip = (star.strip + _.result<number>(this.props, 'vortex')) % NUM_STRIPS;
 
             // Wrap the star if necessary
             if (star.strip < 0) {
@@ -77,7 +78,7 @@ export class ShootingStars extends BasePattern {
     }
 
     render (canopy) {
-        const color = this.props.color.withAlpha(this.props.brightness / 100);
+        const color = this.props.color.withAlpha(_.result(this.props, 'brightness'));
         this.stars.forEach((star) => {
             const converted = ShootingStars.convertCoordinate(star, canopy);
             const strip = Math.round(converted.strip) % NUM_STRIPS;
