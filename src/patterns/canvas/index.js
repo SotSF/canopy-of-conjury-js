@@ -1,6 +1,7 @@
 
 import { RGB } from '../../colors';
 import Memoizer from './memoizer';
+import { RGB } from '../../colors';
 
 
 /**
