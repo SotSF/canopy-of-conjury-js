@@ -1,15 +1,24 @@
 
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 
 import Button from '@material-ui/core/Button';
 import MuiPopover  from '@material-ui/core/Popover';
-import { withTheme } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 
 import { RGB } from '../colors';
 
 
-@withTheme()
+const styles = {
+    transparent: {
+        backgroundColor: 'transparent',
+        boxShadow: 'none',
+        overflow: 'visible',
+    }
+};
+
+@withStyles(styles, { withTheme: true })
 export default class Popover extends React.Component {
     static propTypes = {
         anchorOrigin: PropTypes.shape({
@@ -26,8 +35,9 @@ export default class Popover extends React.Component {
         buttonProps: PropTypes.object,
         buttonText: PropTypes.string.isRequired,
         className: PropTypes.string,
-        paperProps: PropTypes.object,
+        paperClasses: PropTypes.object,
         style: PropTypes.object,
+        transparent: PropTypes.bool,
     };
 
     static defaultProps = {
@@ -42,8 +52,9 @@ export default class Popover extends React.Component {
         buttonColor: new RGB(122, 122, 122),
         buttonProps: {},
         className: null,
-        paperProps: {},
+        paperClasses: {},
         style: null,
+        transparent: false,
     };
 
     state = {
@@ -84,10 +95,20 @@ export default class Popover extends React.Component {
             anchorOrigin,
             children,
             className,
-            paperProps,
+            classes,
+            paperClasses,
             style,
             transformOrigin,
+            transparent,
         } = this.props;
+
+        const PaperProps = {
+            classes: {
+                root: classNames(paperClasses, {
+                    [classes.transparent]: transparent,
+                }),
+            },
+        };
 
         return (
             <div className={className}>
@@ -99,7 +120,7 @@ export default class Popover extends React.Component {
                   anchorOrigin={anchorOrigin}
                   transformOrigin={transformOrigin}
                   style={style}
-                  PaperProps={paperProps}
+                  PaperProps={PaperProps}
                 >
                     {children}
                 </MuiPopover>

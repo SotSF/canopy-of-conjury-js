@@ -16,16 +16,11 @@ const styles = ({ spacing }: Theme) => createStyles({
     slider: {
         height: '200px'
     },
-    oscillatorButton: {
-    },
     spacer: {
         marginLeft: spacing.unit,
     },
     popover: {
-        backgroundColor: 'transparent',
-        boxShadow: 'none',
         display: 'flex',
-        overflow: 'visible',
     }
 });
 
@@ -106,10 +101,9 @@ class Slider extends React.Component<SliderProps, SliderState> {
               buttonProps={{
                   className: classNames(classes.spacer)
               }}
-              paperProps={{
-                  classes: { root: classes.spacer }
-              }}
+              paperClasses={classes.spacer}
               {...positionalProps}
+              transparent
             >
                 <OscillatorWidget onCreate={this.subscribe} />
             </Popover>
@@ -136,9 +130,8 @@ class Slider extends React.Component<SliderProps, SliderState> {
               buttonText={label}
               {...positionalProps}
               className="pattern-prop"
-              paperProps={{
-                  classes: { root: classNames(classes.popover, classes.spacer) }
-              }}
+              paperClasses={classNames(classes.popover, classes.spacer)}
+              transparent
             >
                 <Card className={classes.slider}>
                     <MaterialSlider

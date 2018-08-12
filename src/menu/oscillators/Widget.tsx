@@ -2,10 +2,10 @@
 import * as React from 'react';
 import * as _ from 'lodash';
 
-import Card from '@material-ui/core/Card';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import { createStyles, withStyles, Theme, WithStyles } from '@material-ui/core/styles';
 
 import { IOscillator, WaveType } from '../../types';
 import Popover from '../../util/Popover';
@@ -84,6 +84,7 @@ class WaveImage extends React.Component<WaveImageProps, WaveImageState> {
 }
 
 interface WavePropsProps {
+    className?: string,
     oscillator: IOscillator
 }
 
@@ -97,7 +98,10 @@ class WaveProps extends React.Component<WavePropsProps> {
             WaveType.Saw,
         ];
 
-        const updateWaveType = (type) => oscillator.updateWave({ type });
+        const updateWaveType = (type) => {
+            oscillator.updateWave({ type });
+            this.forceUpdate();
+        };
 
         return (
             <Popover buttonText={WaveType[oscillator.params.type]}>
@@ -117,14 +121,24 @@ class WaveProps extends React.Component<WavePropsProps> {
 
     render () {
         return (
-            <div>
+            <div className={this.props.className}>
                 {this.renderWaveTypes()}
             </div>
         );
     }
 }
 
-interface WidgetProps {
+const styles = ({ spacing }: Theme) => createStyles({
+    spacer: {
+        marginLeft: spacing.unit,
+    },
+    wrapper: {
+        display: 'flex',
+    },
+});
+
+
+interface WidgetProps extends WithStyles<typeof styles> {
     oscillator?: IOscillator
     onCreate?: (osc: IOscillator) => void
 }
@@ -133,7 +147,7 @@ interface WidgetState {
     oscillator: IOscillator
 }
 
-export default class Widget extends React.Component<WidgetProps, WidgetState> {
+class Widget extends React.Component<WidgetProps, WidgetState> {
     constructor (props) {
         super(props);
 
@@ -147,11 +161,14 @@ export default class Widget extends React.Component<WidgetProps, WidgetState> {
     }
 
     render () {
+        const { classes } = this.props;
         return (
-            <Card>
+            <div className={classes.wrapper}>
                 <WaveImage oscillator={this.state.oscillator} />
-                <WaveProps oscillator={this.state.oscillator} />
-            </Card>
+                <WaveProps className={classes.spacer} oscillator={this.state.oscillator} />
+            </div>
         );
     }
 }
+
+export default withStyles(styles)(Widget);
