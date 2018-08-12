@@ -83,6 +83,10 @@ export class HSV implements Color {
     toString () {
         return this.toRgb().toString();
     }
+
+    withAlpha (a) {
+        return this.toRgb().withAlpha(a);
+    }
 }
 
 export const BLACK = new RGB(0, 0, 0);
