@@ -2,7 +2,6 @@
 import { CanopyInterface } from '../../types';
 import { IMemoizedMap, IMemoizer } from './types';
 
-
 class MemoizedMap implements IMemoizedMap {
     map = {};
 
@@ -33,7 +32,7 @@ class MemoizedMap implements IMemoizedMap {
             const radius = Math.sqrt(x ** 2 + y ** 2);
             return {
                 strip: Math.floor(theta * numStrips / TWO_PI),
-                led: Math.floor(radius) - 20
+                led: Math.floor(radius)
             };
         };
 
