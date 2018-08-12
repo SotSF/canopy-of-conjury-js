@@ -17,7 +17,6 @@ import * as patterns from '../patterns';
 import theme from '../theme';
 
 import ActiveLayers from './ActiveLayers';
-import Oscillators from './oscillators';
 import Patterns from './Patterns';
 import RenderSelection from './RenderSelection';
 
@@ -134,8 +133,6 @@ class Menu extends React.Component {
 
                     <RenderSelection />
                 </Drawer>
-
-                <Oscillators />
             </MuiThemeProvider>
         );
     }
