@@ -44,6 +44,8 @@ export default class Transmitter {
     }
 
     render (data) {
-        this._post('render', data);
+        var u8 = new Uint8Array(data);
+        var b64encoded = btoa(String.fromCharCode.apply(null, u8));
+        this._post('render', b64encoded);
     }
 }
