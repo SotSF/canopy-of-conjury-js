@@ -82,9 +82,8 @@ class Menu extends React.Component {
         });
     };
 
-    removeLayer = (i) => {
-        const newLayers = [...this.state.layers];
-        newLayers.splice(i, 1);
+    removeLayer = (layer) => {
+        const newLayers = _.without(this.state.layers, layer);
         this.setState({ layers: newLayers }, () =>  this.props.updateLayers(newLayers));
     };
 
