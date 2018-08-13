@@ -1,16 +1,56 @@
-export { Bubbles } from './Bubbles';
-export { ConcentricCircles } from './ConcentricCircles';
-export { Fade } from './Fade';
-export { Fireflies } from './Fireflies';
-export { GradientFlow } from './GradientFlow';
-export { GradientPulse } from './GradientPulse';
-export { Kaleidoscope } from './Kaleidoscope';
-export { Map } from './Map';
-export { Radar } from './Radar';
-export { ShootingStars } from './ShootingStars';
-export { SineRing } from './SineRing';
-export { Snake } from './Snake';
-export { Swirly } from './Swirly';
-export { SwirlyZig } from './SwirlyZig';
-export { TestLEDs, AlphaTest } from './test';
-export { PCanvas } from './canvas';
+
+import { Bubbles } from './Bubbles';
+import { ConcentricCircles } from './ConcentricCircles';
+import { Fade } from './Fade';
+import { Fireflies } from './Fireflies';
+import { GradientFlow } from './GradientFlow';
+import { GradientPulse } from './GradientPulse';
+import { Kaleidoscope } from './Kaleidoscope';
+import { Map } from './Map';
+import { Radar } from './Radar';
+import { ShootingStars } from './ShootingStars';
+import { SineRing } from './SineRing';
+import { Snake } from './Snake';
+import { Swirly } from './Swirly';
+import { SwirlyZig } from './SwirlyZig';
+import { TestLEDs, AlphaTest } from './Test';
+import { PCanvas } from './canvas';
+
+export const allPatterns = [
+    Bubbles,
+    ConcentricCircles,
+    Fade,
+    Fireflies,
+    GradientFlow,
+    GradientPulse,
+    Kaleidoscope,
+    Map,
+    Radar,
+    ShootingStars,
+    SineRing,
+    Snake,
+    Swirly,
+    SwirlyZig,
+];
+
+export {
+    Bubbles,
+    ConcentricCircles,
+    Fade,
+    Fireflies,
+    GradientFlow,
+    GradientPulse,
+    Kaleidoscope,
+    Map,
+    PCanvas,
+    Radar,
+    ShootingStars,
+    SineRing,
+    Snake,
+    Swirly,
+    SwirlyZig,
+
+    // Test patterns
+    AlphaTest,
+    TestLEDs,
+}
