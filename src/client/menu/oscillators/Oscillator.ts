@@ -1,8 +1,8 @@
 
 import * as _ from 'lodash';
 import * as PubSub from 'pubsub-js';
-import { IOscillator, IWaveParams, WaveType } from '../../types';
-import * as util from '../../util';
+import { IOscillator, IWaveParams, WaveType } from '../../../types';
+import * as util from '../../../util';
 
 
 let oscillatorCount = 0;

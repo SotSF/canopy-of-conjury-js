@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { ChromePicker } from 'react-color';
 
-import { RGB } from '../../colors';
+import { RGB } from '../../../colors';
 import Popover from '../../util/Popover';
 
 

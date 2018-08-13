@@ -9,10 +9,8 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
+import { Rotate } from '../filters/rotate';
 import { FilterItem } from './components/FilterItem';
-
-import {Rotate } from '../filters/rotate';
-
 
 
 const styles = theme => ({

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { PCanvas } from '../patterns';
+import { PCanvas } from '../../patterns';
 
 export class BubbleBrush {
     static menuParams = [

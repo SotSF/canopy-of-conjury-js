@@ -4,7 +4,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
-import { EnumType } from '../../types';
+import { EnumType } from '../../../types';
 import Popover from '../../util/Popover';
 
 

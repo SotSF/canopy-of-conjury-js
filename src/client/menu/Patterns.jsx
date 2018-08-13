@@ -18,8 +18,8 @@ import { withStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
+import * as patterns from '../../patterns';
 import { CanopySvg } from '../canopy';
-import * as patterns from '../patterns';
 import PatternProps from './PatternProps';
 
 

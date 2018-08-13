@@ -2,10 +2,8 @@
 import * as React from 'react';
 import * as _ from 'lodash';
 
-import { rgbToHexString } from '../colors';
-import { CanopyInterface, PatternInstance } from '../types';
-import Canopy from './Canopy';
-import * as util from "../util";
+import { CanopyInterface, PatternInstance } from '../../types';
+import Canopy from '../../canopy/Canopy';
 
 
 // Rendering constants

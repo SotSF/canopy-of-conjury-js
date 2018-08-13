@@ -1,12 +1,12 @@
 
 import * as THREE from 'three';
 import * as _ from 'lodash';
-import { BLACK } from '../colors';
-import { PCanvas } from '../patterns';
-import { CanopyInterface, StripInterface } from '../types';
-import * as util from '../util';
+import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../../canopy';
+import { BLACK } from '../../colors';
+import { PCanvas } from '../../patterns';
+import { CanopyInterface, StripInterface } from '../../types';
+import * as util from '../../util';
 import Catenary from './catenary';
-import { NUM_STRIPS, NUM_LEDS_PER_STRIP} from './constants';
 
 // Constants. Length units are in feet unless otherwise specified
 const BASE_RADIUS = 8;

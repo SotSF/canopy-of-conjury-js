@@ -1,4 +1,5 @@
-import { PCanvas } from '../patterns';
+import { PCanvas } from '../../patterns';
+
 // two clicks one brush
 // take first click as start, second click as target
 export class LineBrush {

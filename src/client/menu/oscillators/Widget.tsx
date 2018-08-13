@@ -7,7 +7,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { createStyles, withStyles, Theme, WithStyles } from '@material-ui/core/styles';
 
-import { IOscillator, WaveType } from '../../types';
+import { IOscillator, WaveType } from '../../../types';
 import Popover from '../../util/Popover';
 import Slider from '../components/Slider';
 import Oscillator  from './Oscillator';

@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 import MuiPopover  from '@material-ui/core/Popover';
 import { withStyles } from '@material-ui/core/styles';
 
-import { RGB } from '../colors';
+import { RGB } from '../../colors';
 
 
 const styles = {

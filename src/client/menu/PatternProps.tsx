@@ -2,7 +2,7 @@
 import * as React from 'react';
 import Card from '@material-ui/core/Card';
 
-import { PatternPropTypes } from '../patterns/utils';
+import { PatternPropTypes } from '../../patterns/utils';
 import { Checkbox, ColorPicker, EnumeratedList, Slider } from './components';
 
 

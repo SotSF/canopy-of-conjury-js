@@ -14,7 +14,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
 import { MuiThemeProvider, withStyles } from '@material-ui/core/styles';
 
-import * as patterns from '../patterns';
+import * as patterns from '../../patterns';
 import theme from '../theme';
 
 import ActiveLayers from './ActiveLayers';

@@ -1,4 +1,4 @@
-import { PCanvas } from '../patterns';
+import { PCanvas } from '../../patterns';
 
 export class RadialBrush {
     static menuParams = [

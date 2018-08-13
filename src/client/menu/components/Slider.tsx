@@ -7,7 +7,7 @@ import Card from '@material-ui/core/Card';
 import { createStyles, withStyles, Theme, WithStyles } from '@material-ui/core/styles';
 import MaterialSlider from '@material-ui/lab/Slider';
 
-import { AccessibleProp, IOscillator } from '../../types';
+import { AccessibleProp, IOscillator } from '../../../types';
 import Popover from '../../util/Popover';
 import { OscillatorWidget } from '../oscillators';
 
