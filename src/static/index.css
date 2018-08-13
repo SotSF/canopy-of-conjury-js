@@ -1,0 +1,31 @@
+body {
+    background-color: #555;
+    color: white;
+    font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif !important;
+    font-size:13px;
+    margin: 0;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+
+#renderer-wrapper {
+    margin-left: 240px;
+}
+
+#controls {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: flex-start;
+}
+
+.pattern-prop + .pattern-prop {
+    margin-top: 10px;
+}
+
+#idCanvas {
+    display: none;
+}
