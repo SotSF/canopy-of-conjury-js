@@ -210,6 +210,10 @@ export default class Patterns extends React.Component {
                           addPattern={this.props.addLayer}
                         />
                         <PatternOption
+                          pattern={patterns.Heartbeat}
+                          addPattern={this.props.addLayer}
+                        />
+                        <PatternOption
                           pattern={patterns.Kaleidoscope}
                           addPattern={this.props.addLayer}
                         />

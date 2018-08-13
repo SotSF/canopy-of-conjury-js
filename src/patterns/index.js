@@ -4,6 +4,7 @@ export { Fade } from './Fade';
 export { Fireflies } from './Fireflies';
 export { GradientFlow } from './GradientFlow';
 export { GradientPulse } from './GradientPulse';
+export { Heartbeat } from './Heartbeat';
 export { Kaleidoscope } from './Kaleidoscope';
 export { Map } from './Map';
 export { Radar } from './Radar';
