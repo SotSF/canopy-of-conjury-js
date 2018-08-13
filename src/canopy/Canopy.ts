@@ -1,5 +1,6 @@
 
 import * as _ from 'lodash';
+import { RGB } from '../colors';
 import { CanopyInterface, StripInterface } from '../types';
 
 
@@ -7,11 +8,7 @@ class Strip implements StripInterface {
     leds = null;
 
     constructor (numLedsPerStrip) {
-        this.leds = _.range(numLedsPerStrip).map(() => ({
-            r: null,
-            g: null,
-            b: null
-        }));
+        this.leds = _.range(numLedsPerStrip).map(() => new RGB(0, 0, 0));
     }
 
     get length () {
