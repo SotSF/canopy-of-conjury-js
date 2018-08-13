@@ -101,7 +101,7 @@ export default class CanopySvg extends React.Component<CanopySvgProps, CanopySvg
 
     render () {
         const { canopy, width } = this.state;
-        const rotationAmount = 360 / canopy.strips.length;
+        const rotationAmount = -360 / canopy.strips.length;
 
         const halfWidth = width / 2;
         const viewBox = `-${halfWidth} -${halfWidth} ${width} ${width}`;
