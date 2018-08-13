@@ -14,13 +14,13 @@ export class Snake extends BasePattern {
     static displayName = 'Snake';
     static propTypes = {
         maxLength: new PatternPropTypes.Range(10, 100),
-        brightness: new PatternPropTypes.Range(0, 100)
+        brightness: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation()
     };
 
     static defaultProps () : SnakeProps {
         return {
             maxLength: 25,
-            brightness: 100
+            brightness: 1
         };
     }
 
@@ -88,17 +88,17 @@ export class Snake extends BasePattern {
     
     render (canopy) {
         const tHSV = new HSV(this.iteration % 100, 100, 100);
-        const tRGB = tHSV.toRgb().withAlpha(this.props.brightness / 100);
+        const tRGB = tHSV.toRgb().withAlpha(this.props.brightness);
+
         const target = Snake.convertCoordinate({ strip: this.target.strip, led: this.target.led }, canopy);
         canopy.strips[target.strip].updateColor(target.led, tRGB);
 
         for (let i = 0; i < this.snake.length; i++) {
-            const snake = this.snake[i];
-            const point = Snake.convertCoordinate({ strip: snake.strip, led: snake.led }, canopy);
+            const point = Snake.convertCoordinate(this.snake[i], canopy);
 
-            const h = 100 * i / this.props.maxLength + this.iteration;
-            const hsv = new HSV(h % 100,100,100);
-            const color = hsv.toRgb().withAlpha(this.props.brightness / 100);
+            const h = i / this.props.maxLength + this.iteration;
+            const hsv = new HSV(h % 1, 1, 1);
+            const color = hsv.toRgb().withAlpha(this.props.brightness);
 
             canopy.strips[point.strip].updateColor(point.led, color);
         }
