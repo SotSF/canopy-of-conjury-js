@@ -9,6 +9,7 @@ import { createStyles, withStyles, Theme, WithStyles } from '@material-ui/core/s
 
 import { IOscillator, WaveType } from '../../types';
 import Popover from '../../util/Popover';
+import Slider from '../components/Slider';
 import Oscillator  from './Oscillator';
 
 
@@ -83,12 +84,23 @@ class WaveImage extends React.Component<WaveImageProps, WaveImageState> {
     }
 }
 
-interface WavePropsProps {
+const wavePropsStyles = ({ spacing }: Theme) => createStyles({
+    frequency: {
+        marginTop: spacing.unit,
+    },
+});
+
+interface WavePropsProps extends WithStyles<typeof wavePropsStyles> {
     className?: string,
     oscillator: IOscillator
 }
 
 class WaveProps extends React.Component<WavePropsProps> {
+    updateWave = param => (value) => {
+        this.props.oscillator.updateWave({ [param]: value });
+        this.forceUpdate();
+    };
+
     renderWaveTypes () {
         const { oscillator } = this.props;
         const waveTypes = [
@@ -98,11 +110,6 @@ class WaveProps extends React.Component<WavePropsProps> {
             WaveType.Saw,
         ];
 
-        const updateWaveType = (type) => {
-            oscillator.updateWave({ type });
-            this.forceUpdate();
-        };
-
         return (
             <Popover buttonText={WaveType[oscillator.params.type]}>
                 <List dense disablePadding>
@@ -110,7 +117,7 @@ class WaveProps extends React.Component<WavePropsProps> {
                         <ListItem button key={type}>
                             <ListItemText
                               primary={WaveType[type]}
-                              onClick={() => updateWaveType(type)}
+                              onClick={this.updateWave('type')}
                             />
                         </ListItem>
                     )}
@@ -120,13 +127,27 @@ class WaveProps extends React.Component<WavePropsProps> {
     }
 
     render () {
+        const { classes, oscillator } = this.props;
         return (
             <div className={this.props.className}>
                 {this.renderWaveTypes()}
+
+                <div className={classes.frequency}>
+                    <Slider
+                      label="Frequency"
+                      value={oscillator.params.frequency}
+                      min={0.1}
+                      max={2}
+                      step={0.1}
+                      onChange={this.updateWave('frequency')}
+                    />
+                </div>
             </div>
         );
     }
 }
+
+const WavePropsStyled = withStyles(wavePropsStyles)(WaveProps);
 
 const styles = ({ spacing }: Theme) => createStyles({
     spacer: {
@@ -165,7 +186,7 @@ class Widget extends React.Component<WidgetProps, WidgetState> {
         return (
             <div className={classes.wrapper}>
                 <WaveImage oscillator={this.state.oscillator} />
-                <WaveProps className={classes.spacer} oscillator={this.state.oscillator} />
+                <WavePropsStyled className={classes.spacer} oscillator={this.state.oscillator} />
             </div>
         );
     }

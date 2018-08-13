@@ -36,19 +36,20 @@ export default class Oscillator implements IOscillator {
     }
 
     private makeWaveFunction () {
+        const wavelength = this.wavelength;
+
         switch (this.params.type) {
             case WaveType.Sine:
                 this.waveFunction = v => Math.sin(v * this.params.frequency);
                 break;
             case WaveType.Square:
                 this.waveFunction = (v) => {
-                    return v % this.wavelength < this.wavelength / 2
+                    return v % wavelength < wavelength / 2
                         ? 1
                         : -1;
                 };
                 break;
             case WaveType.Triangle: {
-                const wavelength = this.wavelength;
                 const quarterLength = wavelength / 4;
                 const slope = this.params.amplitude / quarterLength;
 
@@ -65,8 +66,8 @@ export default class Oscillator implements IOscillator {
                 break;
             }
             case WaveType.Saw: {
-                const slope = -this.params.amplitude / (this.wavelength / 2);
-                this.waveFunction = (v) => (v % this.wavelength) * slope + this.params.amplitude;
+                const slope = -this.params.amplitude / (wavelength / 2);
+                this.waveFunction = (v) => (v % wavelength) * slope + this.params.amplitude;
                 break;
             }
         }
