@@ -36,7 +36,7 @@ export class SineRing extends BaseProcessingPattern {
 
     static defaultProps () : SineRingProps {
         return {
-            color: new RGB(0, 0, 255),
+            color: RGB.random(),
             weight: 2,
             frequency: 6,
             amplitude: 10,
@@ -51,6 +51,7 @@ export class SineRing extends BaseProcessingPattern {
     amp = 0;
     dir = 1;
     r = 1;
+    iteration = 0;
 
     progress () {
         const { processing } = this.canvas;
@@ -94,6 +95,7 @@ export class SineRing extends BaseProcessingPattern {
         if (this.amp > this.props.amplitude) {
             this.dir = -1;
         }
+        this.iteration++;
     }
 
     render (canopy) {

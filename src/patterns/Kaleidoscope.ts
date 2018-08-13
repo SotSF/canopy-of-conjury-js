@@ -21,8 +21,8 @@ class Wave {
         this.flip = Math.random() > 0.5 ? 1 : -1;
     }
 
-    update () : void {
-        this.t += 2;
+    update (velocity) : void {
+        this.t += velocity;
           if (this.t > 300) this.brightness -= 0.05;
           if (this.brightness < 0) this.done = true;
           this.hue = (this.hue + 5) % 360;
@@ -31,6 +31,7 @@ class Wave {
 
 
 interface KaleidoscopePropTypes {
+    velocity: number,
     brightness: number
 }
 
@@ -39,11 +40,13 @@ interface KaleidoscopePropTypes {
 export class Kaleidoscope extends BaseProcessingPattern {
     static displayName = 'Kaleidoscope';
     static propTypes = {
+        velocity: new PatternPropTypes.Range(1,5),
         brightness: new PatternPropTypes.Range(0, 100)
     };
 
     static defaultProps () : KaleidoscopePropTypes {
         return {
+            velocity: 2,
             brightness: 100
         };
     }
@@ -72,7 +75,7 @@ export class Kaleidoscope extends BaseProcessingPattern {
         sortedWaves.forEach((wave) => {
             this.renderWave(wave);
 
-            wave.update();
+            wave.update(this.props.velocity);
             if (wave.done) {
                 this.waves = _.without(this.waves, wave);
             }

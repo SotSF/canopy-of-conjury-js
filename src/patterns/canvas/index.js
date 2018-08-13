@@ -1,7 +1,6 @@
 
 import { RGB } from '../../colors';
 import Memoizer from './memoizer';
-import { RGB } from '../../colors';
 
 
 /**
@@ -26,7 +25,7 @@ export class PCanvas {
         }
     });
 
-    static color = (r, g, b, a) => {
+    static color = (r, g, b, a = 255) => {
         const trueColor = PCanvas.p.color(r,g,b,a);
         const mappedColor = PCanvas.p.color(r * a/255, g * a/255, b * a/255, 255);
         if (!PCanvas.alphaMap[mappedColor]) {
