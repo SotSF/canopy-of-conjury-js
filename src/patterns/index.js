@@ -7,6 +7,7 @@ export { GradientPulse } from './GradientPulse';
 export { Heartbeat } from './Heartbeat';
 export { Kaleidoscope } from './Kaleidoscope';
 export { Map } from './Map';
+export { RainbowSpiral } from './RainbowSpiral';
 export { Radar } from './Radar';
 export { ShootingStars } from './ShootingStars';
 export { SineRing } from './SineRing';

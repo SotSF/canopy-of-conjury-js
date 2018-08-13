@@ -222,6 +222,10 @@ export default class Patterns extends React.Component {
                           addPattern={this.props.addLayer}
                         />
                         <PatternOption
+                          pattern={patterns.RainbowSpiral}
+                          addPattern={this.props.addLayer}
+                        />
+                        <PatternOption
                           pattern={patterns.Radar}
                           addPattern={this.props.addLayer}
                         />
