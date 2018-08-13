@@ -67,7 +67,7 @@ export class Fade extends BasePattern {
         }
 
         // If the current color is finished, reset the lifecycle
-        else if (this.lifecycle > LIFECYCLE_END) {
+        else if (this.lifecycle === LIFECYCLE_END) {
             this.lifecycle = 0;
 
             // Choose a new color if there are any
@@ -83,6 +83,9 @@ export class Fade extends BasePattern {
         // If we've got a color in process...
         else if (this.currentColor) {
             this.lifecycle += _.result<number>(this.props, 'speed');
+            if (this.lifecycle > LIFECYCLE_END) {
+                this.lifecycle = LIFECYCLE_END;
+            }
         }
     }
 
