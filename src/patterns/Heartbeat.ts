@@ -11,6 +11,7 @@ import { PCanvas } from './canvas';
 export class Heartbeat extends BaseProcessingPattern {
     static displayName = 'Heartbeat';
     static propTypes = {
+        color: new PatternPropTypes.Color,
         minPulse: new PatternPropTypes.Range(0.5, 1.5),
         maxPulse: new PatternPropTypes.Range(1.5, 3),
         velocity: new PatternPropTypes.Range(0.01, 1),
@@ -18,6 +19,7 @@ export class Heartbeat extends BaseProcessingPattern {
     }
     static defaultProps () {
          return {
+            color: RGB.random(),
             minPulse: 0.7,
             maxPulse: 2,
             velocity: 0.03,
@@ -31,19 +33,20 @@ export class Heartbeat extends BaseProcessingPattern {
     progress() {
         super.progress();
         const image = this.canvas.processing.pg;
+        image.noSmooth();
         image.beginDraw();
         image.background(0);
         const lerp = (this.pulse - this.props.minPulse) / (this.props.maxPulse - this.props.minPulse);
-        image.stroke(PCanvas.color(255,0,0,255 * this.props.brightness/100));
+        image.stroke(PCanvas.color(this.props.color.r,this.props.color.g,this.props.color.b,255 * this.props.brightness / 100));
         image.strokeWeight(8);
         let t = 0;
-        while ( t < 1000 ) {
+        while ( t < 250 ) {
             const x = Math.floor((1 + this.pulse) * (16 * Math.sin(t) * Math.sin(t) * Math.sin(t)));
             const y = Math.floor((1 + this.pulse) * (13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t)));
             const x2 = Math.floor(x * 2 + PCanvas.dimension / 2);
             const y2 = Math.floor(y * 2 + PCanvas.dimension / 2);
             //image.ellipse(x2,y2,10,10);
-            image.line(PCanvas.dimension / 2, PCanvas.dimension/2, x2, y2);
+            image.line(PCanvas.dimension / 2, PCanvas.dimension/2 - 20, x2, y2);
             t++;
         }
         image.endDraw();
@@ -56,6 +59,7 @@ export class Heartbeat extends BaseProcessingPattern {
 
 
     }
+
     render(canopy) {
         this.canvas.render(canopy);
     }

@@ -10,7 +10,7 @@ import Memoizer from './memoizer';
 class AlphaMap {
     map = {};
     add = (key, value) => { this.map[key] = value; };
-    get = (key) => this.map[key];
+    get = (key) => this.map[key] ? this.map[key] : key;
 }
 
 // Pattern Canvas - for Free Drawing
