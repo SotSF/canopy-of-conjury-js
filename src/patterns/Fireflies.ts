@@ -2,8 +2,7 @@
 import * as _ from 'lodash';
 import { RGB, Color } from '../colors';
 import { AccessibleProp, pattern } from '../types';
-import { PCanvas } from './canvas';
-import BasePattern, { BaseProcessingPattern } from './BasePattern';
+import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 import Memoizer from "./canvas/memoizer";
 import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from "../canopy/constants";
@@ -70,8 +69,8 @@ export class Fireflies extends BasePattern {
 
     addFirefly () {
         const size = Math.floor(Math.random() * 3) + 1;
-        const x = Math.random() * PCanvas.dimension;
-        const y = Math.random() * PCanvas.dimension;
+        const x = Math.random() * this.dimension;
+        const y = Math.random() * this.dimension;
         const offset = Math.random() * 20;
         const brightness = Math.random() * 10;
 
