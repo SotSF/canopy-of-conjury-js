@@ -13,21 +13,18 @@ export class Heartbeat extends BasePattern {
     static displayName = 'Heartbeat';
     static propTypes = {
         color: new PatternPropTypes.Color,
-        minPulse: new PatternPropTypes.Range(0.5, 1.5),
-        maxPulse: new PatternPropTypes.Range(1.5, 3),
-        velocity: new PatternPropTypes.Range(0.01, 1),
         brightness: new PatternPropTypes.Range(0,100)
     }
     static defaultProps () {
          return {
             color: RGB.random(),
-            minPulse: 0.7,
-            maxPulse: 2,
-            velocity: 0.03,
             brightness: 100
         }; 
     }
 
+    minPulse = 0.7;
+    maxPulse = 2;
+    velocity = 0.03;
     pulse = 0;
     grow = true;
     dimension = 300;
@@ -36,18 +33,18 @@ export class Heartbeat extends BasePattern {
         super.progress();
        
         if (this.grow) {
-            this.pulse+= this.props.velocity;
-        } else { this.pulse += -(this.props.velocity * 1.5); }
+            this.pulse += this.velocity;
+        } else { this.pulse += -(this.velocity * 1.5); }
 
-        if (this.pulse > this.props.maxPulse) { this.grow = false; }
-        if (this.pulse < this.props.minPulse) { this.grow = true; }
+        if (this.pulse > this.maxPulse) { this.pulse = this.maxPulse; this.grow = false; }
+        if (this.pulse < this.minPulse) { this.pulse = this.minPulse; this.grow = true; }
 
 
     }
 
     render(canopy) {
         const memoizedMap = this.memoizer.createMap(this.dimension, canopy);
-        const lerp = (this.pulse - this.props.minPulse) / (this.props.maxPulse - this.props.minPulse);
+        const lerp = (this.pulse - this.minPulse) / (this.maxPulse - this.minPulse);
         const color = this.props.color.withAlpha(this.props.brightness/100);
         let t = 0;
         while ( t < 500 ) {
