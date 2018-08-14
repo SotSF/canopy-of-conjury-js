@@ -3,12 +3,13 @@ import * as _ from 'lodash';
 import { Color, RGB } from '../colors';
 import { pattern } from '../types';
 import * as util from '../util';
-import { BaseProcessingPattern } from './BasePattern';
+import BasePattern, { BaseProcessingPattern } from './BasePattern';
 import { PatternPropTypes } from './utils';
 import { PCanvas } from './canvas';
+import Memoizer from "./canvas/memoizer";
 
 @pattern()
-export class Heartbeat extends BaseProcessingPattern {
+export class Heartbeat extends BasePattern {
     static displayName = 'Heartbeat';
     static propTypes = {
         color: new PatternPropTypes.Color,
@@ -29,27 +30,11 @@ export class Heartbeat extends BaseProcessingPattern {
 
     pulse = 0;
     grow = true;
-
+    dimension = 300;
+    memoizer = new Memoizer();
     progress() {
         super.progress();
-        const image = this.canvas.processing.pg;
-        image.noSmooth();
-        image.beginDraw();
-        image.background(0);
-        const lerp = (this.pulse - this.props.minPulse) / (this.props.maxPulse - this.props.minPulse);
-        image.stroke(PCanvas.color(this.props.color.r,this.props.color.g,this.props.color.b,255 * this.props.brightness / 100));
-        image.strokeWeight(8);
-        let t = 0;
-        while ( t < 250 ) {
-            const x = Math.floor((1 + this.pulse) * (16 * Math.sin(t) * Math.sin(t) * Math.sin(t)));
-            const y = Math.floor((1 + this.pulse) * (13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t)));
-            const x2 = Math.floor(x * 2 + PCanvas.dimension / 2);
-            const y2 = Math.floor(y * 2 + PCanvas.dimension / 2);
-            //image.ellipse(x2,y2,10,10);
-            image.line(PCanvas.dimension / 2, PCanvas.dimension/2 - 20, x2, y2);
-            t++;
-        }
-        image.endDraw();
+       
         if (this.grow) {
             this.pulse+= this.props.velocity;
         } else { this.pulse += -(this.props.velocity * 1.5); }
@@ -61,7 +46,22 @@ export class Heartbeat extends BaseProcessingPattern {
     }
 
     render(canopy) {
-        this.canvas.render(canopy);
+        const memoizedMap = this.memoizer.createMap(this.dimension, canopy);
+        const lerp = (this.pulse - this.props.minPulse) / (this.props.maxPulse - this.props.minPulse);
+        const color = this.props.color.withAlpha(this.props.brightness/100);
+        let t = 0;
+        while ( t < 500 ) {
+            const x = (1 + this.pulse) * (16 * Math.sin(t) * Math.sin(t) * Math.sin(t));
+            const y = (1 + this.pulse) * (13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+            const x2 = Math.floor(x * 2 + this.dimension / 2);
+            const y2 = Math.floor(y * 2 + this.dimension / 2);
+            const co = memoizedMap.mapCoords(x2, y2);
+            
+            for (let l = 0; l <= co.led; l++) {
+                canopy.strips[co.strip].updateColor(l, color);
+            }
+            t++;
+        }
     }
 
 }
