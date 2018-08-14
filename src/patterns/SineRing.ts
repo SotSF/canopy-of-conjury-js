@@ -1,14 +1,15 @@
 
 import { RGB, Color } from '../colors';
 import { pattern } from '../types';
-import { BaseProcessingPattern } from './BasePattern';
-import { PCanvas } from './canvas';
+import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
+import Memoizer from "./canvas/memoizer";
+import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
 
 
 interface SineRingProps {
     color: Color,
-    weight: number,
+    width: number,
     frequency: number,
     amplitude: number,
     radius: number,
@@ -17,15 +18,12 @@ interface SineRingProps {
     brightness: number
 }
 
-/**
- * Applies a sine wave to a concentric circle, given frequency and amplitude of the wave.
- */
 @pattern()
-export class SineRing extends BaseProcessingPattern {
+export class SineRing extends BasePattern {
     static displayName = 'Sine Ring';
     static propTypes = {
         color: new PatternPropTypes.Color(),
-        weight: new PatternPropTypes.Range(1, 10),
+        width: new PatternPropTypes.Range(1, 10),
         frequency: new PatternPropTypes.Range(1, 16),
         amplitude: new PatternPropTypes.Range(0, 30),
         radius: new PatternPropTypes.Range(5, 30),
@@ -37,7 +35,7 @@ export class SineRing extends BaseProcessingPattern {
     static defaultProps () : SineRingProps {
         return {
             color: RGB.random(),
-            weight: 2,
+            width: 2,
             frequency: 6,
             amplitude: 10,
             radius: 10,
@@ -52,41 +50,10 @@ export class SineRing extends BaseProcessingPattern {
     dir = 1;
     r = 1;
     iteration = 0;
+    memoizer = new Memoizer();
 
     progress () {
-        const { processing } = this.canvas;
-        const radius = this.props.radius + 20;
-        let angle = 0;
-    
-        processing.pg.beginDraw();
-        processing.pg.background(0);                                                  // wipe canvas to draw next frame in this animation
-        processing.pg.pushMatrix();                                                   // bind any transformations to this context
-        processing.pg.translate(PCanvas.dimension / 2,PCanvas.dimension / 2);         // set context to middle of canvas
-        processing.pg.rotate(processing.radians(this.iteration * this.props.rotate)); // apply rotations (if this.props.rotate != 0)
-        processing.pg.strokeWeight(this.props.weight);
-
-        // use PCanvas.color() to set color with this.props.brightness; this will retain RGBA alpha
-        // information for transparency
-        const color = PCanvas.color(this.props.color.r,this.props.color.g,this.props.color.b, this.props.brightness / 100 * 255);
-        processing.pg.stroke(color);
-        
-        while (angle <= Math.PI * 2) { 
-            // calculate start point of line segment
-            let x = (radius + (Math.sin(angle * this.props.frequency) * this.amp)) * Math.cos(angle);
-            let y = (radius + (Math.sin(angle * this.props.frequency) * this.amp)) * Math.sin(angle);
-            angle += this.angleStep;
-
-            // calculate end point of line segment
-            let dx = (radius + (Math.sin(angle * this.props.frequency) * this.amp)) * Math.cos(angle);
-            let dy = (radius + (Math.sin(angle * this.props.frequency) * this.amp)) * Math.sin(angle);
-
-            // draw line segment
-            processing.pg.line(x,y,dx,dy);
-        }
-
-        processing.pg.popMatrix(); // remove any transformations applied
-        processing.pg.endDraw();
-
+        super.progress();
         this.amp += this.props.velocity * this.dir;
         if (this.amp < 0) {
             this.dir = 1;
@@ -98,8 +65,27 @@ export class SineRing extends BaseProcessingPattern {
         this.iteration++;
     }
 
-    render (canopy) {
-        // this.canvas.render will handle copying the processing.pg image over to the canopy
-        this.canvas.render(canopy);
+    render(canopy) {
+        const radius = this.props.radius + 20;
+        
+        const color = this.props.color.withAlpha(this.props.brightness / 100);
+        const memoizedMap = this.memoizer.createMap(200, canopy);
+
+        let angle = 0;
+        while (angle <= Math.PI * 2) { 
+            angle += this.angleStep;
+            const x = Math.floor((radius + (Math.sin(angle * this.props.frequency) * this.amp)) * Math.cos(angle));
+            const y = Math.floor((radius + (Math.sin(angle * this.props.frequency) * this.amp)) * Math.sin(angle));
+            const co = memoizedMap.mapCoords(x + 100, y + 100);
+            let s = co.strip + (this.props.rotate * this.iteration) % NUM_STRIPS;
+            if (s < 0) { s += NUM_STRIPS; }
+            else if (s >= NUM_STRIPS) { s %= NUM_STRIPS; }
+            for (let l = 0; l < this.props.width; l++) {
+                const led = l + co.led;
+                if (led >= 0 && led < NUM_LEDS_PER_STRIP) {
+                    canopy.strips[s].updateColor(led, color);
+                }
+            }
+        }
     }
 }
