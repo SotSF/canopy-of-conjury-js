@@ -93,7 +93,8 @@ export class Fireflies extends BasePattern {
             this.props.color.r + firefly.offset,
             this.props.color.g + firefly.offset,
             this.props.color.b + firefly.offset,
-        ).withAlpha(this.props.brightness/100 * firefly.brightness / 255);
+            this.props.brightness/100 * firefly.brightness / 255
+        );
         const x = firefly.radius * Math.cos(firefly.theta);
         const y = firefly.radius * Math.sin(firefly.theta);
         const x2 = Math.floor(x + (firefly.x + this.dimension / 2));

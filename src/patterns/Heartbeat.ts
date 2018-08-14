@@ -1,11 +1,8 @@
 
-import * as _ from 'lodash';
 import { Color, RGB } from '../colors';
 import { pattern } from '../types';
-import * as util from '../util';
-import BasePattern, { BaseProcessingPattern } from './BasePattern';
+import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
-import { PCanvas } from './canvas';
 import Memoizer from "./canvas/memoizer";
 
 @pattern()
@@ -22,8 +19,8 @@ export class Heartbeat extends BasePattern {
         }; 
     }
 
-    minPulse = 0.7;
-    maxPulse = 2;
+    minPulse = 0.05;
+    maxPulse = 1.5;
     velocity = 0.03;
     pulse = 0;
     grow = true;
@@ -31,15 +28,12 @@ export class Heartbeat extends BasePattern {
     memoizer = new Memoizer();
     progress() {
         super.progress();
-       
         if (this.grow) {
             this.pulse += this.velocity;
         } else { this.pulse += -(this.velocity * 1.5); }
 
         if (this.pulse > this.maxPulse) { this.pulse = this.maxPulse; this.grow = false; }
         if (this.pulse < this.minPulse) { this.pulse = this.minPulse; this.grow = true; }
-
-
     }
 
     render(canopy) {
@@ -60,5 +54,4 @@ export class Heartbeat extends BasePattern {
             t++;
         }
     }
-
 }
