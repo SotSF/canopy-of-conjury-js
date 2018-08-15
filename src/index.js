@@ -3,7 +3,6 @@ import * as THREE from 'three';
 import { CanopyThreeJs } from './canopy';
 import config from '../config';
 import * as Patterns from './patterns';
-import * as Brushes from './brushes';
 import * as Menu from './menu';
 import Transmitter from './transmitter';
 

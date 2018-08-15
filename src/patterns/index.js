@@ -1,3 +1,4 @@
+
 export { Bubbles } from './Bubbles';
 export { ConcentricCircles } from './ConcentricCircles';
 export { Fade } from './Fade';
@@ -14,5 +15,6 @@ export { SineRing } from './SineRing';
 export { Snake } from './Snake';
 export { Swirly } from './Swirly';
 export { SwirlyZig } from './SwirlyZig';
-export { TestLEDs, AlphaTest } from './test';
+export { TestLEDs } from './test';
+export { Triangles } from './Triangles';
 export { PCanvas } from './canvas';

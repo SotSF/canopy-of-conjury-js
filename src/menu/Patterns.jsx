@@ -249,6 +249,10 @@ export default class Patterns extends React.Component {
                           pattern={patterns.SwirlyZig}
                           addPattern={this.props.addLayer}
                         />
+                        <PatternOption
+                          pattern={patterns.Triangles}
+                          addPattern={this.props.addLayer}
+                        />
                     </List>
                 </ExpansionPanelDetails>
             </ExpansionPanel>
