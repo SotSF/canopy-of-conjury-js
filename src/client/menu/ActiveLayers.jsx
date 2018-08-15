@@ -15,6 +15,7 @@ import { withStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
+import * as messenger from '../messenger';
 import PatternProps from './PatternProps';
 
 
@@ -72,6 +73,8 @@ class Pattern extends React.Component {
 
     updateProps = (props) => {
         this.props.pattern.instance.updateProps(props);
+
+        messenger.state.updateProps(this.props.pattern.id, props);
 
         // Force an update because the props have changed, but React doesn't know about it
         this.forceUpdate();

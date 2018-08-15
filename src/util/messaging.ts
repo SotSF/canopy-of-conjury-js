@@ -3,7 +3,7 @@
 export const enum MESSAGE_TYPE {
     addPattern,
     removePattern,
-    updateProp
+    updateProps
 }
 
 
@@ -23,15 +23,13 @@ export interface RemovePatternMessage extends IMessage {
     patternId: string
 }
 
-export interface UpdatePropMessage extends IMessage {
+export interface UpdatePropsMessage extends IMessage {
     patternId: string
-    prop: string
-    value: any
+    props: any // TODO: make this type more precise...
 }
 
-export type message = AddPatternMessage | RemovePatternMessage | UpdatePropMessage;
+export type message = AddPatternMessage | RemovePatternMessage | UpdatePropsMessage;
 
 
 /** Responses from the server */
-
 export type response = any;

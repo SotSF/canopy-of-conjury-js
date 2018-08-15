@@ -9,8 +9,7 @@ import * as logger from 'morgan';
 import * as path from 'path';
 
 import { Canopy } from '../canopy';
-import { PatternInstance } from '../types';
-import state, { patterns } from './state';
+import state, { ActivePattern, patterns } from './state';
 import Transmitter from './transmitter';
 
 
@@ -67,9 +66,10 @@ transmitter.ping().on('response', (resp) => {
 
     setInterval(() => {
         canopy.clear();
-        Object.values(patterns).forEach((pattern: PatternInstance) => {
-            pattern.progress();
-            pattern.render(canopy);
+
+        patterns.forEach((pattern: ActivePattern) => {
+            pattern.instance.progress();
+            pattern.instance.render(canopy);
         });
 
         transmitter.render(canopy);

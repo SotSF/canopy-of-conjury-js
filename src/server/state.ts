@@ -10,12 +10,12 @@ import {
     message,
     AddPatternMessage,
     RemovePatternMessage,
-    UpdatePropMessage,
+    UpdatePropsMessage,
     MESSAGE_TYPE
 } from '../util/messaging';
 
 
-interface ActivePattern {
+export interface ActivePattern {
     id: string
     order: number
     instance: PatternInstance
@@ -80,9 +80,9 @@ const removePattern = (msg: RemovePatternMessage) => {
 };
 
 /** Updates the property of an active pattern */
-const updateProp = (msg: UpdatePropMessage) => {
+const updateProps = (msg: UpdatePropsMessage) => {
     const pattern: PatternInstance = patterns[msg.patternId];
-    pattern.updateProps({ [msg.prop]: msg.value });
+    pattern.updateProps(msg.props);
 };
 
 export default (ws, req) => {
@@ -102,8 +102,8 @@ export default (ws, req) => {
             case MESSAGE_TYPE.removePattern:
                 removePattern(<RemovePatternMessage>msg);
                 break;
-            case MESSAGE_TYPE.updateProp:
-                updateProp(<UpdatePropMessage>msg);
+            case MESSAGE_TYPE.updateProps:
+                updateProps(<UpdatePropsMessage>msg);
                 break;
         }
 

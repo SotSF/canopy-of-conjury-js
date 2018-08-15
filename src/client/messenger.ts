@@ -7,9 +7,10 @@ import { PatternInterface } from '../types';
 import {
     AddPatternMessage,
     RemovePatternMessage,
-    UpdatePropMessage,
+    UpdatePropsMessage,
     MESSAGE_TYPE,
 } from '../util/messaging';
+
 
 const stateSocket = new W3CWebSocket('ws://localhost:3000/state');
 
@@ -30,6 +31,16 @@ export const state = {
         const message: RemovePatternMessage = {
             type: MESSAGE_TYPE.removePattern,
             patternId
+        };
+
+        stateSocket.send(JSON.stringify(message));
+    },
+
+    updateProps: (patternId: string, props: any) => {
+        const message: UpdatePropsMessage = {
+            type: MESSAGE_TYPE.updateProps,
+            patternId,
+            props
         };
 
         stateSocket.send(JSON.stringify(message));

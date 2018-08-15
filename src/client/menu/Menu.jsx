@@ -89,7 +89,7 @@ class Menu extends React.Component {
         const newPatterns = _.without(this.state.patterns, patternToRemove);
 
         messenger.state.removePattern(patternId);
-        this.setState({ patterns: newPatterns }, () =>  this.props.updatePatterns(newPatterns));
+        this.setState({ patterns: newPatterns }, () => this.props.updatePatterns(newPatterns));
     };
 
     render () {
