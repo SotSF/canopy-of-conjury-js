@@ -40,6 +40,7 @@ const makePatternId = (): string => {
 const addPattern = (msg: AddPatternMessage) => {
     const PatternType: PatternInterface = getPatternByName(msg.patternName);
     if (!PatternType) {
+        console.error(`Unable to render pattern with invalid type: "${msg.patternName}"`);
         return null;
     }
 
@@ -48,6 +49,8 @@ const addPattern = (msg: AddPatternMessage) => {
 
     const id = makePatternId();
     patterns[id] = newPattern;
+
+    console.info(`New "${msg.patternName}" pattern created with id "${id}"`);
     return id;
 };
 
@@ -63,7 +66,15 @@ const updateProp = (msg: UpdatePropMessage) => {
 };
 
 export default (ws, req) => {
-    ws.on('message', (msg: message) => {
+    ws.on('message', (rawMsg: string) => {
+        let msg: message;
+        try {
+            msg = JSON.parse(rawMsg);
+        } catch (e) {
+            console.error('Unable to parse malformatted message!');
+            return;
+        }
+
         switch (msg.type) {
             case MESSAGE_TYPE.addPattern:
                 addPattern(<AddPatternMessage>msg);
