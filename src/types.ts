@@ -60,9 +60,7 @@ export interface IWaveParams {
 export interface IOscillator {
     readonly params: IWaveParams
     scaled: (min: number, max: number) => number
-    subscribe: (fn: (value: number) => void) => string
     theta: number
-    unsubscribe: (token: string) => void
     updateWave: (params: { amplitude?: number, frequency?: number, type?: WaveType }) => void
     value: number
     waveFunction: (x: number) => number
