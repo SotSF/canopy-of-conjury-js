@@ -16,7 +16,7 @@ import {
 
 
 // The set of patterns that will be rendered
-export const PATTERNS = {};
+export const patterns = {};
 
 /** Takes the display name of a pattern and returns the pattern class */
 const getPatternByName = (name: string) => {
@@ -47,18 +47,18 @@ const addPattern = (msg: AddPatternMessage) => {
     newPattern.updateProps(msg.props);
 
     const id = makePatternId();
-    PATTERNS[id] = newPattern;
+    patterns[id] = newPattern;
     return id;
 };
 
 /** Removes a pattern from the set of active patterns */
 const removePattern = (msg: RemovePatternMessage) => {
-    delete PATTERNS[msg.patternId];
+    delete patterns[msg.patternId];
 };
 
 /** Updates the property of an active pattern */
 const updateProp = (msg: UpdatePropMessage) => {
-    const pattern: PatternInstance = PATTERNS[msg.patternId];
+    const pattern: PatternInstance = patterns[msg.patternId];
     pattern.updateProps({ [msg.prop]: msg.value });
 };
 

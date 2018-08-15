@@ -1,6 +1,6 @@
 
-import request from 'request';
-import btoa from 'btoa';
+import * as request from 'request';
+import * as btoa from 'btoa';
 
 
 /** Transmits data to the canopy API */
@@ -12,11 +12,11 @@ export default class Transmitter {
     }
 
     private _get (uri) {
-        return request.get([this.host, 'api', uri].join('/')).end();
+        return request.get([this.host, 'api', uri].join('/'));
     }
 
     private _post (uri, data) {
-        return request.post([this.host, 'api', uri].join('/'), data).end();
+        return request.post([this.host, 'api', uri].join('/'), data);
     }
 
     /** Canopy API method wrappers */
