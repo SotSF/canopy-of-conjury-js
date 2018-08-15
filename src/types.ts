@@ -31,6 +31,8 @@ export interface PatternInstance {
     progress: () => void
     updateProps: (o: object) => void
     render: (canopy: CanopyInterface) => void
+    serialize: () => object
+    deserialize: (object) => void
 }
 
 /** Crazy trickery... see https://stackoverflow.com/questions/13955157/how-to-define-static-property-in-typescript-interface */

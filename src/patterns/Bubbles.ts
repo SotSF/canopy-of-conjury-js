@@ -9,6 +9,26 @@ import { PatternPropTypes } from './utils';
 import Memoizer from './memoizer';
 
 
+interface Bubble {
+    color: Color
+    lerp: number
+    opacity: number
+    size: number
+    x: number
+    y: number
+    change: number[]
+}
+
+interface SerializedBubble {
+    color: RGB
+    lerp: number
+    opacity: number
+    size: number
+    x: number
+    y: number
+    change: number[]
+}
+
 interface BubblesProps {
     color1: Color,
     color2: Color,
@@ -33,13 +53,14 @@ export class Bubbles extends BasePattern {
         };
     }
 
-    bubbles = [];
+    bubbles: Bubble[] = [];
     rateOfColorChange = 0.01;
     rateOfOpacityChange = -0.01;
     rateOfSizeChange = -0.025;
 
     memoizer = new Memoizer();
     dimension = 200;
+
     progress () {
         super.progress();
         if (Math.random() > 0.5) { 
@@ -120,5 +141,20 @@ export class Bubbles extends BasePattern {
         const y = Math.sin(theta) * rad;
         return [x,y];
     }
-    
+
+    serialize () {
+        return this.bubbles.map(bubble => ({
+            ...bubble,
+            color: bubble.color.serialize()
+        }));
+    }
+
+    deserialize (bubbles: SerializedBubble[]) {
+        bubbles.map((bubble) =>
+            this.bubbles.push({
+                ...bubble,
+                color: RGB.fromObject(bubble.color)
+            })
+        );
+    }
 }

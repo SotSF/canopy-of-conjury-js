@@ -28,6 +28,8 @@ export default abstract class BasePattern implements PatternInstance {
 
     // These must each be implemented in inheriting classes
     abstract render (canopy: CanopyInterface);
+    abstract serialize (): object;
+    abstract deserialize (o: object): void;
 
     constructor (props) {
         // If no props are provided, use the default props

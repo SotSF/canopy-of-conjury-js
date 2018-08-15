@@ -16,4 +16,5 @@ export interface Color {
     toRgb: () => RGB
     toString: () => string
     withAlpha: (alpha: number) => Color
+    serialize: () => RGB
 }

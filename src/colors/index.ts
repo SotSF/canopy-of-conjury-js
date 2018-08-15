@@ -20,6 +20,15 @@ export class RGB implements Color {
         );
     }
 
+    static fromObject (obj: RGB): RGB {
+        return new RGB(
+            obj.r,
+            obj.g,
+            obj.b,
+            obj.a
+        );
+    }
+
     constructor (r, g, b, a = 1) {
         this.r = r;
         this.g = g;
@@ -51,6 +60,15 @@ export class RGB implements Color {
 
     withAlpha (a) {
         return new RGB(this.r, this.g, this.b, a);
+    }
+
+    serialize () {
+        return {
+            r: this.r,
+            g: this.g,
+            b: this.b,
+            a: this.a
+        };
     }
 }
 
@@ -86,6 +104,10 @@ export class HSV implements Color {
 
     withAlpha (a) {
         return this.toRgb().withAlpha(a);
+    }
+
+    serialize () {
+        return this.toRgb().serialize();
     }
 }
 
