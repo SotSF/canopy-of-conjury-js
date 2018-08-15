@@ -3,7 +3,6 @@ import * as THREE from 'three';
 import * as _ from 'lodash';
 import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../../canopy';
 import { BLACK } from '../../colors';
-import { PCanvas } from '../../patterns';
 import { CanopyInterface, StripInterface } from '../../types';
 import * as util from '../../util';
 import Catenary from './catenary';

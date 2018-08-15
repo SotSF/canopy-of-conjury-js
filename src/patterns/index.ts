@@ -47,6 +47,7 @@ export {
     Kaleidoscope,
     Map,
     Radar,
+    RainbowSpiral,
     ShootingStars,
     SineRing,
     Snake,
