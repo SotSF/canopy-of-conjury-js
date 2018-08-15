@@ -1,10 +1,11 @@
 
 import * as _ from 'lodash';
 import { pattern } from '../types';
-import { PCanvas } from './canvas';
-import { BaseProcessingPattern } from './BasePattern';
+import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
-import { HSV, RGB } from '../colors';
+import { HSV } from '../colors';
+import Memoizer from './canvas/memoizer';
+import { NUM_LEDS_PER_STRIP, NUM_STRIPS } from '../canopy/constants';
 
 class Wave {
     amp: number;
@@ -14,11 +15,13 @@ class Wave {
     done: boolean = false;
     flip: number;
     t: number = 0;
+    width: number = 1;
 
     constructor (amp) {
         this.amp = amp;
         this.hue = Math.floor(Math.random() * 360);
         this.flip = Math.random() > 0.5 ? 1 : -1;
+        this.width = Math.floor(Math.random() * 5 + 2);
     }
 
     update (velocity) : void {
@@ -32,84 +35,75 @@ class Wave {
 
 interface KaleidoscopePropTypes {
     velocity: number,
-    brightness: number
+    brightness: number,
+    rotate: number
 }
 
 
 @pattern()
-export class Kaleidoscope extends BaseProcessingPattern {
+export class Kaleidoscope extends BasePattern {
     static displayName = 'Kaleidoscope';
     static propTypes = {
         velocity: new PatternPropTypes.Range(1,5),
-        brightness: new PatternPropTypes.Range(0, 100)
+        brightness: new PatternPropTypes.Range(0, 100),
+        rotate: new PatternPropTypes.Range(0,2)
     };
 
     static defaultProps () : KaleidoscopePropTypes {
         return {
             velocity: 2,
-            brightness: 100
+            brightness: 100,
+            rotate: 1
         };
     }
 
     private waves: Wave[] = [];
-    private waveAngle: number = 0;
-
+    private dimension: number = 400;
+    private frequencies: number[] = [3,4,6,8,12];
+    private frequency: number = 6;
+    memoizer = new Memoizer();
     progress () {
         super.progress();
 
-        const { processing } = this.canvas;
-        const halfCanvas = PCanvas.dimension / 2;
-        processing.pg.beginDraw();
-        processing.pg.background(0);
-        processing.pg.pushMatrix();
-        processing.pg.translate(halfCanvas, halfCanvas);
-
         // add a new wave
         if (Math.random() > 0.6 && this.waves.length < 3) {
-            const bassAmp = Math.random() * 95 + 5;
+            this.frequency = this.frequencies[Math.floor(Math.random() * this.frequencies.length)];
+            const bassAmp = Math.floor(Math.random() * NUM_STRIPS / 2 + 5);
             this.waves.push(new Wave(bassAmp));
         }
 
         // order the waves prior to rendering-- render ones with larger amplitudes first
         const sortedWaves = _.sortBy(this.waves, 'amplitude').reverse();
         sortedWaves.forEach((wave) => {
-            this.renderWave(wave);
-
             wave.update(this.props.velocity);
             if (wave.done) {
                 this.waves = _.without(this.waves, wave);
+               
             }
         });
-
-        this.waveAngle -= 0.01;
-        processing.pg.popMatrix();
-        processing.pg.endDraw();
-    }
-
-    renderWave (wave: Wave) : void {
-        const image = this.canvas.processing.pg;
-
-        image.pushMatrix();
-        image.rotate(wave.theta);
-        image.rotate(this.waveAngle);
-        const waveColor = (new HSV(wave.hue / 360, 1, wave.brightness)).toRgb();
-        const color = PCanvas.color(waveColor.r, waveColor.g, waveColor.b, 255 * this.props.brightness / 100);
-        image.fill(color);
-        for (let i = 0; i < 6; i++) {
-            image.rotate(Math.PI / 3);
-            image.beginShape();
-
-            for (let x = 0; x < wave.t; x += 5) {
-                let y = wave.flip * wave.amp * Math.sin(x * 0.2 * wave.amp);
-                image.curveVertex(x, y);
-            }
-
-            image.endShape();
-        }
-        image.popMatrix();
+        this.iteration++;
     }
 
     render (canopy) {
-      this.canvas.render(canopy);
+        const mirror = Math.floor(NUM_STRIPS / this.frequency);
+        const memoizedMap = this.memoizer.createMap(this.dimension, canopy);
+        this.waves.forEach(wave => {
+            const waveColor = (new HSV(wave.hue / 360, 1, wave.brightness)).toRgb();
+            const color = waveColor.withAlpha(this.props.brightness/100)
+            for (let t = 0; t < wave.t; t++) {
+                const x = t + this.dimension / 2
+                const y = Math.floor(wave.flip * wave.amp * Math.sin(t * 0.2 * wave.amp)) + this.dimension / 2;
+                const co = memoizedMap.mapCoords(x % this.dimension, y % this.dimension);
+                if (co.led >= 0 && co.led < NUM_LEDS_PER_STRIP) {
+                    for (let s = 0; s < this.frequency; s++) {
+                        for (let i = 0; i < wave.width; i++) {
+                            let strip = Math.floor((this.iteration / 3 * this.props.rotate) + co.strip + i + mirror * s) % NUM_STRIPS;
+                            canopy.strips[strip].updateColor(co.led, color);
+                        }
+                    }
+                }
+                
+            }
+        });
     }
 }

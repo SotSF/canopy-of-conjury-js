@@ -29,29 +29,3 @@ export class TestLEDs {
         }
     }
 }
-
-export class AlphaTest {
-    static menuParams = [];
-    static displayName = "Alpha Test";
-
-    constructor(params) {
-        this.canvas = new PCanvas();
-    }
-
-    progress() {
-        const { processing } = this.canvas;
-        processing.pg.beginDraw();
-        processing.pg.background(0);
-        for (let x = 0; x < PCanvas.dimension; x++) {
-            const alpha = util.lerp(255,0,x / PCanvas.dimension);
-            const c = PCanvas.color(255,0,0,alpha);
-            processing.pg.stroke(c);
-            processing.pg.line(x,0,x,PCanvas.dimension);
-        }
-        processing.pg.endDraw();
-    }
-
-    render(canopy) {
-        this.canvas.render(canopy);
-    }
-}
