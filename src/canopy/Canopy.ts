@@ -22,6 +22,12 @@ class Strip implements StripInterface {
     updateColors(color) {
         _.range(this.leds.length).forEach(i => this.updateColor(i, color));
     }
+
+    clear () {
+        for (let i = 0; i < this.leds.length; i++) {
+            this.leds[i] = new RGB(0, 0, 0);
+        }
+    }
 }
 
 export default class Canopy implements CanopyInterface {
@@ -33,5 +39,9 @@ export default class Canopy implements CanopyInterface {
 
     get stripLength () {
         return this.strips[0].length;
+    }
+
+    clear () {
+        this.strips.forEach(strip => strip.clear());
     }
 }
