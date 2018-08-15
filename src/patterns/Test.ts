@@ -2,7 +2,6 @@
 import { NUM_STRIPS } from '../canopy';
 import { RGB } from '../colors';
 import { pattern } from '../types';
-import * as util from '../util';
 import { PCanvas } from '.';
 import BasePattern, { BaseProcessingPattern } from './BasePattern';
 
@@ -35,32 +34,5 @@ export class TestLEDs extends BasePattern {
             if ((s + 1) % 8 == 0) c++;
             if (c >= this.colors.length) { c = 0; }
         }
-    }
-}
-
-@pattern()
-export class AlphaTest extends BaseProcessingPattern {
-    static menuParams = [];
-    static displayName = 'Alpha Test';
-    static propTypes = {};
-    static defaultProps = () => ({});
-
-    progress () {
-        const { processing } = this.canvas;
-        processing.pg.beginDraw();
-        processing.pg.background(0);
-
-        for (let x = 0; x < PCanvas.dimension; x++) {
-            const alpha = util.lerp(255,0,x / PCanvas.dimension);
-            const c = PCanvas.color(255,0,0,alpha);
-            processing.pg.stroke(c);
-            processing.pg.line(x,0,x,PCanvas.dimension);
-        }
-
-        processing.pg.endDraw();
-    }
-
-    render (canopy) {
-        this.canvas.render(canopy);
     }
 }

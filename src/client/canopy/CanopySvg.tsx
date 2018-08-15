@@ -80,7 +80,7 @@ export default class CanopySvg extends React.Component<CanopySvgProps, CanopySvg
     }
 
     makeCanopy () {
-        return new Canopy(this.props.mini ? 48 : NUM_STRIPS, NUM_LEDS_PER_STRIP);
+        return new Canopy(NUM_STRIPS, NUM_LEDS_PER_STRIP);
     }
 
     updatePattern = () => {
@@ -99,7 +99,7 @@ export default class CanopySvg extends React.Component<CanopySvgProps, CanopySvg
 
     render () {
         const { canopy, width } = this.state;
-        const rotationAmount = 360 / canopy.strips.length;
+        const rotationAmount = -360 / canopy.strips.length;
 
         const halfWidth = width / 2;
         const viewBox = `-${halfWidth} -${halfWidth} ${width} ${width}`;

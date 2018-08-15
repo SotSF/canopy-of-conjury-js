@@ -43,6 +43,7 @@ export class Snake extends BasePattern {
     target = Snake.getPoint();
     snake = [Snake.getPoint()];
     tail = [];
+    iteration = 0;
 
     progress () {
         super.progress();
@@ -84,10 +85,11 @@ export class Snake extends BasePattern {
             this.target = Snake.getPoint();
             this.tail.push({ ...lastPoint });
         }
+        this.iteration++;
     }
     
     render (canopy) {
-        const tHSV = new HSV(this.iteration % 100, 100, 100);
+        const tHSV = new HSV(this.iteration % 360 / 360, 1, 1);
         const tRGB = tHSV.toRgb().withAlpha(this.props.brightness);
 
         const target = Snake.convertCoordinate({ strip: this.target.strip, led: this.target.led }, canopy);

@@ -44,12 +44,3 @@ export default abstract class BasePattern implements PatternInstance {
         _.merge(this.props, props);
     }
 }
-
-export abstract class BaseProcessingPattern extends BasePattern {
-    canvas = null;
-
-    constructor (props) {
-        super(props);
-        this.canvas = new PCanvas();
-    }
-}

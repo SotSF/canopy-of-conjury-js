@@ -10,7 +10,7 @@ import Memoizer from './memoizer';
 class AlphaMap {
     map = {};
     add = (key, value) => { this.map[key] = value; };
-    get = (key) => this.map[key];
+    get = (key) => this.map[key] ? this.map[key] : key;
 }
 
 // Pattern Canvas - for Free Drawing
@@ -27,7 +27,7 @@ export class PCanvas {
         }
     });
 
-    static color = (r, g, b, a) => {
+    static color = (r, g, b, a = 255) => {
         const trueColor = PCanvas.p.color(r,g,b,a);
         const mappedColor = PCanvas.p.color(r * a/255, g * a/255, b * a/255, 255);
         if (!PCanvas.alphaMap[mappedColor]) {
