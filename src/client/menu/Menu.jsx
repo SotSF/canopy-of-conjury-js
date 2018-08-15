@@ -77,7 +77,7 @@ class Menu extends React.Component {
             order: this.state.patterns.length,
         }, ...this.state.patterns];
 
-        messenger.state.addPattern(pattern, params);
+        messenger.state.addPattern(id, pattern, params, order);
 
         this.setState({ patterns: newPatterns }, () =>
             this.props.updatePatterns(newPatterns)

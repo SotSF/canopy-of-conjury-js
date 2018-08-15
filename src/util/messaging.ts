@@ -13,6 +13,8 @@ interface IMessage {
 }
 
 export interface AddPatternMessage extends IMessage {
+    id: string
+    order: number
     patternName: string
     props: any
 }

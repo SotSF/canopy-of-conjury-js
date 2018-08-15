@@ -15,8 +15,14 @@ import {
 } from '../util/messaging';
 
 
+interface ActivePattern {
+    id: string
+    order: number
+    instance: PatternInstance
+}
+
 // The set of patterns that will be rendered
-export const patterns = {};
+export let patterns: ActivePattern[] = [];
 
 /** Takes the display name of a pattern and returns the pattern class */
 const getPatternByName = (name: string) => {
@@ -44,14 +50,14 @@ const addPattern = (msg: AddPatternMessage) => {
         return null;
     }
 
-    const newPattern = new PatternType();
-    newPattern.updateProps(msg.props);
+    const newPattern = {
+        id: msg.id,
+        instance: new PatternType(Object.assign({}, msg.props)),
+        order: msg.order
+    };
 
-    const id = makePatternId();
-    patterns[id] = newPattern;
-
-    console.info(`New "${msg.patternName}" pattern created with id "${id}"`);
-    return id;
+    patterns.push(newPattern);
+    console.info(`New "${msg.patternName}" pattern created with id "${msg.id}"`);
 };
 
 /** Removes a pattern from the set of active patterns */
