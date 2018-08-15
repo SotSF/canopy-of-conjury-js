@@ -3,10 +3,8 @@ import * as THREE from 'three';
 import { CanopyThreeJs } from './canopy';
 import config from '../../config';
 import * as Menu from './menu';
-import Transmitter from './transmitter';
 
 
-const transmitter = config.api_host ? new Transmitter(config.api_host) : null;
 const scene = new THREE.Scene();
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 50);
