@@ -45,33 +45,6 @@ const mapFromCanopy = (s, l) => {
     return mapFromCanopyMemo[s + "-" + l];
  }
 */
-const clearCanopy = () => {
-    for (let s in canopy.strips) {
-        canopy.strips[s].updateColors("#000000");
-    }
-}
-
-/**
- * Iterates over the canopy's strips, pulling the colors from the LEDs in order to transmit them to
- * the API.
- *
- * TODO: The ordering of the colors matters, as it needs to comply with the ordering the LED driver
- * (e.g. the Pixel Pusher) expects. This is not currently taken into consideration.
- */
-const transmit = () => {
-    if (!transmitter) return;
-
-    const colors = [];
-    canopy.strips.forEach((strip) => {
-        strip.colors.forEach((color, i) => {
-            if (i < 0 || i >= canopy.numLedsPerStrip) { return; }
-            const { r, g, b } = color;
-            colors.push(r, g, b);
-        });
-    });
-
-    transmitter.render(colors);
-};
 
 animate();
 
@@ -86,7 +59,6 @@ function animate() {
             layer.pattern.render(canopy);
         }
 
-        transmit();
         renderer.render(scene, camera);
 
     }, 1000 / 30 );
