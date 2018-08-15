@@ -15,6 +15,7 @@ import Typography from '@material-ui/core/Typography';
 import { MuiThemeProvider, withStyles } from '@material-ui/core/styles';
 
 import * as patterns from '../../patterns';
+import * as messenger from '../messenger';
 import theme from '../theme';
 
 import ActiveLayers from './ActiveLayers';
@@ -75,6 +76,8 @@ class Menu extends React.Component {
             name: pattern.displayName,
             menuParams: pattern.menuParams
         }, ...this.state.layers];
+
+        messenger.state.addPattern(pattern, params);
 
         this.currentId++;
         this.setState({ layers: newLayers }, () => {
