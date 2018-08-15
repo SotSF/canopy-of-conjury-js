@@ -16,7 +16,6 @@ import { Snake } from './Snake';
 import { Swirly } from './Swirly';
 import { SwirlyZig } from './SwirlyZig';
 import { TestLEDs } from './Test';
-import { PCanvas } from './canvas';
 
 export const allPatterns = [
     Bubbles,
@@ -47,7 +46,6 @@ export {
     Heartbeat,
     Kaleidoscope,
     Map,
-    PCanvas,
     Radar,
     ShootingStars,
     SineRing,

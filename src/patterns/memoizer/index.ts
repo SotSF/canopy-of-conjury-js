@@ -2,6 +2,7 @@
 import { CanopyInterface } from '../../types';
 import { IMemoizedMap, IMemoizer } from './types';
 
+
 class MemoizedMap implements IMemoizedMap {
     map = {};
 
@@ -44,7 +45,6 @@ class MemoizedMap implements IMemoizedMap {
         }
     }
 }
-
 
 /**
  * When converting canvas coordinates to canopy coordinates (basically a mapping from cartesian to
