@@ -16,7 +16,7 @@ import {
 
 
 // The set of patterns that will be rendered
-const PATTERNS = {};
+export const PATTERNS = {};
 
 /** Takes the display name of a pattern and returns the pattern class */
 const getPatternByName = (name: string) => {

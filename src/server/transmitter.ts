@@ -21,30 +21,40 @@ export default class Transmitter {
 
     /** Canopy API method wrappers */
     ping () {
-        this._get('ping');
+        return this._get('ping');
     }
 
     echo () {
-        this._get('echo');
+        return this._get('echo');
     }
 
     clear () {
-        this._get('clear');
+        return this._get('clear');
     }
 
     start () {
-        this._get('start');
+        return this._get('start');
     }
 
     stop () {
-        this._get('stop');
+        return this._get('stop');
     }
 
     stats () {
-        this._get('stats');
+        return this._get('stats');
     }
 
-    render (data) {
+    render (canopy) {
+        const data = [];
+
+        canopy.strips.forEach((strip) => {
+            strip.colors.forEach((color, i) => {
+                if (i < 0 || i >= canopy.numLedsPerStrip) { return; }
+                const { r, g, b } = color;
+                data.push(r, g, b);
+            });
+        });
+
         const u8 = new Uint8Array(data);
         const b64encoded = btoa(String.fromCharCode.apply(null, u8));
         this._post('render', b64encoded);
