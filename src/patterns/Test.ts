@@ -2,8 +2,7 @@
 import { NUM_STRIPS } from '../canopy';
 import { RGB } from '../colors';
 import { pattern } from '../types';
-import { PCanvas } from '.';
-import BasePattern, { BaseProcessingPattern } from './BasePattern';
+import BasePattern from './BasePattern';
 
 /**
  * Test pattern to determine order of strips

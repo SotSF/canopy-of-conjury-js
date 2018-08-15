@@ -1,9 +1,9 @@
 
-import { Color, RGB } from '../colors';
+import { RGB } from '../colors';
 import { pattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
-import Memoizer from "./canvas/memoizer";
+import Memoizer from './memoizer';
 
 @pattern()
 export class Heartbeat extends BasePattern {
@@ -11,7 +11,8 @@ export class Heartbeat extends BasePattern {
     static propTypes = {
         color: new PatternPropTypes.Color,
         brightness: new PatternPropTypes.Range(0,100)
-    }
+    };
+
     static defaultProps () {
          return {
             color: RGB.random(),
@@ -26,7 +27,8 @@ export class Heartbeat extends BasePattern {
     grow = true;
     dimension = 300;
     memoizer = new Memoizer();
-    progress() {
+
+    progress () {
         super.progress();
         if (this.grow) {
             this.pulse += this.velocity;
@@ -36,10 +38,10 @@ export class Heartbeat extends BasePattern {
         if (this.pulse < this.minPulse) { this.pulse = this.minPulse; this.grow = true; }
     }
 
-    render(canopy) {
+    render (canopy) {
         const memoizedMap = this.memoizer.createMap(this.dimension, canopy);
-        const lerp = (this.pulse - this.minPulse) / (this.maxPulse - this.minPulse);
         const color = this.props.color.withAlpha(this.props.brightness/100);
+
         let t = 0;
         while ( t < 500 ) {
             const x = (1 + this.pulse) * (16 * Math.sin(t) * Math.sin(t) * Math.sin(t));

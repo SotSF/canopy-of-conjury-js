@@ -3,7 +3,6 @@ import * as _ from 'lodash';
 import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
 import { CanopyInterface, PatternInstance } from '../types';
 import * as util from '../util';
-import { PCanvas } from './canvas';
 
 
 export default abstract class BasePattern implements PatternInstance {

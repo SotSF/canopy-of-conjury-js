@@ -4,8 +4,8 @@ import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
 import { RGB, Color } from '../colors';
 import { AccessibleProp, pattern } from '../types';
 import BasePattern from './BasePattern';
+import Memoizer from './memoizer';
 import { PatternPropTypes } from './utils';
-import Memoizer from './canvas/memoizer';
 
 
 interface FireFliesPropTypes {

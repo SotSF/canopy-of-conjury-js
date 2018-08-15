@@ -1,11 +1,11 @@
 
 import * as _ from 'lodash';
+import { NUM_LEDS_PER_STRIP, NUM_STRIPS } from '../canopy';
 import { pattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 import { HSV } from '../colors';
-import Memoizer from './canvas/memoizer';
-import { NUM_LEDS_PER_STRIP, NUM_STRIPS } from '../canopy/constants';
+import Memoizer from './memoizer';
 
 class Wave {
     amp: number;

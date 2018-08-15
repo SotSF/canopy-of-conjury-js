@@ -1,12 +1,12 @@
 
 import * as _ from 'lodash';
+import { NUM_LEDS_PER_STRIP } from '../canopy';
 import { Color, RGB } from '../colors';
 import { pattern } from '../types';
 import * as util from '../util';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
-import Memoizer from "./canvas/memoizer";
-import { NUM_LEDS_PER_STRIP } from "../canopy/constants";
+import Memoizer from './memoizer';
 
 
 interface BubblesProps {
