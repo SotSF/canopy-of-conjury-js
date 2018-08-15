@@ -36,10 +36,16 @@ const getPatternByName = (name: string) => {
     return null;
 };
 
-/** Creates a unique ID for a pattern instance */
-const makePatternId = (): string => {
-    const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    return _.range(20).map(() => _.sample(characters)).join('');
+/** Takes an instance of a pattern and returns class that created it */
+const getPatternClassFromInstance = (pattern: PatternInstance): PatternInterface => {
+    for (let i = 0; i < allPatterns.length; i++) {
+        if (pattern instanceof allPatterns[i]) {
+            return allPatterns[i];
+        }
+    }
+
+    // Didn't find a pattern class that matched the given pattern
+    return null;
 };
 
 /** Adds a pattern to the set of active patterns */
@@ -63,6 +69,14 @@ const addPattern = (msg: AddPatternMessage) => {
 /** Removes a pattern from the set of active patterns */
 const removePattern = (msg: RemovePatternMessage) => {
     delete patterns[msg.patternId];
+
+    const patternToRemove = _.find(patterns, { id: msg.patternId });
+    const patternInterface = getPatternClassFromInstance(patternToRemove.instance);
+    patterns = _.without(patterns, patternToRemove);
+
+    console.info(`Pattern "${patternInterface.displayName}" (id "${msg.patternId}") removed`);
+
+    // TODO: notify clients
 };
 
 /** Updates the property of an active pattern */
