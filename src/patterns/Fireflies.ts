@@ -1,11 +1,11 @@
 
 import * as _ from 'lodash';
+import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
 import { RGB, Color } from '../colors';
 import { AccessibleProp, pattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
-import Memoizer from "./canvas/memoizer";
-import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from "../canopy/constants";
+import Memoizer from './canvas/memoizer';
 
 
 interface FireFliesPropTypes {
@@ -16,15 +16,14 @@ interface FireFliesPropTypes {
     velocity: AccessibleProp<number>
 }
 
-
 @pattern()
 export class Fireflies extends BasePattern {
     static displayName = 'Fireflies';
     static propTypes = {
         color     : new PatternPropTypes.Color(),
-        brightness: new PatternPropTypes.Range(0, 100),
+        brightness: new PatternPropTypes.Range(0, 1, 0.01),
         quantity  : new PatternPropTypes.Range(10, 100),
-        rotation     : new PatternPropTypes.Range(-10, 10),
+        rotation  : new PatternPropTypes.Range(-10, 10),
         velocity  : new PatternPropTypes.Range(0, 10).enableOscillation()
     };
 
@@ -34,7 +33,7 @@ export class Fireflies extends BasePattern {
             quantity: 50,
             velocity: 0,
             rotation: 0,
-            brightness: 100
+            brightness: 1
         };
     }
 
@@ -52,6 +51,9 @@ export class Fireflies extends BasePattern {
 
     progress () {
         super.progress();
+
+        this.fireflies.map(this.updateFirefly);
+
         if (this.fireflies.length < this.props.quantity) {
             this.addFirefly();
         } else if (this.fireflies.length > this.props.quantity) {
@@ -61,10 +63,9 @@ export class Fireflies extends BasePattern {
 
     render (canopy) {
         const memoizedMap = this.memoizer.createMap(this.dimension, canopy);
-        this.fireflies.forEach((firefly) => {
-            this.renderFirefly(firefly, canopy, memoizedMap);
-            this.updateFirefly(firefly);
-        });
+        this.fireflies.forEach(firefly =>
+            this.renderFirefly(firefly, canopy, memoizedMap)
+        );
     }
 
     addFirefly () {
@@ -92,8 +93,9 @@ export class Fireflies extends BasePattern {
             this.props.color.r + firefly.offset,
             this.props.color.g + firefly.offset,
             this.props.color.b + firefly.offset,
-            this.props.brightness/100 * firefly.brightness / 255
+            this.props.brightness * firefly.brightness / 255
         );
+
         const x = firefly.radius * Math.cos(firefly.theta);
         const y = firefly.radius * Math.sin(firefly.theta);
         const x2 = Math.floor(x + (firefly.x + this.dimension / 2));
@@ -117,19 +119,29 @@ export class Fireflies extends BasePattern {
         }
     }
 
-    updateFirefly (firefly) {
+    updateFirefly = (firefly) => {
         firefly.brightness += 10 * firefly.dir[0];
-        if (firefly.brightness >= 255 || firefly.brightness <= 0) firefly.dir[0] *= -1;
-        firefly.age++;
-        if (firefly.age >= this.lifespan) _.without(this.fireflies, firefly);
+        if (firefly.brightness >= 255 || firefly.brightness <= 0) {
+            firefly.dir[0] *= -1;
+        }
 
-        const velocity: number = _.result(this.props, 'velocity');
+        firefly.age++;
+        if (firefly.age >= this.lifespan) {
+            _.without(this.fireflies, firefly);
+        }
+
+        const velocity = _.result<number>(this.props, 'velocity');
         if (velocity > 0) {
             const v = velocity / 2;
             firefly.radius += 0.1 * v * firefly.dir[1];
-            if (firefly.radius > 20 || Math.random() > 0.99) { firefly.dir[1] *= -1; }
+            if (firefly.radius > 20 || Math.random() > 0.99) {
+                firefly.dir[1] *= -1;
+            }
+
             firefly.theta += 0.1 * v * firefly.dir[2];
-            if (Math.random() > 0.99) { firefly.dir[2] *= -1; }
+            if (Math.random() > 0.99) {
+                firefly.dir[2] *= -1;
+            }
         }
-    }
+    };
 }
