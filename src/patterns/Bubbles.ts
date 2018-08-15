@@ -12,7 +12,7 @@ import { NUM_LEDS_PER_STRIP } from "../canopy/constants";
 interface BubblesProps {
     color1: Color,
     color2: Color,
-    brightness: number
+    opacity: number
 }
 
 @pattern()
@@ -22,14 +22,14 @@ export class Bubbles extends BasePattern {
     static propTypes = {
         color1: new PatternPropTypes.Color(),
         color2: new PatternPropTypes.Color(),
-        brightness: new PatternPropTypes.Range(0,100)
+        opacity: new PatternPropTypes.Range(0,100)
     };
 
     static defaultProps () : BubblesProps {
         return {
             color1: RGB.random(),
             color2: RGB.random(),
-            brightness: 100
+            opacity: 100
         };
     }
 
@@ -76,7 +76,7 @@ export class Bubbles extends BasePattern {
                 util.lerp(color1.g, color2.g, bubble.lerp),
                 util.lerp(color1.b, color2.b, bubble.lerp)
             );
-            const color = bubble.color.withAlpha(bubble.opacity * this.props.brightness / 100);
+            const color = bubble.color.withAlpha(bubble.opacity * this.props.opacity / 100);
             const center = memoizedMap.mapCoords(Math.floor(bubble.x + halfCanvas),Math.floor(bubble.y + halfCanvas));
             let t = 0;
             while (t < 30) {

@@ -11,7 +11,7 @@ import { PatternPropTypes } from './utils';
 interface GradientPulseProps {
     color1: Color,
     color2: Color,
-    brightness: AccessibleProp<number>
+    opacity: AccessibleProp<number>
 }
 
 /**
@@ -23,14 +23,14 @@ export class GradientPulse extends BasePattern {
     static propTypes = {
         color1: new PatternPropTypes.Color(),
         color2: new PatternPropTypes.Color(),
-        brightness: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation()
+        opacity: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation()
     };
 
     static defaultProps () : GradientPulseProps {
         return {
             color1: RGB.random(),
             color2: RGB.random(),
-            brightness: 1
+            opacity: 1
         };
     }
 
@@ -78,8 +78,8 @@ export class GradientPulse extends BasePattern {
 
     render (canopy) {
         this.beatList.forEach((beat) => {
-            const brightness = _.result<number>(this.props, 'brightness');
-            const color = beat.c.withAlpha(brightness);
+            const opacity = _.result<number>(this.props, 'opacity');
+            const color = beat.c.withAlpha(opacity);
             canopy.strips.forEach((strip) => strip.updateColor(beat.pos, color));
         });
     }

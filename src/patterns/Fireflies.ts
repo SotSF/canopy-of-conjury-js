@@ -10,7 +10,7 @@ import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from "../canopy/constants";
 
 interface FireFliesPropTypes {
     color: Color,
-    brightness: number,
+    opacity: number,
     quantity: number,
     rotation: number,
     velocity: AccessibleProp<number>
@@ -22,7 +22,7 @@ export class Fireflies extends BasePattern {
     static displayName = 'Fireflies';
     static propTypes = {
         color     : new PatternPropTypes.Color(),
-        brightness: new PatternPropTypes.Range(0, 100),
+        opacity: new PatternPropTypes.Range(0, 100),
         quantity  : new PatternPropTypes.Range(10, 100),
         rotation     : new PatternPropTypes.Range(-10, 10),
         velocity  : new PatternPropTypes.Range(0, 10).enableOscillation()
@@ -34,7 +34,7 @@ export class Fireflies extends BasePattern {
             quantity: 50,
             velocity: 0,
             rotation: 0,
-            brightness: 100
+            opacity: 100
         };
     }
 
@@ -92,7 +92,7 @@ export class Fireflies extends BasePattern {
             this.props.color.r + firefly.offset,
             this.props.color.g + firefly.offset,
             this.props.color.b + firefly.offset,
-            this.props.brightness/100 * firefly.brightness / 255
+            this.props.opacity/100 * firefly.brightness / 255
         );
         const x = firefly.radius * Math.cos(firefly.theta);
         const y = firefly.radius * Math.sin(firefly.theta);
