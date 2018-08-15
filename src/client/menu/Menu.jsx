@@ -1,7 +1,8 @@
 
 import * as _ from 'lodash';
-import React from 'react';
+import * as React from 'react';
 import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 
 import Drawer from '@material-ui/core/Drawer';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -18,7 +19,7 @@ import * as patterns from '../../patterns';
 import * as messenger from '../messenger';
 import theme from '../theme';
 
-import ActiveLayers from './ActiveLayers';
+import ActivePatterns from './ActiveLayers';
 import Patterns from './Patterns';
 import RenderSelection from './RenderSelection';
 
@@ -45,49 +46,50 @@ const styles = theme => ({
 
 @withStyles(styles)
 class Menu extends React.Component {
+    static propTypes = {
+        updatePatterns: PropTypes.func
+    };
+
     static presets = [
         { pattern: patterns.TestLEDs, name: 'Test LEDs' }
     ];
-    currentId = 0;
+
     state = {
-        layers: [],
+        patterns: [],
         activeBrush: ''
     };
 
     clear = () => {
         this.props.canopy.clear();
-        this.setState({ layers: [] });
-        this.props.updateLayers([]);
+        this.setState({ patterns: [] });
+        this.props.updatePatterns([]);
     };
 
-    activateBrush = (name) => {
-        this.setState({ activeBrush: name });
-        this.props.setBrush(name);
-        var drawLayer = this.state.layers.find((layer) => {return layer.pattern instanceof patterns.PCanvas});
-        if (drawLayer == null) {
-            this.addLayer(patterns.PCanvas, "Draw Canvas");
-        }
-    };
+    addPattern = (pattern, params) => {
+        // Create a unique ID for the pattern instance
+        const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        const id = _.range(20).map(() => _.sample(characters)).join('');
 
-    addLayer = (pattern, params) => {
-        const newLayers = [{
-            key: this.currentId,
-            pattern: new pattern(Object.assign({}, params)),
+        const newPatterns = [{
+            id,
+            instance: new pattern(Object.assign({}, params)),
             name: pattern.displayName,
-            menuParams: pattern.menuParams
-        }, ...this.state.layers];
+            order: this.state.patterns.length,
+        }, ...this.state.patterns];
 
         messenger.state.addPattern(pattern, params);
 
-        this.currentId++;
-        this.setState({ layers: newLayers }, () => {
-            this.props.updateLayers(newLayers)
-        });
+        this.setState({ patterns: newPatterns }, () =>
+            this.props.updatePatterns(newPatterns)
+        );
     };
 
-    removeLayer = (layer) => {
-        const newLayers = _.without(this.state.layers, layer);
-        this.setState({ layers: newLayers }, () =>  this.props.updateLayers(newLayers));
+    removePattern = (patternId) => {
+        const patternToRemove = _.find(this.state.patterns, { id: patternId });
+        const newPatterns = _.without(this.state.patterns, patternToRemove);
+
+        messenger.state.removePattern(patternId);
+        this.setState({ patterns: newPatterns }, () =>  this.props.updatePatterns(newPatterns));
     };
 
     render () {
@@ -119,7 +121,7 @@ class Menu extends React.Component {
                                     <ListItem button key={name}>
                                         <ListItemText
                                           primary={name}
-                                          onClick={() => this.addLayer(pattern, name)}
+                                          onClick={() => this.addPattern(pattern, name)}
                                         />
                                     </ListItem>
                                 )}
@@ -127,11 +129,11 @@ class Menu extends React.Component {
                         </ExpansionPanelDetails>
                     </ExpansionPanel>
 
-                    <Patterns addLayer={this.addLayer} />
+                    <Patterns addPattern={this.addPattern} />
 
-                    <ActiveLayers
-                      layers={this.state.layers}
-                      removeLayer={this.removeLayer}
+                    <ActivePatterns
+                      patterns={this.state.patterns}
+                      removePattern={this.removePattern}
                       updatePattern={this.props.updatePattern}
                     />
 
@@ -142,12 +144,12 @@ class Menu extends React.Component {
     }
 }
 
-export const initialize = (updateLayers, setBrush, canopy) => {
+export const initialize = (updatePatterns, setBrush, canopy) => {
     ReactDOM.render(
         <Menu
           canopy={canopy}
           setBrush={setBrush}
-          updateLayers={updateLayers}
+          updatePatterns={updatePatterns}
         />,
         document.getElementById('controls')
     );

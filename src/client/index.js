@@ -1,7 +1,6 @@
 
 import * as THREE from 'three';
 import { CanopyThreeJs } from './canopy';
-import config from '../../config';
 import * as Menu from './menu';
 
 
@@ -22,7 +21,7 @@ const canopy = new CanopyThreeJs;
 canopy.initialize(scene);
 
 var brush; // active freedraw brush
-var layers = [];
+var patterns = [];
 var mapFromCanopyMemo = {};
 /*
 window.onload = function () {  
@@ -50,17 +49,17 @@ animate();
 
 function animate() {
     setTimeout( function() {
-
         requestAnimationFrame( animate );
         controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
         canopy.clear();
-        for (let layer of Array.from(layers).reverse()) {
-            layer.pattern.progress();
-            layer.pattern.render(canopy);
-        }
+
+        // Reverse the patterns so that the bottom one is rendered first
+        patterns.reverse().forEach((pattern) => {
+            pattern.instance.progress();
+            pattern.instance.render(canopy);
+        });
 
         renderer.render(scene, camera);
-
     }, 1000 / 30 );
   
 }
@@ -76,21 +75,11 @@ window.onkeydown = e => {
     }
 };
 
-const addLayer = function(pattern, displayName) {
-    layers.push({
-        pattern: pattern,
-        name: displayName
-    });
-}
+const setBrush = (val) => { brush = val; };
+const updatePatterns = (val) => { patterns = val };
 
-const setBrush = function(val) {
-    brush = val;
-}
-const updateLayers = function(val) {
-    layers = val;
-}
 $(document).ready(function () {
-    Menu.initialize(updateLayers, setBrush, canopy);
+    Menu.initialize(updatePatterns, setBrush, canopy);
     //$(document).on('click', '#idRenderer', canopyClick);
 });
 

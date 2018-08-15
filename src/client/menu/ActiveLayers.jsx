@@ -40,7 +40,7 @@ const styles = theme => ({
     }
 });
 
-const LayerStyles = {
+const PatternStyles = {
     topText: {
         verticalAlign: "top"
     },
@@ -49,10 +49,11 @@ const LayerStyles = {
     }
 };
 
-@withStyles(LayerStyles)
-class Layer extends React.Component {
+@withStyles(PatternStyles)
+class Pattern extends React.Component {
     static propTypes = {
-        layer: PropTypes.shape({
+        pattern: PropTypes.shape({
+            instance: PropTypes.object,
             name: PropTypes.string
         }).isRequired
     };
@@ -70,14 +71,14 @@ class Layer extends React.Component {
     };
 
     updateProps = (props) => {
-        this.props.layer.pattern.updateProps(props);
+        this.props.pattern.instance.updateProps(props);
 
         // Force an update because the props have changed, but React doesn't know about it
         this.forceUpdate();
     };
 
     renderPopover() {
-        const { layer } = this.props;
+        const { pattern } = this.props;
         const { anchorEl } = this.state;
         return (
             <Popover
@@ -94,8 +95,8 @@ class Layer extends React.Component {
               }}
             >
                 <PatternProps
-                  propTypes={layer.pattern.constructor.propTypes}
-                  values={layer.pattern.props}
+                  propTypes={pattern.instance.constructor.propTypes}
+                  values={pattern.instance.props}
                   onChange={this.updateProps}
                 />
             </Popover>
@@ -103,12 +104,12 @@ class Layer extends React.Component {
     }
 
     render () {
-        const { layer } = this.props;
+        const { pattern } = this.props;
         return (
             <ListItem button className="layer">
-                <ListItemText onClick={this.handleClick} primary={layer.name} />
+                <ListItemText onClick={this.handleClick} primary={pattern.name} />
                 <ListItemSecondaryAction>
-                    <DeleteIcon onClick={() => this.props.removeLayer(layer)} />
+                    <DeleteIcon onClick={() => this.props.removePattern(pattern.id)} />
                 </ListItemSecondaryAction>
                 {this.renderPopover()}
             </ListItem>
@@ -117,21 +118,22 @@ class Layer extends React.Component {
 }
 
 @withStyles(styles)
-export default class ActiveLayers extends React.Component {
+export default class ActivePatterns extends React.Component {
     static propTypes = {
-        layers: PropTypes.array
+        patterns: PropTypes.array
     };
 
     render () {
-        const { classes, layers } = this.props;
+        const { classes, patterns } = this.props;
+
         return (
             <ExpansionPanel>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                     <div className={classes.summaryHeader}>
-                        <Typography className={classes.heading}>Active Layers</Typography>
+                        <Typography className={classes.heading}>Active Patterns</Typography>
                     </div>
                     <div className={classes.summaryCount}>
-                        <Typography className={classes.secondaryHeading}>{layers.length}</Typography>
+                        <Typography className={classes.secondaryHeading}>{patterns.length}</Typography>
                     </div>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails classes={{
@@ -140,11 +142,11 @@ export default class ActiveLayers extends React.Component {
                     <List dense disablePadding classes={{
                         root: classes.list
                     }}>
-                        {layers.map((layer, i) =>
-                            <Layer
-                              key={i}
-                              layer={layer}
-                              removeLayer={this.props.removeLayer}
+                        {patterns.map(pattern =>
+                            <Pattern
+                              key={pattern.id}
+                              pattern={pattern}
+                              removePattern={this.props.removePattern}
                             />
                         )}
                     </List>

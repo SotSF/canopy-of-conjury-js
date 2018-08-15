@@ -169,7 +169,7 @@ const styles = theme => ({
 @withStyles(styles)
 export default class Patterns extends React.Component {
     static propTypes = {
-        addLayer: PropTypes.func.isRequired
+        addPattern: PropTypes.func.isRequired
     };
 
     render () {
@@ -187,67 +187,67 @@ export default class Patterns extends React.Component {
                     }}>
                         <PatternOption
                           pattern={patterns.Bubbles}
-                          addPattern={this.props.addLayer}
+                          addPattern={this.props.addPattern}
                         />
                         <PatternOption
                           pattern={patterns.ConcentricCircles}
-                          addPattern={this.props.addLayer}
+                          addPattern={this.props.addPattern}
                         />
                         <PatternOption
                           pattern={patterns.Fade}
-                          addPattern={this.props.addLayer}
+                          addPattern={this.props.addPattern}
                         />
                         <PatternOption
                           pattern={patterns.Fireflies}
-                          addPattern={this.props.addLayer}
+                          addPattern={this.props.addPattern}
                         />
                         <PatternOption
                           pattern={patterns.GradientFlow}
-                          addPattern={this.props.addLayer}
+                          addPattern={this.props.addPattern}
                         />
                         <PatternOption
                           pattern={patterns.GradientPulse}
-                          addPattern={this.props.addLayer}
+                          addPattern={this.props.addPattern}
                         />
                         <PatternOption
                           pattern={patterns.Heartbeat}
-                          addPattern={this.props.addLayer}
+                          addPattern={this.props.addPattern}
                         />
                         <PatternOption
                           pattern={patterns.Kaleidoscope}
-                          addPattern={this.props.addLayer}
+                          addPattern={this.props.addPattern}
                         />
                         <PatternOption
                           pattern={patterns.Map}
-                          addPattern={this.props.addLayer}
+                          addPattern={this.props.addPattern}
                         />
                         <PatternOption
                           pattern={patterns.RainbowSpiral}
-                          addPattern={this.props.addLayer}
+                          addPattern={this.props.addPattern}
                         />
                         <PatternOption
                           pattern={patterns.Radar}
-                          addPattern={this.props.addLayer}
+                          addPattern={this.props.addPattern}
                         />
                         <PatternOption
                           pattern={patterns.ShootingStars}
-                          addPattern={this.props.addLayer}
+                          addPattern={this.props.addPattern}
                         />
                         <PatternOption
                           pattern={patterns.SineRing}
-                          addPattern={this.props.addLayer}
+                          addPattern={this.props.addPattern}
                         />
                         <PatternOption
                           pattern={patterns.Snake}
-                          addPattern={this.props.addLayer}
+                          addPattern={this.props.addPattern}
                         />
                         <PatternOption
                           pattern={patterns.Swirly}
-                          addPattern={this.props.addLayer}
+                          addPattern={this.props.addPattern}
                         />
                         <PatternOption
                           pattern={patterns.SwirlyZig}
-                          addPattern={this.props.addLayer}
+                          addPattern={this.props.addPattern}
                         />
                     </List>
                 </ExpansionPanelDetails>
