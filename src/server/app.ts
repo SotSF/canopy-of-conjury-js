@@ -59,7 +59,7 @@ const config: AppConfig = (() => {
 
 /** Create a connection to the API */
 const transmitter = new Transmitter(config.api_host);
-transmitter.ping().on('response', (resp) => {
+transmitter.ping().on('response', () => {
     console.log('Connected to canopy API');
 
     const canopy = new Canopy(96, 75);

@@ -10,7 +10,7 @@ import {
     message,
     AddPatternMessage,
     RemovePatternMessage,
-    SyncStateMessage,
+    ServerMessage,
     UpdatePropsMessage,
     MESSAGE_TYPE,
 } from '../util/messaging';
@@ -66,7 +66,7 @@ const syncState = (ws) => {
         name: pattern.name
     }));
 
-    const message: SyncStateMessage = {
+    const message: ServerMessage.SyncState = {
         type: MESSAGE_TYPE.syncState,
         patterns: serialized
     };

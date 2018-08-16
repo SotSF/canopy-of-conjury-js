@@ -1,5 +1,5 @@
 
-import { IPatternSerialized } from '../types';
+import { IPatternState } from '../types';
 
 
 /** Constants */
@@ -32,18 +32,21 @@ export interface UpdatePropsMessage extends IMessage {
     props: any // TODO: make this type more precise...
 }
 
-interface IPatternWrapper {
-    id: string
-    order: number
-    pattern: IPatternSerialized
-}
-
-export interface SyncStateMessage extends IMessage {
-    patterns: IPatternWrapper[]
-}
-
 export type message = AddPatternMessage | RemovePatternMessage | UpdatePropsMessage;
 
 
 /** Responses from the server */
 export type response = any;
+
+export namespace ServerMessage {
+    interface IPatternWrapper {
+        id: string
+        order: number
+        state: IPatternState
+        name: string
+    }
+
+    export interface SyncState extends IMessage {
+        patterns: IPatternWrapper[]
+    }
+}
