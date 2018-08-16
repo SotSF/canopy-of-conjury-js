@@ -67,12 +67,13 @@ class Menu extends React.Component {
         // Create a unique ID for the pattern instance
         const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         const id = _.range(20).map(() => _.sample(characters)).join('');
+        const order = this.state.patterns.length;
 
         const newPatterns = [{
             id,
             instance: new pattern(Object.assign({}, params)),
             name: pattern.displayName,
-            order: this.state.patterns.length,
+            order,
         }, ...this.state.patterns];
 
         messenger.state.addPattern(id, pattern, params, order);
