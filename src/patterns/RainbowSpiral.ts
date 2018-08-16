@@ -5,6 +5,7 @@ import { pattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 
+
 enum SpiralDirection {
     inwards,
     outwards
@@ -35,14 +36,15 @@ export class RainbowSpiral extends BasePattern {
 
     progress() {
         super.progress();
-        this.lines.push( {
+
+        this.lines.push({
             strip: this.adder,
             head: this.props.direction === SpiralDirection.inwards ? NUM_LEDS_PER_STRIP : 0,
             hue: this.colorOffset
         });
+
         this.adder += this.props.gap;
         this.adder %= NUM_STRIPS;
-        
 
         this.lines.forEach(line => {
             if (this.props.direction === SpiralDirection.inwards) {
@@ -54,6 +56,7 @@ export class RainbowSpiral extends BasePattern {
                 if (line.head - this.props.length >= NUM_LEDS_PER_STRIP ) { this.lines = _.without(this.lines, line); }
             }
         });
+
         this.colorOffset++;
     }
 
@@ -68,5 +71,19 @@ export class RainbowSpiral extends BasePattern {
                 }
             }
         });
+    }
+
+    serializeExtra () {
+        return {
+            adder: this.adder,
+            colorOffset: this.colorOffset,
+            lines: this.lines
+        };
+    }
+
+    deserializeExtra (object) {
+        this.adder = object.adder;
+        this.colorOffset = object.colorOffset;
+        this.lines = object.lines;
     }
 }

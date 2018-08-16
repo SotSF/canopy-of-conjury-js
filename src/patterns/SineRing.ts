@@ -45,12 +45,11 @@ export class SineRing extends BasePattern {
         };
     }
 
-    angleStep = 0.01;
-    amp = 0;
-    dir = 1;
-    r = 1;
-    iteration = 0;
-    memoizer = new Memoizer();
+    private readonly angleStep = 0.01;
+    private readonly memoizer = new Memoizer();
+
+    private amp = 0;
+    private dir = 1;
 
     progress () {
         super.progress();
@@ -62,7 +61,6 @@ export class SineRing extends BasePattern {
         if (this.amp > this.props.amplitude) {
             this.dir = -1;
         }
-        this.iteration++;
     }
 
     render(canopy) {
@@ -87,5 +85,17 @@ export class SineRing extends BasePattern {
                 }
             }
         }
+    }
+
+    serializeExtra () {
+        return {
+            amp: this.amp,
+            dir: this.dir
+        };
+    }
+
+    deserializeExtra (object) {
+        this.amp = object.map;
+        this.dir = object.dir;
     }
 }

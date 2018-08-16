@@ -8,6 +8,18 @@ import Memoizer from './memoizer';
 import { PatternPropTypes } from './utils';
 
 
+interface IFirefly {
+    brightness: number
+    offset: number
+    size: number
+    x: number
+    y: number
+    dir: number[]
+    age: number
+    radius: number
+    theta: number
+}
+
 interface FireFliesPropTypes {
     color: Color,
     opacity: number,
@@ -37,10 +49,11 @@ export class Fireflies extends BasePattern {
         };
     }
 
-    fireflies = [];
+    fireflies: IFirefly[] = [];
     dimension = 200;
     lifespan = 75;
     memoizer = new Memoizer();
+
     constructor (props) {
         super(props);
 
@@ -144,4 +157,14 @@ export class Fireflies extends BasePattern {
             }
         }
     };
+
+    serializeExtra () {
+        return {
+            fireflies: this.fireflies
+        };
+    }
+
+    deserializeExtra (object) {
+        this.fireflies = object.fireflies;
+    }
 }

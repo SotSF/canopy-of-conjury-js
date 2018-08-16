@@ -42,10 +42,12 @@ export class Triangles extends BasePattern {
         };
     }
 
-    currentHue = 0;
-    indexOfBrightest = 0;
-    progress() {
+    private currentHue = 0;
+    private indexOfBrightest = 0;
+
+    progress () {
         super.progress();
+
         if (this.iteration % 2 === 0) { 
             this.indexOfBrightest++;
         }
@@ -88,5 +90,17 @@ export class Triangles extends BasePattern {
                 }
             }
         }
+    }
+
+    serializeExtra () {
+        return {
+            currentHue: this.currentHue,
+            indexOfBrightest: this.indexOfBrightest
+        };
+    }
+
+    deserializeExtra (object) {
+        this.currentHue = object.currentHue;
+        this.indexOfBrightest = object.indexOfBrightest;
     }
 }

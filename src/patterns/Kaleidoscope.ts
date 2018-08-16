@@ -7,6 +7,7 @@ import { PatternPropTypes } from './utils';
 import { HSV } from '../colors';
 import Memoizer from './memoizer';
 
+
 class Wave {
     amp: number;
     theta: number;
@@ -16,6 +17,20 @@ class Wave {
     flip: number;
     t: number = 0;
     width: number = 1;
+
+    static fromObject (object) {
+        const wave = new Wave(object.amp);
+
+        wave.theta = object.theta;
+        wave.opacity = object.opacity;
+        wave.hue = object.hue;
+        wave.done = object.done;
+        wave.flip = object.flip;
+        wave.t = object.t;
+        wave.width = object.width;
+
+        return wave;
+    }
 
     constructor (amp) {
         this.amp = amp;
@@ -30,8 +45,20 @@ class Wave {
           if (this.opacity < 0) this.done = true;
           this.hue = (this.hue + 5) % 360;
     }
-}
 
+    serialize () {
+        return {
+            amp: this.amp,
+            theta: this.theta,
+            opacity: this.opacity,
+            hue: this.hue,
+            done: this.done,
+            flip: this.flip,
+            t: this.t,
+            width: this.width,
+        };
+    }
+}
 
 interface KaleidoscopePropTypes {
     velocity: number,
@@ -39,29 +66,30 @@ interface KaleidoscopePropTypes {
     rotate: number
 }
 
-
 @pattern()
 export class Kaleidoscope extends BasePattern {
     static displayName = 'Kaleidoscope';
     static propTypes = {
         velocity: new PatternPropTypes.Range(1,5),
-        opacity: new PatternPropTypes.Range(0, 100),
+        opacity: new PatternPropTypes.Range(0, 1, 0.01),
         rotate: new PatternPropTypes.Range(0,2)
     };
 
     static defaultProps () : KaleidoscopePropTypes {
         return {
             velocity: 2,
-            opacity: 100,
+            opacity: 1,
             rotate: 1
         };
     }
 
+    private readonly dimension: number = 400;
+    private readonly frequencies: number[] = [3, 4, 6, 8, 12];
+    readonly memoizer = new Memoizer();
+
     private waves: Wave[] = [];
-    private dimension: number = 400;
-    private frequencies: number[] = [3,4,6,8,12];
     private frequency: number = 6;
-    memoizer = new Memoizer();
+
     progress () {
         super.progress();
 
@@ -81,7 +109,6 @@ export class Kaleidoscope extends BasePattern {
                
             }
         });
-        this.iteration++;
     }
 
     render (canopy) {
@@ -89,7 +116,7 @@ export class Kaleidoscope extends BasePattern {
         const memoizedMap = this.memoizer.createMap(this.dimension, canopy);
         this.waves.forEach(wave => {
             const waveColor = (new HSV(wave.hue / 360, 1, wave.opacity)).toRgb();
-            const color = waveColor.withAlpha(this.props.opacity/100)
+            const color = waveColor.withAlpha(this.props.opacity)
             for (let t = 0; t < wave.t; t++) {
                 const x = t + this.dimension / 2
                 const y = Math.floor(wave.flip * wave.amp * Math.sin(t * 0.2 * wave.amp)) + this.dimension / 2;
@@ -105,5 +132,17 @@ export class Kaleidoscope extends BasePattern {
                 
             }
         });
+    }
+
+    serializeExtra () {
+        return {
+            frequency: this.frequency,
+            waves: this.waves.map(wave => wave.serialize())
+        };
+    }
+
+    deserializeExtra (object) {
+        this.frequency = object.frequency;
+        this.waves = object.waves.map(waveProps => Wave.fromObject(waveProps));
     }
 }

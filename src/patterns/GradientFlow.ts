@@ -166,4 +166,18 @@ export class GradientFlow extends BasePattern {
             canopy.strips.forEach(strip => strip.updateColor(i, color));
         });
     }
+
+    serializeExtra () {
+        return {
+            ringColors: this.ringColors.map(color => color.serialize()),
+            curPolarity: this.curPolarity,
+            curPosition: this.curPosition
+        }
+    }
+
+    deserializeExtra (object) {
+        this.ringColors = object.ringColors.map(color => RGB.fromObject(color));
+        this.curPolarity = object.curPolarity;
+        this.curPosition = object.curPosition;
+    }
 }

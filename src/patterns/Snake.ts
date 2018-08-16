@@ -40,10 +40,9 @@ export class Snake extends BasePattern {
         return 0;
     }
 
-    target = Snake.getPoint();
-    snake = [Snake.getPoint()];
-    tail = [];
-    iteration = 0;
+    private target = Snake.getPoint();
+    private snake = [Snake.getPoint()];
+    private tail = [];
 
     progress () {
         super.progress();
@@ -104,5 +103,17 @@ export class Snake extends BasePattern {
 
             canopy.strips[point.strip].updateColor(point.led, color);
         }
+    }
+
+    serializeExtra () {
+        return {
+            snake: this.snake,
+            tail: this.tail
+        };
+    }
+
+    deserializeExtra (object) {
+        this.snake = object.snake;
+        this.tail = object.tail;
     }
 }

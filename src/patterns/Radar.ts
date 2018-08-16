@@ -62,4 +62,14 @@ export class Radar extends BasePattern {
             canopy.strips[s].updateColors(color);
         }
     }
+
+    serializeExtra () {
+        return {
+            head: this.head
+        };
+    }
+
+    deserializeExtra (object) {
+        this.head = object.head;
+    }
 }

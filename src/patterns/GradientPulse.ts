@@ -8,6 +8,11 @@ import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 
 
+interface IBeat {
+    pos: number
+    color: Color
+}
+
 interface GradientPulseProps {
     color1: Color,
     color2: Color,
@@ -34,7 +39,7 @@ export class GradientPulse extends BasePattern {
         };
     }
 
-    beatList = [];
+    beatList: IBeat[] = [];
     offset = 0;
     dir = 1;
 
@@ -46,13 +51,13 @@ export class GradientPulse extends BasePattern {
 
         // pattern-logic: randomly add new ring is <25 rings total
         if (Math.random() > 0.5 && this.beatList.length < 25) {
-            const c = new RGB(
+            const color = new RGB(
                 util.lerp(color1.r, color2.r, this.offset),
                 util.lerp(color1.g, color2.g, this.offset),
                 util.lerp(color1.b, color2.b, this.offset)
             );
 
-            this.beatList.push({ pos: 0, c });
+            this.beatList.push({ pos: 0, color });
             this.offset += 0.05 * this.dir;
 
             if (this.offset >= 1) {
@@ -79,8 +84,28 @@ export class GradientPulse extends BasePattern {
     render (canopy) {
         this.beatList.forEach((beat) => {
             const opacity = _.result<number>(this.props, 'opacity');
-            const color = beat.c.withAlpha(opacity);
+            const color = beat.color.withAlpha(opacity);
             canopy.strips.forEach((strip) => strip.updateColor(beat.pos, color));
         });
+    }
+
+    serializeExtra () {
+        return {
+            offset: this.offset,
+            dir: this.dir,
+            beatList: this.beatList.map(beat => ({
+                pos: beat.pos,
+                color: beat.color.serialize()
+            }))
+        };
+    }
+
+    deserializeExtra (object) {
+        this.dir = object.dir;
+        this.offset = object.offset;
+        this.beatList = object.beatList.map(beat => ({
+            pos: beat.pos,
+            color: RGB.fromObject(beat.color)
+        }));
     }
 }

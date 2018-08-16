@@ -40,12 +40,12 @@ export class Swirly extends BasePattern {
         };
     }
 
-    offset = 0;
-    f = 0.01;
-    color = null;
-    colorRate = 0.05;
-    colorDir = 1;
-    swirls = [];
+    private readonly colorRate = 0.05;
+
+    private f = 0.01;
+    private color: Color = null;
+    private colorDir = 1;
+    private swirls = [];
 
     constructor (props: SwirlyProps) {
         super(props);
@@ -134,5 +134,27 @@ export class Swirly extends BasePattern {
                 canopy.strips[converted.strip].updateColor(converted.led, color);
             });
         });
+    }
+
+    serializeExtra () {
+        return {
+            f: this.f,
+            color: this.color.serialize(),
+            colorDir: this.colorDir,
+            swirls: this.swirls.map(swirl => ({
+                ...swirl,
+                color: swirl.color.serialize()
+            }))
+        };
+    }
+
+    deserializeExtra (object) {
+        this.f = object.f;
+        this.color = RGB.fromObject(object.color);
+        this.colorDir = object.colorDir;
+        this.swirls = object.swirls.map(swirl => ({
+            ...swirl,
+            color: RGB.fromObject(swirl.color)
+        }));
     }
 }

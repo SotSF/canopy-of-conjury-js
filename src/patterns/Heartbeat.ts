@@ -20,22 +20,33 @@ export class Heartbeat extends BasePattern {
         }; 
     }
 
-    minPulse = 0.05;
-    maxPulse = 1.5;
-    velocity = 0.03;
+    readonly dimension = 300;
+    readonly maxPulse = 1.5;
+    readonly minPulse = 0.05;
+    readonly memoizer = new Memoizer();
+    readonly velocity = 0.03;
+
     pulse = 0;
     grow = true;
-    dimension = 300;
-    memoizer = new Memoizer();
 
     progress () {
         super.progress();
+
         if (this.grow) {
             this.pulse += this.velocity;
-        } else { this.pulse += -(this.velocity * 1.5); }
+        } else {
+            this.pulse += -this.velocity * 1.5;
+        }
 
-        if (this.pulse > this.maxPulse) { this.pulse = this.maxPulse; this.grow = false; }
-        if (this.pulse < this.minPulse) { this.pulse = this.minPulse; this.grow = true; }
+        if (this.pulse > this.maxPulse) {
+            this.pulse = this.maxPulse;
+            this.grow = false;
+        }
+
+        if (this.pulse < this.minPulse) {
+            this.pulse = this.minPulse;
+            this.grow = true;
+        }
     }
 
     render (canopy) {
@@ -54,5 +65,17 @@ export class Heartbeat extends BasePattern {
             }
             t++;
         }
+    }
+
+    serializeExtra () {
+        return {
+            pulse: this.pulse,
+            grow: this.grow
+        };
+    }
+
+    deserializeExtra (object) {
+        this.pulse = object.pulse;
+        this.grow = object.grow;
     }
 }

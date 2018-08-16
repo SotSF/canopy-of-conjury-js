@@ -85,4 +85,14 @@ export class ShootingStars extends BasePattern {
             canopy.strips[strip].updateColor(converted.led, color);
         });
     }
+
+    serializeExtra () {
+        return {
+            stars: this.stars
+        };
+    }
+
+    deserializeExtra (object) {
+        this.stars = object.stars;
+    }
 }

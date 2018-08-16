@@ -65,4 +65,12 @@ export class SwirlyZig extends BasePattern {
     render (canopy) {
         this.swirly.render(canopy);
     }
+
+    serializeExtra () {
+        return this.swirly.serializeExtra();
+    }
+
+    deserializeExtra (object) {
+        this.swirly.deserializeExtra(object);
+    }
 }

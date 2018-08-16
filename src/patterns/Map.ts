@@ -1,6 +1,4 @@
 
-import * as _ from 'lodash';
-import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
 import { RGB, BLACK } from '../colors';
 import { pattern, CanopyInterface } from '../types';
 import * as util from '../util';
