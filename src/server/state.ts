@@ -4,8 +4,8 @@
  */
 
 import * as _ from 'lodash';
-import { allPatterns } from '../patterns';
 import { PatternInstance, PatternInterface } from '../types';
+import { getPatternClassFromInstance, getPatternByName } from '../patterns';
 import {
     message,
     AddPatternMessage,
@@ -25,29 +25,6 @@ export interface ActivePattern {
 // The set of patterns that will be rendered
 export let patterns: ActivePattern[] = [];
 
-/** Takes the display name of a pattern and returns the pattern class */
-const getPatternByName = (name: string) => {
-    for (let i = 0; i < allPatterns.length; i++) {
-        if (allPatterns[i].displayName === name) {
-            return allPatterns[i];
-        }
-    }
-
-    // Didn't find a pattern with the given name
-    return null;
-};
-
-/** Takes an instance of a pattern and returns class that created it */
-const getPatternClassFromInstance = (pattern: PatternInstance): PatternInterface => {
-    for (let i = 0; i < allPatterns.length; i++) {
-        if (pattern instanceof allPatterns[i]) {
-            return allPatterns[i];
-        }
-    }
-
-    // Didn't find a pattern class that matched the given pattern
-    return null;
-};
 
 /** Adds a pattern to the set of active patterns */
 const addPattern = (msg: AddPatternMessage) => {
