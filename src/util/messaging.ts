@@ -11,28 +11,32 @@ export const enum MESSAGE_TYPE {
 }
 
 
-/** Messages from the client */
+/** Basic message interface */
 interface IMessage {
     type: MESSAGE_TYPE
 }
 
-export interface AddPatternMessage extends IMessage {
-    id: string
-    order: number
-    patternName: string
-    props: any
-}
 
-export interface RemovePatternMessage extends IMessage {
-    patternId: string
-}
+/** Messages from the client */
+export namespace ClientMessage {
+    export type SyncState = IMessage;
 
-export interface UpdatePropsMessage extends IMessage {
-    patternId: string
-    props: any // TODO: make this type more precise...
-}
+    export interface AddPattern extends IMessage {
+        id: string
+        order: number
+        patternName: string
+        props: any
+    }
 
-export type message = AddPatternMessage | RemovePatternMessage | UpdatePropsMessage;
+    export interface RemovePattern extends IMessage {
+        patternId: string
+    }
+
+    export interface UpdateProps extends IMessage {
+        patternId: string
+        props: any // TODO: make this type more precise...
+    }
+}
 
 
 /** Responses from the server */

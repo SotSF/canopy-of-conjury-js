@@ -6,21 +6,14 @@
 import * as _ from 'lodash';
 import { getPatternClassFromInstance, getPatternByName } from '../patterns';
 import { IPatternActive, PatternInstance, PatternInterface } from '../types';
-import {
-    message,
-    AddPatternMessage,
-    RemovePatternMessage,
-    ServerMessage,
-    UpdatePropsMessage,
-    MESSAGE_TYPE,
-} from '../util/messaging';
+import { ClientMessage, ServerMessage, MESSAGE_TYPE } from '../util/messaging';
 
 
 // The set of patterns that will be rendered
 export let patterns: IPatternActive[] = [];
 
 /** Adds a pattern to the set of active patterns */
-const addPattern = (msg: AddPatternMessage) => {
+const addPattern = (msg: ClientMessage.AddPattern) => {
     const PatternType: PatternInterface = getPatternByName(msg.patternName);
     if (!PatternType) {
         console.error(`Unable to render pattern with invalid type: "${msg.patternName}"`);
@@ -39,7 +32,7 @@ const addPattern = (msg: AddPatternMessage) => {
 };
 
 /** Removes a pattern from the set of active patterns */
-const removePattern = (msg: RemovePatternMessage) => {
+const removePattern = (msg: ClientMessage.RemovePattern) => {
     delete patterns[msg.patternId];
 
     const patternToRemove = _.find(patterns, { id: msg.patternId });
@@ -52,7 +45,7 @@ const removePattern = (msg: RemovePatternMessage) => {
 };
 
 /** Updates the property of an active pattern */
-const updateProps = (msg: UpdatePropsMessage) => {
+const updateProps = (msg: ClientMessage.UpdateProps) => {
     const pattern: PatternInstance = patterns[msg.patternId];
     pattern.updateProps(msg.props);
 };
@@ -76,7 +69,7 @@ const syncState = (ws) => {
 
 export default (ws, req) => {
     ws.on('message', (rawMsg: string) => {
-        let msg: message;
+        let msg;
         try {
             msg = JSON.parse(rawMsg);
         } catch (e) {
@@ -86,13 +79,13 @@ export default (ws, req) => {
 
         switch (msg.type) {
             case MESSAGE_TYPE.addPattern:
-                addPattern(<AddPatternMessage>msg);
+                addPattern(<ClientMessage.AddPattern>msg);
                 break;
             case MESSAGE_TYPE.removePattern:
-                removePattern(<RemovePatternMessage>msg);
+                removePattern(<ClientMessage.RemovePattern>msg);
                 break;
             case MESSAGE_TYPE.updateProps:
-                updateProps(<UpdatePropsMessage>msg);
+                updateProps(<ClientMessage.UpdateProps>msg);
                 break;
             case MESSAGE_TYPE.syncState:
                 syncState(ws);

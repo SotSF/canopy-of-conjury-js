@@ -8,10 +8,8 @@ import { updatePatterns } from './state';
 import { PatternInterface } from '../types';
 import {
     ClientMessage,
-    AddPatternMessage,
-    RemovePatternMessage,
-    UpdatePropsMessage,
-    MESSAGE_TYPE, ServerMessage,
+    ServerMessage,
+    MESSAGE_TYPE,
 } from '../util/messaging';
 
 
@@ -27,7 +25,7 @@ stateSocket.onopen = () => {
 const send = message => stateSocket.send(JSON.stringify(message));
 export const state = {
     addPattern: (id, pattern: PatternInterface, props, order) => {
-        const message: AddPatternMessage = {
+        const message: ClientMessage.AddPattern = {
             type: MESSAGE_TYPE.addPattern,
             patternName: pattern.displayName,
             props,
@@ -39,7 +37,7 @@ export const state = {
     },
 
     removePattern: (patternId: string) => {
-        const message: RemovePatternMessage = {
+        const message: ClientMessage.RemovePattern = {
             type: MESSAGE_TYPE.removePattern,
             patternId
         };
@@ -48,7 +46,7 @@ export const state = {
     },
 
     updateProps: (patternId: string, props: any) => {
-        const message: UpdatePropsMessage = {
+        const message: ClientMessage.UpdateProps = {
             type: MESSAGE_TYPE.updateProps,
             patternId,
             props
