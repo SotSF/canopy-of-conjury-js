@@ -48,6 +48,7 @@ export interface IPatternActive {
 export interface IPatternState {
     props: object
     extra: object
+    iteration: number
 }
 
 /** Crazy trickery... see https://stackoverflow.com/questions/13955157/how-to-define-static-property-in-typescript-interface */

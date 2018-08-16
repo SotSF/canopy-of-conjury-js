@@ -48,7 +48,8 @@ export default abstract class BasePattern implements PatternInstance {
 
         return {
             props,
-            extra: this.serializeExtra()
+            extra: this.serializeExtra(),
+            iteration: this.iteration
         };
     }
 
@@ -77,6 +78,7 @@ export default abstract class BasePattern implements PatternInstance {
 
         this.updateProps(props);
         this.deserializeExtra(state.extra);
+        this.iteration = state.iteration;
     }
 
     // These must each be implemented in inheriting classes
