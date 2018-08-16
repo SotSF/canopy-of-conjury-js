@@ -152,12 +152,9 @@ class Menu extends React.Component {
     }
 }
 
-export const initialize = (setBrush, canopy) => {
+export const initialize = (canopy) => {
     ReactDOM.render(
-        <Menu
-          canopy={canopy}
-          setBrush={setBrush}
-        />,
+        <Menu canopy={canopy} />,
         document.getElementById('controls')
     );
 };

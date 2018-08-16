@@ -51,6 +51,4 @@ window.onkeydown = e => {
     }
 };
 
-$(document).ready(function () {
-    Menu.initialize(setBrush, canopy);
-});
+$(document).ready(() => Menu.initialize(canopy));

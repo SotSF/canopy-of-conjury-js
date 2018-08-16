@@ -251,7 +251,7 @@ export default class Patterns extends React.Component {
                         />
                         <PatternOption
                           pattern={patterns.Triangles}
-                          addPattern={this.props.addLayer}
+                          addPattern={this.props.addPattern}
                         />
                     </List>
                 </ExpansionPanelDetails>
