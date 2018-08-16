@@ -2,7 +2,7 @@
 import * as _ from 'lodash';
 import { NUM_LEDS_PER_STRIP } from '../canopy';
 import { RGB, Color, HSV } from '../colors';
-import { AccessibleProp, pattern } from '../types';
+import { MaybeOscillator, pattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 
@@ -24,8 +24,8 @@ enum GradientPolarity {
 interface GradientFlowProps {
     color1: Color,
     color2: Color,
-    brightness: AccessibleProp<number>,
-    speed: AccessibleProp<number>,
+    brightness: MaybeOscillator<number>,
+    speed: MaybeOscillator<number>,
     direction: GradientTravelDirection
 }
 

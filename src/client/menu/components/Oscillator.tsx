@@ -10,11 +10,11 @@ import { createStyles, withStyles, Theme, WithStyles } from '@material-ui/core/s
 import { IOscillator, WaveType } from '../../../types';
 import Popover from '../../util/Popover';
 import Slider from '../components/Slider';
-import Oscillator  from './Oscillator';
+import Oscillator  from '../../../patterns/utils/oscillator';
 
 
 interface WaveImageProps {
-    oscillator: IOscillator
+    oscillator: IOscillator<number>
 }
 
 interface WaveImageState {
@@ -92,7 +92,7 @@ const wavePropsStyles = ({ spacing }: Theme) => createStyles({
 
 interface WavePropsProps extends WithStyles<typeof wavePropsStyles> {
     className?: string,
-    oscillator: IOscillator
+    oscillator: IOscillator<number>
 }
 
 class WaveProps extends React.Component<WavePropsProps> {
@@ -159,21 +159,23 @@ const styles = ({ spacing }: Theme) => createStyles({
 });
 
 
-interface WidgetProps extends WithStyles<typeof styles> {
-    oscillator?: IOscillator
-    onCreate?: (osc: IOscillator) => void
+interface NumericOscillatorProps extends WithStyles<typeof styles> {
+    oscillator?: IOscillator<number>
+    oscillatorProps?: object
+    onCreate?: (osc: IOscillator<number>) => void
 }
 
-interface WidgetState {
-    oscillator: IOscillator
+interface NumericOscillatorState {
+    oscillator: IOscillator<number>
 }
 
-class Widget extends React.Component<WidgetProps, WidgetState> {
+class NumericOscillator extends React.Component<NumericOscillatorProps, NumericOscillatorState> {
     constructor (props) {
         super(props);
 
         // If no oscillator was passed in, create one
-        const oscillator = props.oscillator || new Oscillator(Math.sin);
+        const oscillatorProps = Object.assign({ type: WaveType.Sine }, props.oscillatorProps);
+        const oscillator = props.oscillator || new Oscillator(oscillatorProps);
         if (oscillator !== props.oscillator) {
             props.onCreate(oscillator);
         }
@@ -192,4 +194,4 @@ class Widget extends React.Component<WidgetProps, WidgetState> {
     }
 }
 
-export default withStyles(styles)(Widget);
+export default withStyles(styles)(NumericOscillator);

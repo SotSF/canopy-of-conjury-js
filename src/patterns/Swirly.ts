@@ -2,7 +2,7 @@
 import * as _ from 'lodash';
 import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
 import { RGB, Color } from '../colors';
-import { AccessibleProp, pattern } from '../types';
+import { MaybeOscillator, pattern } from '../types';
 import * as util from '../util';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
@@ -12,7 +12,7 @@ interface SwirlyProps {
     color1: Color,
     color2: Color,
     quantity: number,
-    brightness: AccessibleProp<number>,
+    brightness: MaybeOscillator<number>,
     fromApex: boolean,
     clockwise: boolean
 }
@@ -126,10 +126,10 @@ export class Swirly extends BasePattern {
     }
 
     render (canopy) {
-        const b = _.result<number>(this.props, 'brightness');
+        const brightness = this.getOscillatorValue('brightness');
         this.swirls.forEach((swirl) => {
             swirl.lights.forEach((light) => {
-                const color = swirl.color.withAlpha(b);
+                const color = swirl.color.withAlpha(brightness);
                 const converted = Swirly.convertCoordinate(light, canopy);
                 canopy.strips[converted.strip].updateColor(converted.led, color);
             });

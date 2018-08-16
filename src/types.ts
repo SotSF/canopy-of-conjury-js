@@ -31,8 +31,13 @@ export interface PatternInstance {
     progress: () => void
     updateProps: (o: object) => void
     render: (canopy: CanopyInterface) => void
-    serialize: () => object
-    deserialize: (object) => void
+    serializeExtra?: () => object
+    deserializeExtra?: (object) => void
+}
+
+// The serialized version of a pattern
+export interface IPatternSerialized {
+    props: any
 }
 
 /** Crazy trickery... see https://stackoverflow.com/questions/13955157/how-to-define-static-property-in-typescript-interface */
@@ -59,13 +64,18 @@ export interface IWaveParams {
     type: WaveType
 }
 
-export interface IOscillator {
+export interface ISerializedOscillator extends IWaveParams {
+    theta: number
+}
+
+export interface IOscillator<T> {
     readonly params: IWaveParams
     scaled: (min: number, max: number) => number
     theta: number
     updateWave: (params: { amplitude?: number, frequency?: number, type?: WaveType }) => void
-    value: number
-    waveFunction: (x: number) => number
+    value: T
+    waveFunction: (x: number) => T
+    serialize: () => ISerializedOscillator
 }
 
-export type AccessibleProp<T> = T | (() => T);
+export type MaybeOscillator<T> = T | IOscillator<T>;

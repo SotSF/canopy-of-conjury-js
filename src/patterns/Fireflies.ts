@@ -2,7 +2,7 @@
 import * as _ from 'lodash';
 import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
 import { RGB, Color } from '../colors';
-import { AccessibleProp, pattern } from '../types';
+import { MaybeOscillator, pattern } from '../types';
 import BasePattern from './BasePattern';
 import Memoizer from './memoizer';
 import { PatternPropTypes } from './utils';
@@ -13,7 +13,7 @@ interface FireFliesPropTypes {
     brightness: number,
     quantity: number,
     rotation: number,
-    velocity: AccessibleProp<number>
+    velocity: MaybeOscillator<number>
 }
 
 @pattern()

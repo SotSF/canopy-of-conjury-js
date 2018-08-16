@@ -1,17 +1,35 @@
 
 import * as _ from 'lodash';
-import { IOscillator, IWaveParams, WaveType } from '../../../types';
-import * as util from '../../../util';
+import { IOscillator, IWaveParams, WaveType } from '../../types';
+import * as util from '../../util';
 
 
-let oscillatorCount = 0;
-
-export default class Oscillator implements IOscillator {
+export default class Oscillator implements IOscillator<number> {
     waveFunction = null;
     theta = 0;
 
+    static fromObject (object) {
+        const oscillatorKeys = ['amplitude', 'frequency', 'type', 'theta'];
+        const isValid = _.every(oscillatorKeys.map(
+            key => Object.keys(object).includes(key))
+        );
+
+        if (isValid) {
+            const oscillator = new Oscillator({
+                amplitude: object.amplitude,
+                frequency: object.frequency,
+                type: object.type
+            });
+
+            oscillator.theta = object.theta;
+            return oscillator;
+        }
+
+        // Not a valid serialized oscillator
+        return null;
+    }
+
     private velocity = 2 * Math.PI;
-    private id = oscillatorCount++;
     private readonly interval = null;
     readonly params: IWaveParams = {
         amplitude: 1,
@@ -27,10 +45,6 @@ export default class Oscillator implements IOscillator {
     private update = () => {
         this.theta += 0.1;
     };
-
-    private get event () {
-        return `oscillator.${this.id}`;
-    }
 
     private makeWaveFunction () {
         const wavelength = this.wavelength;
@@ -86,5 +100,12 @@ export default class Oscillator implements IOscillator {
     updateWave (params) {
         _.merge(this.params, params);
         this.makeWaveFunction();
+    }
+
+    serialize () {
+        return {
+            ...this.params,
+            theta: this.theta
+        };
     }
 }

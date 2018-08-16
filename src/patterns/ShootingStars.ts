@@ -2,16 +2,16 @@
 import * as _ from 'lodash';
 import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
 import { RGB, Color } from '../colors';
-import { AccessibleProp, pattern } from '../types';
+import { MaybeOscillator, pattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 
 
 interface ShootingStarsProps {
     color: Color
-    velocity: AccessibleProp<number>
-    vortex: AccessibleProp<number>
-    brightness: AccessibleProp<number>
+    velocity: MaybeOscillator<number>
+    vortex: MaybeOscillator<number>
+    brightness: MaybeOscillator<number>
     fromApex: boolean
 }
 

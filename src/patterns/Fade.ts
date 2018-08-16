@@ -1,8 +1,7 @@
 
 import * as _ from 'lodash';
-import { NUM_LEDS_PER_STRIP } from '../canopy';
 import { Color, RGB } from '../colors';
-import { AccessibleProp, pattern } from '../types';
+import { MaybeOscillator, pattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 
@@ -11,8 +10,8 @@ const LIFECYCLE_END = 500;
 
 interface FadeProps {
     colors: Color[],
-    speed: AccessibleProp<number>
-    brightness: AccessibleProp<number>
+    speed: MaybeOscillator<number>
+    brightness: MaybeOscillator<number>
 }
 
 /**
@@ -40,12 +39,12 @@ export class Fade extends BasePattern {
     // Keep `colorIndex` so we know which color to proceed to next (in case the same color appears
     // twice); keep `currentColor` in case the current active color is removed while it is being
     // displayed
-    colorIndex = null;
-    currentColor = null;
+    colorIndex: number = null;
+    currentColor: Color = null;
 
     // Keeps track of where in the lifecycle of a color we are. 0 is the start, and `LIFECYCLE_END`
     // is the end.
-    lifecycle = 0;
+    lifecycle: number = 0;
 
     constructor (props) {
         super(props);
@@ -100,5 +99,19 @@ export class Fade extends BasePattern {
         canopy.strips.forEach((strip) => {
             strip.updateColors(color);
         });
+    }
+
+    serializeExtra () {
+        return {
+            colorIndex: this.colorIndex,
+            currentColor: this.currentColor.serialize(),
+            lifecycle: this.lifecycle
+        };
+    }
+
+    deserializeExtra (obj) {
+        this.colorIndex = obj.colorIndex;
+        this.currentColor = RGB.fromObject(obj.currentColor);
+        this.lifecycle = obj.lifecycle;
     }
 }

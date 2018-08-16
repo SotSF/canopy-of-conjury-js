@@ -2,14 +2,21 @@
 import * as _ from 'lodash';
 import { NUM_LEDS_PER_STRIP } from '../canopy';
 import { Color, RGB } from '../colors';
-import { AccessibleProp, pattern } from '../types';
+import { MaybeOscillator, IPatternSerialized, pattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
+import Oscillator from "./utils/oscillator";
 
+
+interface ICircle {
+    color: Color
+    pos: number
+    width: number
+}
 
 interface ConcentricCirclesProps {
     color: Color,
-    width: AccessibleProp<number>,
+    width: MaybeOscillator<number>,
     frequency: number
 }
 
@@ -34,7 +41,7 @@ export class ConcentricCircles extends BasePattern {
         };
     }
 
-    circles = [];
+    circles: ICircle[] = [];
 
     progress () {
         super.progress();
@@ -43,7 +50,7 @@ export class ConcentricCircles extends BasePattern {
             this.circles.push({
                 pos: 0,
                 color: this.props.color,
-                width: _.result(this.props, 'width')
+                width: this.getOscillatorValue('width')
             });
         }
 
@@ -72,6 +79,29 @@ export class ConcentricCircles extends BasePattern {
                     strip.updateColor(position, circle.color.toRgb())
                 });
             });
+        });
+    }
+
+    serialize () {
+        return {
+            circles: this.circles.map((circle) => ({
+                ...circle,
+                color: circle.color.serialize(),
+            }))
+        };
+    }
+
+    deserialize (obj) {
+        const { props, circles } = obj;
+        this.circles = circles.map((circle) => ({
+            ...circle,
+            color: RGB.fromObject(circle.color)
+        }));
+
+        this.updateProps({
+            color: RGB.fromObject(props.color),
+            width: Oscillator.fromObject(props.width) || props.width,
+            frequency: props.frequency
         });
     }
 }

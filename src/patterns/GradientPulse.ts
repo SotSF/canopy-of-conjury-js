@@ -2,7 +2,7 @@
 import * as _ from 'lodash';
 import { NUM_LEDS_PER_STRIP } from '../canopy';
 import { RGB, Color } from '../colors';
-import { AccessibleProp, pattern } from '../types';
+import { MaybeOscillator, pattern } from '../types';
 import * as util from '../util';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
@@ -11,7 +11,7 @@ import { PatternPropTypes } from './utils';
 interface GradientPulseProps {
     color1: Color,
     color2: Color,
-    brightness: AccessibleProp<number>
+    brightness: MaybeOscillator<number>
 }
 
 /**

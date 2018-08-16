@@ -1,7 +1,7 @@
 
 import * as _ from 'lodash';
 import { Color } from '../colors';
-import { AccessibleProp, pattern, PatternInstance } from '../types';
+import { MaybeOscillator, pattern, PatternInstance } from '../types';
 import BasePattern from './BasePattern';
 import { Swirly } from './Swirly';
 import { PatternPropTypes } from './utils';
@@ -11,7 +11,7 @@ interface SwirlyZigProps {
     color1: Color,
     color2: Color,
     quantity: number,
-    brightness: AccessibleProp<number>,
+    brightness: MaybeOscillator<number>,
     velocity: number,
     fromApex: boolean,
 }

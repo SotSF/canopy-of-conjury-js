@@ -7,9 +7,9 @@ import Card from '@material-ui/core/Card';
 import { createStyles, withStyles, Theme, WithStyles } from '@material-ui/core/styles';
 import MaterialSlider from '@material-ui/lab/Slider';
 
-import { AccessibleProp, IOscillator } from '../../../types';
+import { MaybeOscillator, IOscillator } from '../../../types';
 import Popover from '../../util/Popover';
-import { OscillatorWidget } from '../oscillators';
+import NumericOscillator from './Oscillator';
 
 
 const styles = ({ spacing }: Theme) => createStyles({
@@ -30,7 +30,7 @@ interface SliderProps extends WithStyles<typeof styles> {
     min?: number,
     max?: number,
     step?: number,
-    onChange (value: AccessibleProp<number>): void,
+    onChange (value: MaybeOscillator<number>): void,
     oscillation: boolean
 }
 
@@ -76,14 +76,12 @@ class Slider extends React.Component<SliderProps, SliderState> {
         this.setState({ value });
     };
 
-    subscribe = (oscillator: IOscillator) => {
-        const { min, max } = this.props;
-        const accessor = () => oscillator.scaled(min, max);
-        this.props.onChange(accessor);
+    subscribe = (oscillator: IOscillator<number>) => {
+        this.props.onChange(oscillator);
     };
 
     renderOscillator () {
-        const { classes, oscillation } = this.props;
+        const { classes, min, max, oscillation } = this.props;
         if (!oscillation) return null;
 
         const positionalProps = {
@@ -97,6 +95,10 @@ class Slider extends React.Component<SliderProps, SliderState> {
             },
         };
 
+        const oscillatorProps = {
+            amplitude: (max - min) / 2
+        };
+
         return (
             <Popover
               buttonText="Oscillator"
@@ -107,7 +109,7 @@ class Slider extends React.Component<SliderProps, SliderState> {
               {...positionalProps}
               transparent
             >
-                <OscillatorWidget onCreate={this.subscribe} />
+                <NumericOscillator onCreate={this.subscribe} oscillatorProps={oscillatorProps} />
             </Popover>
         );
     }

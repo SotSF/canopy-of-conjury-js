@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
 import { CanopyInterface, PatternInstance } from '../types';
 import * as util from '../util';
+import Oscillator from './utils/oscillator';
 
 
 export default abstract class BasePattern implements PatternInstance {
@@ -26,10 +27,46 @@ export default abstract class BasePattern implements PatternInstance {
         return { strip: canopyStrip, led: canopyLed };
     }
 
+    serialize () {
+        const serializeProp = (value) => {
+            if (Object.hasOwnProperty.call(value, 'serialize')) {
+                // @ts-ignore
+                return value.serialize();
+            } else if (_.isArray(value)) {
+                return value.map(serializeProp)
+            } else {
+                return value;
+            }
+        };
+
+        // Serialize the props
+        const props = {};
+        Object.entries(this.props).forEach(([name, value]) => {
+            props[name] = serializeProp(value);
+        });
+
+        return {
+            ...props,
+            ...this.serializeExtra()
+        };
+    }
+
+    // Should be overridden in inheriting classes if they have any additional parameters that must
+    // be serialized
+    serializeExtra () {
+        return {};
+    }
+
+    deserialize (obj) {
+        // Deserialize the props
+        const props = {};
+        Object.entries(obj.props).forEach(([name, value]) => {
+
+        });
+    }
+
     // These must each be implemented in inheriting classes
     abstract render (canopy: CanopyInterface);
-    abstract serialize (): object;
-    abstract deserialize (o: object): void;
 
     constructor (props) {
         // If no props are provided, use the default props
@@ -43,5 +80,19 @@ export default abstract class BasePattern implements PatternInstance {
 
     updateProps (props) {
         _.merge(this.props, props);
+    }
+
+    /**
+     * Given the name of a prop that may be an oscillator, this function will look up the prop,
+     * check if it's an oscillator and return the oscillator value if it is. If the prop is not an
+     * oscillator, the prop will be returned as is.
+     */
+    getOscillatorValue (propName) {
+        const prop = this.props[propName];
+        if (prop instanceof Oscillator) {
+            return prop.value;
+        } else {
+            return prop;
+        }
     }
 }
