@@ -1,3 +1,12 @@
+## Installation
+1. Download the repository
+2. Install npm packages in 3 locations
+  - `/canopy-of-conjury-js`
+  - `/canopy-of-conjury-js/src/client`
+  - `/canopy-of-conjury-js/src/server`
+3. Start the server: `cd src/server; npm start;`
+4. In your favority browser, navigate to `http://localhost:3000`
+
 ## Writing Patterns
 #### No Processing Canvas (manipulating LEDs in strips directly) 
 ----------
