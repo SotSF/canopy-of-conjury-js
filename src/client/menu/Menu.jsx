@@ -17,6 +17,7 @@ import { MuiThemeProvider, withStyles } from '@material-ui/core/styles';
 
 import * as patterns from '../../patterns';
 import * as messenger from '../messenger';
+import { updatePatterns } from '../state';
 import theme from '../theme';
 
 import ActivePatterns from './ActiveLayers';
@@ -46,9 +47,6 @@ const styles = theme => ({
 
 @withStyles(styles)
 class Menu extends React.Component {
-    static propTypes = {
-        updatePatterns: PropTypes.func
-    };
 
     static presets = [
         { pattern: patterns.TestLEDs, name: 'Test LEDs' }
@@ -62,7 +60,7 @@ class Menu extends React.Component {
     clear = () => {
         this.props.canopy.clear();
         this.setState({ patterns: [] });
-        this.props.updatePatterns([]);
+        updatePatterns([]);
     };
 
     addPattern = (pattern, params) => {
@@ -79,9 +77,7 @@ class Menu extends React.Component {
 
         messenger.state.addPattern(id, pattern, params, order);
 
-        this.setState({ patterns: newPatterns }, () =>
-            this.props.updatePatterns(newPatterns)
-        );
+        this.setState({ patterns: newPatterns }, () => updatePatterns(newPatterns));
     };
 
     removePattern = (patternId) => {
@@ -89,7 +85,7 @@ class Menu extends React.Component {
         const newPatterns = _.without(this.state.patterns, patternToRemove);
 
         messenger.state.removePattern(patternId);
-        this.setState({ patterns: newPatterns }, () => this.props.updatePatterns(newPatterns));
+        this.setState({ patterns: newPatterns }, () => updatePatterns(newPatterns));
     };
 
     render () {
@@ -134,7 +130,6 @@ class Menu extends React.Component {
                     <ActivePatterns
                       patterns={this.state.patterns}
                       removePattern={this.removePattern}
-                      updatePattern={this.props.updatePattern}
                     />
 
                     <RenderSelection />
@@ -144,12 +139,11 @@ class Menu extends React.Component {
     }
 }
 
-export const initialize = (updatePatterns, setBrush, canopy) => {
+export const initialize = (setBrush, canopy) => {
     ReactDOM.render(
         <Menu
           canopy={canopy}
           setBrush={setBrush}
-          updatePatterns={updatePatterns}
         />,
         document.getElementById('controls')
     );

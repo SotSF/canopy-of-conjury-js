@@ -2,6 +2,7 @@
 import * as THREE from 'three';
 import { CanopyThreeJs } from './canopy';
 import * as Menu from './menu';
+import { patterns } from './state';
 
 
 const scene = new THREE.Scene();
@@ -21,7 +22,6 @@ const canopy = new CanopyThreeJs;
 canopy.initialize(scene);
 
 var brush; // active freedraw brush
-var patterns = [];
 var mapFromCanopyMemo = {};
 /*
 window.onload = function () {  
@@ -76,10 +76,9 @@ window.onkeydown = e => {
 };
 
 const setBrush = (val) => { brush = val; };
-const updatePatterns = (val) => { patterns = val };
 
 $(document).ready(function () {
-    Menu.initialize(updatePatterns, setBrush, canopy);
+    Menu.initialize(setBrush, canopy);
     //$(document).on('click', '#idRenderer', canopyClick);
 });
 
