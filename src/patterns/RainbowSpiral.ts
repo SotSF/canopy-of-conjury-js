@@ -17,7 +17,7 @@ export class RainbowSpiral extends BasePattern {
         length: new PatternPropTypes.Range(1, NUM_LEDS_PER_STRIP),
         gap: new PatternPropTypes.Range(1,10),
         direction: new PatternPropTypes.Enum(SpiralDirection),
-        brightness: new PatternPropTypes.Range(0,100)
+        opacity: new PatternPropTypes.Range(0,100)
     };
 
     lines = [];
@@ -27,7 +27,7 @@ export class RainbowSpiral extends BasePattern {
     static defaultProps () {
         return {
             length: 10,
-            brightness: 100,
+            opacity: 100,
             gap: 1,
             direction: SpiralDirection.inwards
         };
@@ -59,7 +59,7 @@ export class RainbowSpiral extends BasePattern {
 
     render(canopy) {
         this.lines.forEach((line) => {
-            const color = (new HSV(((line.hue + this.colorOffset) % NUM_STRIPS) / NUM_STRIPS,1,1)).toRgb().withAlpha(this.props.brightness / 100);
+            const color = (new HSV(((line.hue + this.colorOffset) % NUM_STRIPS) / NUM_STRIPS,1,1)).toRgb().withAlpha(this.props.opacity / 100);
             for (let l = 0; l < this.props.length; l++) {
                 const led = this.props.direction === SpiralDirection.inwards ? line.head + l : line.head - l;
               

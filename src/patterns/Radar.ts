@@ -10,7 +10,7 @@ import { PatternPropTypes } from './utils';
 interface RadarProps {
     color: Color,
     velocity: number,
-    brightness: AccessibleProp<number>,
+    opacity: AccessibleProp<number>,
     tailLength: AccessibleProp<number>,
     clockwise: boolean
 }
@@ -21,7 +21,7 @@ export class Radar extends BasePattern {
     static propTypes = {
         color: new PatternPropTypes.Color(),
         velocity: new PatternPropTypes.Range(1, 10),
-        brightness: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation(),
+        opacity: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation(),
         tailLength: new PatternPropTypes.Range(0, 30).enableOscillation(),
         clockwise: new PatternPropTypes.Boolean()
     };
@@ -30,7 +30,7 @@ export class Radar extends BasePattern {
         return {
             color: RGB.random(),
             velocity: 1,
-            brightness: 1,
+            opacity: 1,
             tailLength: 0,
             clockwise: true
         };
@@ -48,11 +48,11 @@ export class Radar extends BasePattern {
     render (canopy) {
         const numStrips = canopy.strips.length;
         const head = this.head % numStrips;
-        const brightness = _.result<number>(this.props, 'brightness');
+        const opacity = _.result<number>(this.props, 'opacity');
         const tailLength = _.result<number>(this.props, 'tailLength');
 
         for (let i = 0; i < tailLength + 1; i++) {
-            const b = brightness - (0.05 * i);
+            const b = opacity - (0.05 * i);
             const color = this.props.color.withAlpha(b < 0 ? 0 : b);
 
             let s = head + (this.props.clockwise ? i : -i);

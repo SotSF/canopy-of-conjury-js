@@ -7,20 +7,20 @@ import { PatternPropTypes } from './utils';
 
 interface SnakeProps {
     maxLength: number,
-    brightness: number
+    opacity: number
 }
 
 export class Snake extends BasePattern {
     static displayName = 'Snake';
     static propTypes = {
         maxLength: new PatternPropTypes.Range(10, 100),
-        brightness: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation()
+        opacity: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation()
     };
 
     static defaultProps () : SnakeProps {
         return {
             maxLength: 25,
-            brightness: 1
+            opacity: 1
         };
     }
 
@@ -90,7 +90,7 @@ export class Snake extends BasePattern {
     
     render (canopy) {
         const tHSV = new HSV(this.iteration % 360 / 360, 1, 1);
-        const tRGB = tHSV.toRgb().withAlpha(this.props.brightness);
+        const tRGB = tHSV.toRgb().withAlpha(this.props.opacity);
 
         const target = Snake.convertCoordinate({ strip: this.target.strip, led: this.target.led }, canopy);
         canopy.strips[target.strip].updateColor(target.led, tRGB);
@@ -100,7 +100,7 @@ export class Snake extends BasePattern {
 
             const h = i / this.props.maxLength + this.iteration;
             const hsv = new HSV(h % 1, 1, 1);
-            const color = hsv.toRgb().withAlpha(this.props.brightness);
+            const color = hsv.toRgb().withAlpha(this.props.opacity);
 
             canopy.strips[point.strip].updateColor(point.led, color);
         }

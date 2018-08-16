@@ -11,7 +11,7 @@ interface ShootingStarsProps {
     color: Color
     velocity: AccessibleProp<number>
     vortex: AccessibleProp<number>
-    brightness: AccessibleProp<number>
+    opacity: AccessibleProp<number>
     fromApex: boolean
 }
 
@@ -22,7 +22,7 @@ export class ShootingStars extends BasePattern {
         color: new PatternPropTypes.Color(),
         velocity: new PatternPropTypes.Range(0, 5).enableOscillation(),
         vortex: new PatternPropTypes.Range(-2, 2, 0.1).enableOscillation(),
-        brightness: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation(),
+        opacity: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation(),
         fromApex: new PatternPropTypes.Boolean(),
     };
 
@@ -31,7 +31,7 @@ export class ShootingStars extends BasePattern {
             color: RGB.random(),
             velocity: 2,
             vortex: 0,
-            brightness: 1,
+            opacity: 1,
             fromApex: true,
         };
     }
@@ -78,7 +78,7 @@ export class ShootingStars extends BasePattern {
     }
 
     render (canopy) {
-        const color = this.props.color.withAlpha(_.result(this.props, 'brightness'));
+        const color = this.props.color.withAlpha(_.result(this.props, 'opacity'));
         this.stars.forEach((star) => {
             const converted = ShootingStars.convertCoordinate(star, canopy);
             const strip = Math.round(converted.strip) % NUM_STRIPS;
