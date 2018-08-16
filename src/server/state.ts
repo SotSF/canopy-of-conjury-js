@@ -46,8 +46,8 @@ const removePattern = (msg: ClientMessage.RemovePattern) => {
 
 /** Updates the property of an active pattern */
 const updateProps = (msg: ClientMessage.UpdateProps) => {
-    const pattern: PatternInstance = patterns[msg.patternId];
-    pattern.updateProps(msg.props);
+    const pattern: IPatternActive = _.find(patterns, { id: msg.patternId });
+    pattern.instance.updateProps(msg.props);
 };
 
 /** A client is asking to sync their state with the server (happens at page load) */
