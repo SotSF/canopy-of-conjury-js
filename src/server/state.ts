@@ -4,8 +4,8 @@
  */
 
 import * as _ from 'lodash';
-import { PatternInstance, PatternInterface } from '../types';
 import { getPatternClassFromInstance, getPatternByName } from '../patterns';
+import { IPatternActive, PatternInstance, PatternInterface } from '../types';
 import {
     message,
     AddPatternMessage,
@@ -16,15 +16,8 @@ import {
 } from '../util/messaging';
 
 
-export interface ActivePattern {
-    id: string
-    order: number
-    instance: PatternInstance
-}
-
 // The set of patterns that will be rendered
-export let patterns: ActivePattern[] = [];
-
+export let patterns: IPatternActive[] = [];
 
 /** Adds a pattern to the set of active patterns */
 const addPattern = (msg: AddPatternMessage) => {
@@ -37,7 +30,8 @@ const addPattern = (msg: AddPatternMessage) => {
     const newPattern = {
         id: msg.id,
         instance: new PatternType(Object.assign({}, msg.props)),
-        order: msg.order
+        order: msg.order,
+        name: msg.patternName
     };
 
     patterns.push(newPattern);
@@ -68,7 +62,8 @@ const syncState = (ws) => {
     const serialized = patterns.map(pattern => ({
         id: pattern.id,
         order: pattern.order,
-        pattern: pattern.instance.serialize()
+        state: pattern.instance.serialize(),
+        name: pattern.name
     }));
 
     const message: SyncStateMessage = {

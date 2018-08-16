@@ -36,6 +36,13 @@ export interface PatternInstance {
     deserializeExtra?: (object) => void
 }
 
+export interface IPatternActive {
+    id: string
+    order: number
+    instance: PatternInstance
+    name: string
+}
+
 // The serialized version of a pattern
 export interface IPatternSerialized {
     props: any

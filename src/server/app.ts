@@ -9,7 +9,7 @@ import * as logger from 'morgan';
 import * as path from 'path';
 
 import { Canopy } from '../canopy';
-import state, { ActivePattern, patterns } from './state';
+import state, { patterns } from './state';
 import Transmitter from './transmitter';
 
 
@@ -67,7 +67,7 @@ transmitter.ping().on('response', (resp) => {
     setInterval(() => {
         canopy.clear();
 
-        patterns.forEach((pattern: ActivePattern) => {
+        patterns.forEach((pattern) => {
             pattern.instance.progress();
             pattern.instance.render(canopy);
         });
