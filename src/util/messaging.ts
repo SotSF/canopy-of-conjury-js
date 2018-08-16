@@ -1,9 +1,13 @@
 
+import { IPatternSerialized } from '../types';
+
+
 /** Constants */
 export const enum MESSAGE_TYPE {
     addPattern,
     removePattern,
-    updateProps
+    updateProps,
+    syncState
 }
 
 
@@ -26,6 +30,16 @@ export interface RemovePatternMessage extends IMessage {
 export interface UpdatePropsMessage extends IMessage {
     patternId: string
     props: any // TODO: make this type more precise...
+}
+
+interface IPatternWrapper {
+    id: string
+    order: number
+    pattern: IPatternSerialized
+}
+
+export interface SyncStateMessage extends IMessage {
+    patterns: IPatternWrapper[]
 }
 
 export type message = AddPatternMessage | RemovePatternMessage | UpdatePropsMessage;

@@ -46,7 +46,7 @@ export default abstract class BasePattern implements PatternInstance {
         });
 
         return {
-            ...props,
+            props,
             ...this.serializeExtra()
         };
     }

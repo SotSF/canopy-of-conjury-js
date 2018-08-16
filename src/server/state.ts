@@ -10,8 +10,9 @@ import {
     message,
     AddPatternMessage,
     RemovePatternMessage,
+    SyncStateMessage,
     UpdatePropsMessage,
-    MESSAGE_TYPE
+    MESSAGE_TYPE,
 } from '../util/messaging';
 
 
@@ -85,6 +86,22 @@ const updateProps = (msg: UpdatePropsMessage) => {
     pattern.updateProps(msg.props);
 };
 
+/** A client is asking to sync their state with the server (happens at page load) */
+const syncState = (ws) => {
+    const serialized = patterns.map(pattern => ({
+        id: pattern.id,
+        order: pattern.order,
+        pattern: pattern.instance.serialize()
+    }));
+
+    const message: SyncStateMessage = {
+        type: MESSAGE_TYPE.syncState,
+        patterns: serialized
+    };
+
+    ws.send(JSON.stringify(message));
+};
+
 export default (ws, req) => {
     ws.on('message', (rawMsg: string) => {
         let msg: message;
@@ -104,6 +121,9 @@ export default (ws, req) => {
                 break;
             case MESSAGE_TYPE.updateProps:
                 updateProps(<UpdatePropsMessage>msg);
+                break;
+            case MESSAGE_TYPE.syncState:
+                syncState(ws);
                 break;
         }
 
