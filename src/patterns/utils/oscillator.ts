@@ -10,9 +10,8 @@ export default class Oscillator implements IOscillator<number> {
 
     static fromObject (object) {
         const oscillatorKeys = ['amplitude', 'frequency', 'type', 'theta'];
-        const isValid = _.every(oscillatorKeys.map(
-            key => Object.keys(object).includes(key))
-        );
+        const objectKeys = Object.keys(object);
+        const isValid = _.every(oscillatorKeys.map(key => objectKeys.includes(key)));
 
         if (isValid) {
             const oscillator = new Oscillator({

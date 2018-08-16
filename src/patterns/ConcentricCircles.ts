@@ -82,7 +82,7 @@ export class ConcentricCircles extends BasePattern {
         });
     }
 
-    serialize () {
+    serializeExtra () {
         return {
             circles: this.circles.map((circle) => ({
                 ...circle,
@@ -91,17 +91,11 @@ export class ConcentricCircles extends BasePattern {
         };
     }
 
-    deserialize (obj) {
-        const { props, circles } = obj;
+    deserializeExtra (obj) {
+        const { circles } = obj;
         this.circles = circles.map((circle) => ({
             ...circle,
             color: RGB.fromObject(circle.color)
         }));
-
-        this.updateProps({
-            color: RGB.fromObject(props.color),
-            width: Oscillator.fromObject(props.width) || props.width,
-            frequency: props.frequency
-        });
     }
 }

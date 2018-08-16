@@ -31,7 +31,8 @@ export interface PatternInstance {
     progress: () => void
     updateProps: (o: object) => void
     render: (canopy: CanopyInterface) => void
-    serialize: () => IPatternSerialized
+    serialize: () => IPatternState
+    deserialize: (state: IPatternState) => void
     serializeExtra?: () => object
     deserializeExtra?: (object) => void
 }

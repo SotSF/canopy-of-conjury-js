@@ -142,14 +142,14 @@ export class Bubbles extends BasePattern {
         return [x,y];
     }
 
-    serialize () {
+    serializeExtra () {
         return this.bubbles.map(bubble => ({
             ...bubble,
             color: bubble.color.serialize()
         }));
     }
 
-    deserialize (bubbles: SerializedBubble[]) {
+    deserializeExtra (bubbles: SerializedBubble[]) {
         bubbles.map((bubble) =>
             this.bubbles.push({
                 ...bubble,

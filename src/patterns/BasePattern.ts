@@ -1,9 +1,10 @@
 
 import * as _ from 'lodash';
 import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
-import { CanopyInterface, PatternInstance } from '../types';
+import { RGB } from '../colors';
+import { CanopyInterface, PatternInstance, PatternInterface } from '../types';
 import * as util from '../util';
-import Oscillator from './utils/oscillator';
+import { Oscillator, PatternPropTypes } from './utils';
 
 
 export default abstract class BasePattern implements PatternInstance {
@@ -47,22 +48,35 @@ export default abstract class BasePattern implements PatternInstance {
 
         return {
             props,
-            ...this.serializeExtra()
+            extra: this.serializeExtra()
         };
     }
 
     // Should be overridden in inheriting classes if they have any additional parameters that must
     // be serialized
-    serializeExtra () {
-        return {};
-    }
+    serializeExtra () { return {}; }
+    deserializeExtra (extra) {}
 
-    deserialize (obj) {
+    deserialize (state) {
+        const parseProp = (propType, value) => {
+            if (propType instanceof PatternPropTypes.Color) {
+                return RGB.fromObject(<RGB>value);
+            } else if (propType instanceof PatternPropTypes.Array) {
+                return value.map(v => parseProp(value.types, v));
+            } else {
+                return Oscillator.fromObject(value) || value;
+            }
+        };
+
         // Deserialize the props
         const props = {};
-        Object.entries(obj.props).forEach(([name, value]) => {
-
+        Object.entries(state.props).forEach(([name, value]) => {
+            const propType = (<PatternInterface>this.constructor).propTypes[name];
+            props[name] = parseProp(propType, value);
         });
+
+        this.updateProps(props);
+        this.deserializeExtra(state.extra);
     }
 
     // These must each be implemented in inheriting classes
