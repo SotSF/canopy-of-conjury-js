@@ -72,7 +72,7 @@ const syncState = (message: ServerMessage.SyncState) => {
         const PatternClass = getPatternByName(pattern.name);
 
         // Instantiate the pattern with the provided props
-        const instance = new PatternClass();
+        const instance = new PatternClass(pattern.state.props);
         instance.deserialize(pattern.state);
 
         return {
