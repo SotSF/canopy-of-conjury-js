@@ -36,9 +36,9 @@ const removePattern = (msg: ClientMessage.RemovePattern) => {
     delete patterns[msg.patternId];
 
     const patternToRemove = _.find(patterns, { id: msg.patternId });
-    const patternInterface = getPatternClassFromInstance(patternToRemove.instance);
     patterns = _.without(patterns, patternToRemove);
 
+    const patternInterface = getPatternClassFromInstance(patternToRemove.instance);
     console.info(`Pattern "${patternInterface.displayName}" (id "${msg.patternId}") removed`);
 
     // TODO: notify clients
@@ -48,6 +48,9 @@ const removePattern = (msg: ClientMessage.RemovePattern) => {
 const updateProps = (msg: ClientMessage.UpdateProps) => {
     const pattern: IPatternActive = _.find(patterns, { id: msg.patternId });
     pattern.instance.updateProps(msg.props);
+
+    const patternInterface = getPatternClassFromInstance(pattern.instance);
+    console.info(`Pattern "${patternInterface.displayName}" (id "${msg.patternId}") props updated`);
 };
 
 /** A client is asking to sync their state with the server (happens at page load) */
