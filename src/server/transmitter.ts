@@ -49,7 +49,7 @@ export default class Transmitter {
 
         canopy.strips.forEach((strip) => {
             strip.colors.forEach((color, i) => {
-                if (i < 0 || i >= canopy.numLedsPerStrip) { return; }
+                if (i < 0 || i >= canopy.numLedsPerStrip) return;
                 const { r, g, b } = color;
                 data.push(r, g, b);
             });

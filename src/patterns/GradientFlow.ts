@@ -22,10 +22,10 @@ enum GradientPolarity {
 }
 
 interface GradientFlowProps {
-    color1: Color,
-    color2: Color,
-    brightness: MaybeOscillator<number>,
-    speed: MaybeOscillator<number>,
+    color1: Color
+    color2: Color
+    opacity: MaybeOscillator<number>
+    speed: MaybeOscillator<number>
     direction: GradientTravelDirection
 }
 
@@ -38,7 +38,7 @@ export class GradientFlow extends BasePattern {
     static propTypes = {
         color1: new PatternPropTypes.Color(),
         color2: new PatternPropTypes.Color(),
-        brightness: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation(),
+        opacity: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation(),
         speed: new PatternPropTypes.Range(1, 15).enableOscillation(),
         direction: new PatternPropTypes.Enum(GradientTravelDirection)
     };
@@ -47,7 +47,7 @@ export class GradientFlow extends BasePattern {
         return {
             color1: RGB.random(),
             color2: RGB.random(),
-            brightness: 1,
+            opacity: 1,
             speed: 1,
             direction: GradientTravelDirection.outwards
         };
@@ -162,7 +162,7 @@ export class GradientFlow extends BasePattern {
         this.ringColors.forEach((ringColor, i) => {
             if (!ringColor) return;
 
-            const color = ringColor.withAlpha(_.result(this.props, 'brightness'));
+            const color = ringColor.withAlpha(_.result(this.props, 'opacity'));
             canopy.strips.forEach(strip => strip.updateColor(i, color));
         });
     }

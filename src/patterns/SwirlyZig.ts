@@ -8,12 +8,12 @@ import { PatternPropTypes } from './utils';
 
 
 interface SwirlyZigProps {
-    color1: Color,
-    color2: Color,
-    quantity: number,
-    brightness: MaybeOscillator<number>,
-    velocity: number,
-    fromApex: boolean,
+    color1: Color
+    color2: Color
+    quantity: number
+    opacity: MaybeOscillator<number>
+    velocity: number
+    fromApex: boolean
 }
 
 @pattern()
@@ -23,7 +23,7 @@ export class SwirlyZig extends BasePattern {
         color1: new PatternPropTypes.Color(),
         color2: new PatternPropTypes.Color(),
         quantity: new PatternPropTypes.Range(1, 100),
-        brightness: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation(),
+        opacity: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation(),
         velocity: new PatternPropTypes.Range(5, 30),
         fromApex: new PatternPropTypes.Boolean(),
     };

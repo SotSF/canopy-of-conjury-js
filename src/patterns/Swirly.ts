@@ -9,11 +9,11 @@ import { PatternPropTypes } from './utils';
 
 
 interface SwirlyProps {
-    color1: Color,
-    color2: Color,
-    quantity: number,
-    brightness: MaybeOscillator<number>,
-    fromApex: boolean,
+    color1: Color
+    color2: Color
+    quantity: number
+    opacity: MaybeOscillator<number>
+    fromApex: boolean
     clockwise: boolean
 }
 
@@ -24,7 +24,7 @@ export class Swirly extends BasePattern {
         color1: new PatternPropTypes.Color(),
         color2: new PatternPropTypes.Color(),
         quantity: new PatternPropTypes.Range(1, 100),
-        brightness: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation(),
+        opacity: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation(),
         fromApex: new PatternPropTypes.Boolean(),
         clockwise: new PatternPropTypes.Boolean()
     };
@@ -34,7 +34,7 @@ export class Swirly extends BasePattern {
             color1: RGB.random(),
             color2: RGB.random(),
             quantity: 30,
-            brightness: 1,
+            opacity: 1,
             fromApex: true,
             clockwise: true
         };
@@ -126,7 +126,7 @@ export class Swirly extends BasePattern {
     }
 
     render (canopy) {
-        const brightness = this.getOscillatorValue('brightness');
+        const brightness = this.getOscillatorValue('opacity');
         this.swirls.forEach((swirl) => {
             swirl.lights.forEach((light) => {
                 const color = swirl.color.withAlpha(brightness);

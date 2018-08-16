@@ -10,7 +10,7 @@ import { PatternPropTypes } from './utils';
 
 interface FireFliesPropTypes {
     color: Color,
-    brightness: number,
+    opacity: number,
     quantity: number,
     rotation: number,
     velocity: MaybeOscillator<number>
@@ -20,11 +20,11 @@ interface FireFliesPropTypes {
 export class Fireflies extends BasePattern {
     static displayName = 'Fireflies';
     static propTypes = {
-        color     : new PatternPropTypes.Color(),
-        brightness: new PatternPropTypes.Range(0, 1, 0.01),
-        quantity  : new PatternPropTypes.Range(10, 100),
-        rotation  : new PatternPropTypes.Range(-10, 10),
-        velocity  : new PatternPropTypes.Range(0, 10).enableOscillation()
+        color   : new PatternPropTypes.Color(),
+        opacity : new PatternPropTypes.Range(0, 1, 0.01),
+        quantity: new PatternPropTypes.Range(10, 100),
+        rotation: new PatternPropTypes.Range(-10, 10),
+        velocity: new PatternPropTypes.Range(0, 10).enableOscillation()
     };
 
     static defaultProps () : FireFliesPropTypes {
@@ -33,7 +33,7 @@ export class Fireflies extends BasePattern {
             quantity: 50,
             velocity: 0,
             rotation: 0,
-            brightness: 1
+            opacity: 1
         };
     }
 
@@ -93,7 +93,7 @@ export class Fireflies extends BasePattern {
             this.props.color.r + firefly.offset,
             this.props.color.g + firefly.offset,
             this.props.color.b + firefly.offset,
-            this.props.brightness * firefly.brightness / 255
+            this.props.opacity * firefly.brightness / 255
         );
 
         const x = firefly.radius * Math.cos(firefly.theta);

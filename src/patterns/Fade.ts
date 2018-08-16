@@ -11,7 +11,7 @@ const LIFECYCLE_END = 500;
 interface FadeProps {
     colors: Color[],
     speed: MaybeOscillator<number>
-    brightness: MaybeOscillator<number>
+    opacity: MaybeOscillator<number>
 }
 
 /**
@@ -24,7 +24,7 @@ export class Fade extends BasePattern {
     static propTypes = {
         colors: new PatternPropTypes.Array(PatternPropTypes.Color),
         speed: new PatternPropTypes.Range(1, 10).enableOscillation(),
-        brightness: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation(),
+        opacity: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation(),
 
     };
 
@@ -32,7 +32,7 @@ export class Fade extends BasePattern {
         return {
             colors: [RGB.random(), RGB.random()],
             speed: 2,
-            brightness: 1
+            opacity: 1
         };
     }
 
@@ -93,8 +93,8 @@ export class Fade extends BasePattern {
         if (!this.currentColor) return;
 
         const amplitude = Math.sin(Math.PI * (this.lifecycle / LIFECYCLE_END));
-        const brightness = _.result<number>(this.props, 'brightness');
-        const color = this.currentColor.withAlpha(amplitude * brightness);
+        const opacity = _.result<number>(this.props, 'opacity');
+        const color = this.currentColor.withAlpha(amplitude * opacity);
 
         canopy.strips.forEach((strip) => {
             strip.updateColors(color);

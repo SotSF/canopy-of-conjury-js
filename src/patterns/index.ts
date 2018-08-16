@@ -17,6 +17,7 @@ import { Snake } from './Snake';
 import { Swirly } from './Swirly';
 import { SwirlyZig } from './SwirlyZig';
 import { TestLEDs } from './Test';
+import { Triangles } from './Triangles';
 
 export const allPatterns = [
     Bubbles,
@@ -35,6 +36,7 @@ export const allPatterns = [
     Snake,
     Swirly,
     SwirlyZig,
+    Triangles,
 ];
 
 export {
@@ -54,6 +56,7 @@ export {
     Snake,
     Swirly,
     SwirlyZig,
+    Triangles,
 
     // Test patterns
     TestLEDs,

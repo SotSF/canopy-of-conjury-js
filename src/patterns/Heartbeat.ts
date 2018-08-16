@@ -10,13 +10,13 @@ export class Heartbeat extends BasePattern {
     static displayName = 'Heartbeat';
     static propTypes = {
         color: new PatternPropTypes.Color,
-        brightness: new PatternPropTypes.Range(0,100)
+        opacity: new PatternPropTypes.Range(0, 1, 0.01)
     };
 
     static defaultProps () {
          return {
             color: RGB.random(),
-            brightness: 100
+            opacity: 1
         }; 
     }
 
@@ -40,8 +40,7 @@ export class Heartbeat extends BasePattern {
 
     render (canopy) {
         const memoizedMap = this.memoizer.createMap(this.dimension, canopy);
-        const color = this.props.color.withAlpha(this.props.brightness/100);
-
+        const color = this.props.color.withAlpha(this.props.opacity);
         let t = 0;
         while ( t < 500 ) {
             const x = (1 + this.pulse) * (16 * Math.sin(t) * Math.sin(t) * Math.sin(t));

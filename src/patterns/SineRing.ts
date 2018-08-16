@@ -15,7 +15,7 @@ interface SineRingProps {
     radius: number,
     velocity: number,
     rotate: number,
-    brightness: number
+    opacity: number
 }
 
 @pattern()
@@ -29,7 +29,7 @@ export class SineRing extends BasePattern {
         radius: new PatternPropTypes.Range(5, 30),
         velocity: new PatternPropTypes.Range(0, 10),
         rotate: new PatternPropTypes.Range(-10, 10),
-        brightness: new PatternPropTypes.Range(0, 100)
+        opacity: new PatternPropTypes.Range(0, 100)
     };
 
     static defaultProps () : SineRingProps {
@@ -41,7 +41,7 @@ export class SineRing extends BasePattern {
             radius: 10,
             velocity: 1,
             rotate: 0,
-            brightness: 100
+            opacity: 100
         };
     }
 
@@ -68,7 +68,7 @@ export class SineRing extends BasePattern {
     render(canopy) {
         const radius = this.props.radius + 20;
         
-        const color = this.props.color.withAlpha(this.props.brightness / 100);
+        const color = this.props.color.withAlpha(this.props.opacity / 100);
         const memoizedMap = this.memoizer.createMap(200, canopy);
 
         let angle = 0;

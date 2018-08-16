@@ -10,7 +10,7 @@ import Memoizer from './memoizer';
 class Wave {
     amp: number;
     theta: number;
-    brightness: number = 1;
+    opacity: number = 1;
     hue: number;
     done: boolean = false;
     flip: number;
@@ -26,8 +26,8 @@ class Wave {
 
     update (velocity) : void {
         this.t += velocity;
-          if (this.t > 300) this.brightness -= 0.05;
-          if (this.brightness < 0) this.done = true;
+          if (this.t > 300) this.opacity -= 0.05;
+          if (this.opacity < 0) this.done = true;
           this.hue = (this.hue + 5) % 360;
     }
 }
@@ -35,7 +35,7 @@ class Wave {
 
 interface KaleidoscopePropTypes {
     velocity: number,
-    brightness: number,
+    opacity: number,
     rotate: number
 }
 
@@ -45,14 +45,14 @@ export class Kaleidoscope extends BasePattern {
     static displayName = 'Kaleidoscope';
     static propTypes = {
         velocity: new PatternPropTypes.Range(1,5),
-        brightness: new PatternPropTypes.Range(0, 100),
+        opacity: new PatternPropTypes.Range(0, 100),
         rotate: new PatternPropTypes.Range(0,2)
     };
 
     static defaultProps () : KaleidoscopePropTypes {
         return {
             velocity: 2,
-            brightness: 100,
+            opacity: 100,
             rotate: 1
         };
     }
@@ -88,8 +88,8 @@ export class Kaleidoscope extends BasePattern {
         const mirror = Math.floor(NUM_STRIPS / this.frequency);
         const memoizedMap = this.memoizer.createMap(this.dimension, canopy);
         this.waves.forEach(wave => {
-            const waveColor = (new HSV(wave.hue / 360, 1, wave.brightness)).toRgb();
-            const color = waveColor.withAlpha(this.props.brightness/100)
+            const waveColor = (new HSV(wave.hue / 360, 1, wave.opacity)).toRgb();
+            const color = waveColor.withAlpha(this.props.opacity/100)
             for (let t = 0; t < wave.t; t++) {
                 const x = t + this.dimension / 2
                 const y = Math.floor(wave.flip * wave.amp * Math.sin(t * 0.2 * wave.amp)) + this.dimension / 2;
