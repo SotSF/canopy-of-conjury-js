@@ -81,7 +81,7 @@ export class Fade extends BasePattern {
 
         // If we've got a color in process...
         else if (this.currentColor) {
-            this.lifecycle += _.result<number>(this.props, 'speed');
+            this.lifecycle += this.getOscillatorValue('speed');
             if (this.lifecycle > LIFECYCLE_END) {
                 this.lifecycle = LIFECYCLE_END;
             }
@@ -93,7 +93,7 @@ export class Fade extends BasePattern {
         if (!this.currentColor) return;
 
         const amplitude = Math.sin(Math.PI * (this.lifecycle / LIFECYCLE_END));
-        const opacity = _.result<number>(this.props, 'opacity');
+        const opacity = this.getOscillatorValue('opacity');
         const color = this.currentColor.withAlpha(amplitude * opacity);
 
         canopy.strips.forEach((strip) => {

@@ -129,7 +129,7 @@ export class GradientFlow extends BasePattern {
 
         const { ringColors } = this;
         const { direction } = this.props;
-        const speed: number = _.result<number>(this.props, 'speed');
+        const speed: number = this.getOscillatorValue('speed');
 
         // move the colors along
         if (direction == GradientTravelDirection.outwards) {
@@ -162,7 +162,7 @@ export class GradientFlow extends BasePattern {
         this.ringColors.forEach((ringColor, i) => {
             if (!ringColor) return;
 
-            const color = ringColor.withAlpha(_.result(this.props, 'opacity'));
+            const color = ringColor.withAlpha(this.getOscillatorValue('opacity'));
             canopy.strips.forEach(strip => strip.updateColor(i, color));
         });
     }

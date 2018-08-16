@@ -83,7 +83,7 @@ export class GradientPulse extends BasePattern {
 
     render (canopy) {
         this.beatList.forEach((beat) => {
-            const opacity = _.result<number>(this.props, 'opacity');
+            const opacity = this.getOscillatorValue('opacity');
             const color = beat.color.withAlpha(opacity);
             canopy.strips.forEach((strip) => strip.updateColor(beat.pos, color));
         });

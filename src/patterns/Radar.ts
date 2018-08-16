@@ -48,8 +48,8 @@ export class Radar extends BasePattern {
     render (canopy) {
         const numStrips = canopy.strips.length;
         const head = this.head % numStrips;
-        const opacity = _.result<number>(this.props, 'opacity');
-        const tailLength = _.result<number>(this.props, 'tailLength');
+        const opacity = this.getOscillatorValue('opacity');
+        const tailLength = this.getOscillatorValue('tailLength');
 
         for (let i = 0; i < tailLength + 1; i++) {
             const b = opacity - (0.05 * i);

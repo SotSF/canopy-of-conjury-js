@@ -1,13 +1,14 @@
 
 import { HSV } from '../colors';
 import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
+import { MaybeOscillator } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 
 
 interface SnakeProps {
-    maxLength: number,
-    opacity: number
+    maxLength: number
+    opacity: MaybeOscillator<number>
 }
 
 export class Snake extends BasePattern {
@@ -88,8 +89,9 @@ export class Snake extends BasePattern {
     }
     
     render (canopy) {
+        const opacity = this.getOscillatorValue('opacity');
         const tHSV = new HSV(this.iteration % 360 / 360, 1, 1);
-        const tRGB = tHSV.toRgb().withAlpha(this.props.opacity);
+        const tRGB = tHSV.toRgb().withAlpha(opacity);
 
         const target = Snake.convertCoordinate({ strip: this.target.strip, led: this.target.led }, canopy);
         canopy.strips[target.strip].updateColor(target.led, tRGB);
@@ -99,7 +101,7 @@ export class Snake extends BasePattern {
 
             const h = i / this.props.maxLength + this.iteration;
             const hsv = new HSV(h % 1, 1, 1);
-            const color = hsv.toRgb().withAlpha(this.props.opacity);
+            const color = hsv.toRgb().withAlpha(opacity);
 
             canopy.strips[point.strip].updateColor(point.led, color);
         }
