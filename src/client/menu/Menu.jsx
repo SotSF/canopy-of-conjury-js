@@ -2,7 +2,7 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
+import * as PubSub from 'pubsub-js';
 
 import Drawer from '@material-ui/core/Drawer';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -16,6 +16,7 @@ import Typography from '@material-ui/core/Typography';
 import { MuiThemeProvider, withStyles } from '@material-ui/core/styles';
 
 import * as patterns from '../../patterns';
+import events from '../events';
 import * as messenger from '../messenger';
 import { updatePatterns } from '../state';
 import theme from '../theme';
@@ -47,6 +48,7 @@ const styles = theme => ({
 
 @withStyles(styles)
 class Menu extends React.Component {
+    subscription = null;
 
     static presets = [
         { pattern: patterns.TestLEDs, name: 'Test LEDs' }
@@ -56,6 +58,16 @@ class Menu extends React.Component {
         patterns: [],
         activeBrush: ''
     };
+
+    componentDidMount () {
+        this.subscription = PubSub.subscribe(events.updatePatterns, (event, patterns) => {
+            this.setState({ patterns });
+        });
+    }
+
+    componentWillUnmount () {
+        PubSub.unsubscribe(this.subscription);
+    }
 
     clear = () => {
         this.props.canopy.clear();
