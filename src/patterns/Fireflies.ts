@@ -67,10 +67,10 @@ export class Fireflies extends BasePattern {
 
         this.fireflies.map(this.updateFirefly);
 
-        if (this.fireflies.length < this.props.quantity) {
+        if (this.fireflies.length < this.values.quantity) {
             this.addFirefly();
-        } else if (this.fireflies.length > this.props.quantity) {
-            this.fireflies.splice(0, this.fireflies.length - this.props.quantity);
+        } else if (this.fireflies.length > this.values.quantity) {
+            this.fireflies.splice(0, this.fireflies.length - this.values.quantity);
         }
     }
 
@@ -103,10 +103,10 @@ export class Fireflies extends BasePattern {
 
     renderFirefly (firefly, canopy, memoMap) {
         const color = new RGB(
-            this.props.color.r + firefly.offset,
-            this.props.color.g + firefly.offset,
-            this.props.color.b + firefly.offset,
-            this.props.opacity * firefly.brightness / 255
+            this.values.color.r + firefly.offset,
+            this.values.color.g + firefly.offset,
+            this.values.color.b + firefly.offset,
+            this.values.opacity * firefly.brightness / 255
         );
 
         const x = firefly.radius * Math.cos(firefly.theta);
@@ -115,7 +115,7 @@ export class Fireflies extends BasePattern {
         const y2 = Math.floor(y + (firefly.y + this.dimension / 2));
         const co = memoMap.mapCoords(x2 % this.dimension,y2 % this.dimension);
        
-        let rotation = this.iteration * this.props.rotation;
+        let rotation = this.iteration * this.values.rotation;
         let strip = (co.strip + rotation) % NUM_STRIPS;
         if (strip < 0)  { strip += NUM_STRIPS; }
         canopy.strips[strip].updateColor(co.led, color);

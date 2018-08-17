@@ -122,8 +122,8 @@ export class Map extends BasePattern {
 
         // highlight selection
         if (this.blink) {
-            const strip = Map.getStripIndexForTime(this.props.time, canopy);
-            const led = Map.getStripIndexForLetter(this.props.letter, canopy);
+            const strip = Map.getStripIndexForTime(this.values.time, canopy);
+            const led = Map.getStripIndexForLetter(this.values.letter, canopy);
             canopy.strips[strip].updateColor(led, this.colors.poi);
             canopy.strips[strip].updateColor(led + 1, this.colors.poi);
         }

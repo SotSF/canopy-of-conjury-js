@@ -52,7 +52,7 @@ export class Triangles extends BasePattern {
             this.indexOfBrightest++;
         }
 
-        this.indexOfBrightest %= this.props.quantity;
+        this.indexOfBrightest %= this.values.quantity;
         this.currentHue += 1;
         this.currentHue %= 360;
         
@@ -62,16 +62,16 @@ export class Triangles extends BasePattern {
         const size = this.values.size;
         const radius = this.values.radius;
 
-        for (let i = 0 ; i < this.props.quantity; i++ ){
+        for (let i = 0 ; i < this.values.quantity; i++ ){
             let t = (this.indexOfBrightest - i);
-            if (t < 0) t += this.props.quantity;
-            const triangleOpacity = (this.props.quantity - t) / this.props.quantity;
+            if (t < 0) t += this.values.quantity;
+            const triangleOpacity = (this.values.quantity - t) / this.values.quantity;
             let color;
-            if (this.props.rainbow) {
-                const hue = (this.currentHue + i * 360 / this.props.quantity)%360;
-                color = new HSV( hue / 360, 1, 1).toRgb().withAlpha(this.props.opacity * triangleOpacity);
+            if (this.values.rainbow) {
+                const hue = (this.currentHue + i * 360 / this.values.quantity)%360;
+                color = new HSV( hue / 360, 1, 1).toRgb().withAlpha(this.values.opacity * triangleOpacity);
             } else {
-                color = this.props.color.withAlpha(this.props.opacity * triangleOpacity);
+                color = this.values.color.withAlpha(this.values.opacity * triangleOpacity);
             }
 
            this.renderTriangle(i, size, radius, canopy, color);
@@ -79,13 +79,13 @@ export class Triangles extends BasePattern {
     }
 
     renderTriangle(i, size, radius, canopy, color) {  
-        const centerStrip = Math.floor(NUM_STRIPS / this.props.quantity * i);
+        const centerStrip = Math.floor(NUM_STRIPS / this.values.quantity * i);
         const out = Math.floor(size / 2);
         for (let s = -out; s <= out; s++) {
             let strip = (centerStrip + s) % NUM_STRIPS;
             if (strip < 0) strip += NUM_STRIPS;
             for (let l = 0; l < size - Math.abs(s * 2); l++) {
-                const led = this.props.inverted ? Math.floor(radius - l) : Math.floor(radius + l);
+                const led = this.values.inverted ? Math.floor(radius - l) : Math.floor(radius + l);
                 if (_.inRange(led, 0, NUM_LEDS_PER_STRIP)) {
                     canopy.strips[strip].updateColor(led, color)
                 }

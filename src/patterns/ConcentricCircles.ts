@@ -50,12 +50,12 @@ export class ConcentricCircles extends BasePattern {
     progress () {
         super.progress();
 
-        if (this.iteration % this.props.frequency === 0) {
+        if (this.iteration % this.values.frequency === 0) {
             this.circles.push({
                 pos: 0,
                 color: this.values.color,
                 width: this.values.width,
-                trail: this.props.trail
+                trail: this.values.trail
             });
         }
 

@@ -65,7 +65,7 @@ export class Bubbles extends BasePattern {
         super.progress();
         if (Math.random() > 0.5) { 
             this.bubbles.push({
-                color: this.props.color1,
+                color: this.values.color1,
                 lerp: 0,
                 opacity: 1,
                 size: 15 * Math.random(),
@@ -88,7 +88,7 @@ export class Bubbles extends BasePattern {
 
     render (canopy) {
         this.bubbles.forEach(bubble => {
-            const { color1, color2 } = this.props;
+            const { color1, color2 } = this.values;
             const memoizedMap = this.memoizer.createMap(this.dimension, canopy);
             const halfCanvas = this.dimension / 2;
             //const center = memoizedMap.mapCoords(Math.floor(bubble.x + halfCanvas), Math.floor(bubble.y + halfCanvas));
@@ -97,7 +97,7 @@ export class Bubbles extends BasePattern {
                 util.lerp(color1.g, color2.g, bubble.lerp),
                 util.lerp(color1.b, color2.b, bubble.lerp)
             );
-            const color = bubble.color.withAlpha(bubble.opacity * this.props.opacity / 100);
+            const color = bubble.color.withAlpha(bubble.opacity * this.values.opacity / 100);
             const center = memoizedMap.mapCoords(Math.floor(bubble.x + halfCanvas),Math.floor(bubble.y + halfCanvas));
             let t = 0;
             while (t < 30) {

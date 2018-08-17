@@ -53,32 +53,32 @@ export class SineRing extends BasePattern {
 
     progress () {
         super.progress();
-        this.amp += this.props.velocity * this.dir;
+        this.amp += this.values.velocity * this.dir;
         if (this.amp < 0) {
             this.dir = 1;
         }
 
-        if (this.amp > this.props.amplitude) {
+        if (this.amp > this.values.amplitude) {
             this.dir = -1;
         }
     }
 
     render(canopy) {
-        const radius = this.props.radius + 20;
+        const radius = this.values.radius + 20;
         
-        const color = this.props.color.withAlpha(this.props.opacity / 100);
+        const color = this.values.color.withAlpha(this.values.opacity / 100);
         const memoizedMap = this.memoizer.createMap(200, canopy);
 
         let angle = 0;
         while (angle <= Math.PI * 2) { 
             angle += this.angleStep;
-            const x = Math.floor((radius + (Math.sin(angle * this.props.frequency) * this.amp)) * Math.cos(angle));
-            const y = Math.floor((radius + (Math.sin(angle * this.props.frequency) * this.amp)) * Math.sin(angle));
+            const x = Math.floor((radius + (Math.sin(angle * this.values.frequency) * this.amp)) * Math.cos(angle));
+            const y = Math.floor((radius + (Math.sin(angle * this.values.frequency) * this.amp)) * Math.sin(angle));
             const co = memoizedMap.mapCoords(x + 100, y + 100);
-            let s = co.strip + (this.props.rotate * this.iteration) % NUM_STRIPS;
+            let s = co.strip + (this.values.rotate * this.iteration) % NUM_STRIPS;
             if (s < 0) { s += NUM_STRIPS; }
             else if (s >= NUM_STRIPS) { s %= NUM_STRIPS; }
-            for (let l = 0; l < this.props.width; l++) {
+            for (let l = 0; l < this.values.width; l++) {
                 const led = l + co.led;
                 if (led >= 0 && led < NUM_LEDS_PER_STRIP) {
                     canopy.strips[s].updateColor(led, color);

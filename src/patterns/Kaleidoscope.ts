@@ -103,7 +103,7 @@ export class Kaleidoscope extends BasePattern {
         // order the waves prior to rendering-- render ones with larger amplitudes first
         const sortedWaves = _.sortBy(this.waves, 'amplitude').reverse();
         sortedWaves.forEach((wave) => {
-            wave.update(this.props.velocity);
+            wave.update(this.values.velocity);
             if (wave.done) {
                 this.waves = _.without(this.waves, wave);
                
@@ -116,7 +116,7 @@ export class Kaleidoscope extends BasePattern {
         const memoizedMap = this.memoizer.createMap(this.dimension, canopy);
         this.waves.forEach(wave => {
             const waveColor = (new HSV(wave.hue / 360, 1, wave.opacity)).toRgb();
-            const color = waveColor.withAlpha(this.props.opacity)
+            const color = waveColor.withAlpha(this.values.opacity);
             for (let t = 0; t < wave.t; t++) {
                 const x = t + this.dimension / 2
                 const y = Math.floor(wave.flip * wave.amp * Math.sin(t * 0.2 * wave.amp)) + this.dimension / 2;
@@ -124,7 +124,7 @@ export class Kaleidoscope extends BasePattern {
                 if (co.led >= 0 && co.led < NUM_LEDS_PER_STRIP) {
                     for (let s = 0; s < this.frequency; s++) {
                         for (let i = 0; i < wave.width; i++) {
-                            let strip = Math.floor((this.iteration / 3 * this.props.rotate) + co.strip + i + mirror * s) % NUM_STRIPS;
+                            let strip = Math.floor((this.iteration / 3 * this.values.rotate) + co.strip + i + mirror * s) % NUM_STRIPS;
                             canopy.strips[strip].updateColor(co.led, color);
                         }
                     }

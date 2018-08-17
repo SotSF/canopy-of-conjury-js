@@ -46,8 +46,8 @@ export class GradientPulse extends BasePattern {
     progress () {
         // any consts dependent on tunable params need to be set here
         // to account for dynamic changes
-        const color1 = this.props.color1;
-        const color2 = this.props.color2;
+        const color1 = this.values.color1;
+        const color2 = this.values.color2;
 
         // pattern-logic: randomly add new ring is <25 rings total
         if (Math.random() > 0.5 && this.beatList.length < 25) {

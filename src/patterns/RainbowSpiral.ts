@@ -39,21 +39,21 @@ export class RainbowSpiral extends BasePattern {
 
         this.lines.push({
             strip: this.adder,
-            head: this.props.direction === SpiralDirection.inwards ? NUM_LEDS_PER_STRIP : 0,
+            head: this.values.direction === SpiralDirection.inwards ? NUM_LEDS_PER_STRIP : 0,
             hue: this.colorOffset
         });
 
-        this.adder += this.props.gap;
+        this.adder += this.values.gap;
         this.adder %= NUM_STRIPS;
 
         this.lines.forEach(line => {
-            if (this.props.direction === SpiralDirection.inwards) {
+            if (this.values.direction === SpiralDirection.inwards) {
                 line.head--;
-                if (line.head + this.props.length < 0) { this.lines = _.without(this.lines, line); }
+                if (line.head + this.values.length < 0) { this.lines = _.without(this.lines, line); }
             }
-            else if (this.props.direction === SpiralDirection.outwards) {
+            else if (this.values.direction === SpiralDirection.outwards) {
                 line.head++;
-                if (line.head - this.props.length >= NUM_LEDS_PER_STRIP ) { this.lines = _.without(this.lines, line); }
+                if (line.head - this.values.length >= NUM_LEDS_PER_STRIP ) { this.lines = _.without(this.lines, line); }
             }
         });
 
@@ -62,9 +62,9 @@ export class RainbowSpiral extends BasePattern {
 
     render(canopy) {
         this.lines.forEach((line) => {
-            const color = (new HSV(((line.hue + this.colorOffset) % NUM_STRIPS) / NUM_STRIPS,1,1)).toRgb().withAlpha(this.props.opacity / 100);
-            for (let l = 0; l < this.props.length; l++) {
-                const led = this.props.direction === SpiralDirection.inwards ? line.head + l : line.head - l;
+            const color = (new HSV(((line.hue + this.colorOffset) % NUM_STRIPS) / NUM_STRIPS,1,1)).toRgb().withAlpha(this.values.opacity / 100);
+            for (let l = 0; l < this.values.length; l++) {
+                const led = this.values.direction === SpiralDirection.inwards ? line.head + l : line.head - l;
               
                 if (led >= 0 && led < NUM_LEDS_PER_STRIP) {
                     canopy.strips[line.strip].updateColor(led, color);

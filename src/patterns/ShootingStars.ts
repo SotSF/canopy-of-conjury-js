@@ -8,7 +8,7 @@ import { PatternPropTypes } from './utils';
 
 
 interface ShootingStarsProps {
-    color: Color
+    color: MaybeOscillator<Color>
     velocity: MaybeOscillator<number>
     vortex: MaybeOscillator<number>
     opacity: MaybeOscillator<number>
@@ -19,7 +19,7 @@ interface ShootingStarsProps {
 export class ShootingStars extends BasePattern {
     static displayName = 'Shooting Stars';
     static propTypes = {
-        color: new PatternPropTypes.Color(),
+        color: new PatternPropTypes.Color().enableOscillation(),
         velocity: new PatternPropTypes.Range(0, 5).enableOscillation(),
         vortex: new PatternPropTypes.Range(-2, 2, 0.1).enableOscillation(),
         opacity: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation(),
@@ -50,16 +50,18 @@ export class ShootingStars extends BasePattern {
     }
 
     progress () {
+        super.progress();
+
         for (let i = Math.floor(Math.random() * 10); i >= 0; i--) {
             this.stars.push({
                 strip: Math.floor(Math.random() * NUM_STRIPS),
-                led: this.props.fromApex ? 0 : NUM_LEDS_PER_STRIP - 1
+                led: this.values.fromApex ? 0 : NUM_LEDS_PER_STRIP - 1
             });
         }
 
         const velocity = this.values.velocity;
         this.stars.forEach((star) => {
-            const directionalMultiplier = this.props.fromApex ? 1 : -1;
+            const directionalMultiplier = this.values.fromApex ? 1 : -1;
             star.led += velocity * directionalMultiplier;
             star.strip = (star.strip + this.values.vortex) % NUM_STRIPS;
 
@@ -78,7 +80,7 @@ export class ShootingStars extends BasePattern {
     }
 
     render (canopy) {
-        const color = this.props.color.withAlpha(this.values.opacity);
+        const color = this.values.color.withAlpha(this.values.opacity);
         this.stars.forEach((star) => {
             const converted = ShootingStars.convertCoordinate(star, canopy);
             const strip = Math.round(converted.strip) % NUM_STRIPS;

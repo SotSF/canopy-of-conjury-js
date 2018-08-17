@@ -49,7 +49,7 @@ export class Snake extends BasePattern {
         super.progress();
 
         let lastPoint = { ...this.snake[0] };
-        if (this.tail.length > 0 && this.snake.length < this.props.maxLength) {
+        if (this.tail.length > 0 && this.snake.length < this.values.maxLength) {
             this.snake.push({
                 strip: this.tail[0].strip,
                 led: this.tail[0].led
@@ -99,7 +99,7 @@ export class Snake extends BasePattern {
         for (let i = 0; i < this.snake.length; i++) {
             const point = Snake.convertCoordinate(this.snake[i], canopy);
 
-            const h = i / this.props.maxLength + this.iteration;
+            const h = i / this.values.maxLength + this.iteration;
             const hsv = new HSV(h % 1, 1, 1);
             const color = hsv.toRgb().withAlpha(opacity);
 

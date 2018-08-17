@@ -39,8 +39,8 @@ export class Radar extends BasePattern {
     head = 0;
 
     progress () {
-        const directionalMultiplier = this.props.clockwise ? -1 : 1;
-        this.head += this.props.velocity * directionalMultiplier;
+        const directionalMultiplier = this.values.clockwise ? -1 : 1;
+        this.head += this.values.velocity * directionalMultiplier;
         if (this.head > NUM_STRIPS - 1) this.head = 0;
         if (this.head < 0) this.head = NUM_STRIPS - 1;
     }
@@ -53,9 +53,9 @@ export class Radar extends BasePattern {
 
         for (let i = 0; i < tailLength + 1; i++) {
             const b = opacity - (0.05 * i);
-            const color = this.props.color.withAlpha(b < 0 ? 0 : b);
+            const color = this.values.color.withAlpha(b < 0 ? 0 : b);
 
-            let s = head + (this.props.clockwise ? i : -i);
+            let s = head + (this.values.clockwise ? i : -i);
             if (s > numStrips - 1) s %= numStrips;
             if (s < 0) s += numStrips;
 

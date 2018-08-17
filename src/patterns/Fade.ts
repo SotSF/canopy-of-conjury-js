@@ -59,9 +59,9 @@ export class Fade extends BasePattern {
         super.progress();
 
         // If we now have a color, start the cycle
-        if (this.currentColor === null && this.props.colors.length) {
+        if (this.currentColor === null && this.values.colors.length) {
             this.colorIndex = 0;
-            this.currentColor = this.props.colors[this.colorIndex];
+            this.currentColor = this.values.colors[this.colorIndex];
             return;
         }
 
@@ -70,9 +70,9 @@ export class Fade extends BasePattern {
             this.lifecycle = 0;
 
             // Choose a new color if there are any
-            if (this.props.colors.length) {
-                this.colorIndex = (this.colorIndex + 1) % this.props.colors.length;
-                this.currentColor = this.props.colors[this.colorIndex];
+            if (this.values.colors.length) {
+                this.colorIndex = (this.colorIndex + 1) % this.values.colors.length;
+                this.currentColor = this.values.colors[this.colorIndex];
             } else {
                 this.colorIndex = null;
                 this.currentColor = null;

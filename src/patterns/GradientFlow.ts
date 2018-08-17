@@ -77,8 +77,8 @@ export class GradientFlow extends BasePattern {
     private interpolateColors () : Color[] {
         const interpolatedColors: Color[] = [];
 
-        const color1 = this.props.color1.toHSV();
-        const color2 = this.props.color2.toHSV();
+        const color1 = this.values.color1.toHSV();
+        const color2 = this.values.color2.toHSV();
 
         // use HSB for this
         const hueStart    = color1.h;
@@ -128,7 +128,7 @@ export class GradientFlow extends BasePattern {
         super.progress();
 
         const { ringColors } = this;
-        const { direction } = this.props;
+        const { direction } = this.values;
         const speed: number = this.values.speed;
 
         // move the colors along

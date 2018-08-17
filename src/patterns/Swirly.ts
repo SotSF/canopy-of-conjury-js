@@ -73,7 +73,7 @@ export class Swirly extends BasePattern {
     }
 
     progress () {
-        if (this.swirls.length < this.props.quantity) {
+        if (this.swirls.length < this.values.quantity) {
             this.makeSwirl();
         }
 
@@ -87,8 +87,8 @@ export class Swirly extends BasePattern {
 
             // Adjust the swirl's lights
             swirl.lights.forEach((light) => {
-                light.strip += this.props.clockwise ? -1 : 1;
-                light.led += this.props.fromApex ? 1 : -1;
+                light.strip += this.values.clockwise ? -1 : 1;
+                light.led += this.values.fromApex ? 1 : -1;
 
                 if (light.strip >= NUM_STRIPS) {
                     light.strip %= NUM_STRIPS;
@@ -107,8 +107,8 @@ export class Swirly extends BasePattern {
         });
 
         // Adapt the pattern color
-        const color1 = this.props.color1;
-        const color2 = this.props.color2;
+        const color1 = this.values.color1;
+        const color2 = this.values.color2;
         this.color = new RGB(
             util.lerp(color1.r, color2.r, this.f),
             util.lerp(color1.g, color2.g, this.f),

@@ -57,7 +57,7 @@ export class SwirlyZig extends BasePattern {
         super.progress();
         this.swirly.progress();
 
-        if (this.iteration % this.props.velocity === 0) {
+        if (this.iteration % this.values.velocity === 0) {
             this.swirly.updateProps({ clockwise: !this.swirly.props.clockwise });
         }
     }
