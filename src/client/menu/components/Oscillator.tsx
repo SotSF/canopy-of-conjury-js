@@ -117,7 +117,7 @@ class WaveProps extends React.Component<WavePropsProps> {
                         <ListItem button key={type}>
                             <ListItemText
                               primary={WaveType[type]}
-                              onClick={this.updateWave('type')}
+                              onClick={() => this.updateWave('type')(type)}
                             />
                         </ListItem>
                     )}

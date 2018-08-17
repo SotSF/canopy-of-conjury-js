@@ -7,7 +7,7 @@ import { createStyles, withStyles, Theme, WithStyles } from '@material-ui/core/s
 import MaterialSlider from '@material-ui/lab/Slider';
 
 import { MaybeOscillator, IOscillator } from '../../../types';
-import { NumericOscillator } from '../../../patterns/utils';
+import { NumericOscillator, isOscillatorWrapper } from '../../../patterns/utils';
 import Popover from '../../util/Popover';
 import Oscillator from './Oscillator';
 
@@ -26,7 +26,7 @@ const styles = ({ spacing }: Theme) => createStyles({
 
 interface SliderProps extends WithStyles<typeof styles> {
     label: string,
-    value: number
+    value: MaybeOscillator<number>,
     min?: number,
     max?: number,
     step?: number,
@@ -35,7 +35,7 @@ interface SliderProps extends WithStyles<typeof styles> {
 }
 
 interface SliderState {
-    value: number
+    value: MaybeOscillator<number>
 }
 
 class Slider extends React.Component<SliderProps, SliderState> {
@@ -70,14 +70,21 @@ class Slider extends React.Component<SliderProps, SliderState> {
 
     subscribe = (oscillator: IOscillator) => {
         const { max, min } = this.props;
-        this.props.onChange(new NumericOscillator(oscillator, min, max));
+        const newValue = new NumericOscillator(oscillator, min, max);
+        this.props.onChange(newValue);
+        this.setState({ value: newValue });
     };
 
     renderOscillator () {
-        const { min, max, oscillation } = this.props;
+        const { oscillation } = this.props;
         if (!oscillation) return null;
 
-        return <Oscillator onCreate={this.subscribe} />;
+        const { value } = this.state;
+        const oscillator = isOscillatorWrapper(value)
+            ? value.oscillator
+            : null;
+
+        return <Oscillator onCreate={this.subscribe} oscillator={oscillator} />;
     }
 
     render () {
@@ -95,6 +102,10 @@ class Slider extends React.Component<SliderProps, SliderState> {
             },
         };
 
+        const actual = isOscillatorWrapper(value)
+            ? value.value()
+            : value;
+
         return (
             <Popover
               buttonText={label}
@@ -109,7 +120,7 @@ class Slider extends React.Component<SliderProps, SliderState> {
                       min={max}
                       max={min}
                       step={-step}
-                      value={value}
+                      value={actual}
                       vertical
                     />
                 </Card>
