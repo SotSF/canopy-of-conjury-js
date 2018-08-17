@@ -59,8 +59,8 @@ export class Triangles extends BasePattern {
     }
 
     render(canopy) {
-        const size = this.getOscillatorValue('size');
-        const radius = this.getOscillatorValue('radius');
+        const size = this.values.size;
+        const radius = this.values.radius;
 
         for (let i = 0 ; i < this.props.quantity; i++ ){
             let t = (this.indexOfBrightest - i);

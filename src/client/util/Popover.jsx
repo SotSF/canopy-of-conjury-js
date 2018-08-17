@@ -35,6 +35,7 @@ export default class Popover extends React.Component {
         buttonProps: PropTypes.object,
         buttonText: PropTypes.string.isRequired,
         className: PropTypes.string,
+        onOpen: PropTypes.func,
         paperClasses: PropTypes.string,
         style: PropTypes.object,
         transparent: PropTypes.bool,
@@ -52,6 +53,7 @@ export default class Popover extends React.Component {
         buttonColor: new RGB(122, 122, 122),
         buttonProps: {},
         className: null,
+        onOpen: () => {},
         paperClasses: null,
         style: null,
         transparent: false,
@@ -61,8 +63,11 @@ export default class Popover extends React.Component {
         anchorEl: null
     };
 
-    handleClick = event => this.setState({ anchorEl: event.currentTarget });
     handleClose = () => this.setState({ anchorEl: null });
+    handleClick = (event) => {
+        this.props.onOpen();
+        this.setState({ anchorEl: event.currentTarget });
+    };
 
     renderButton () {
         const { theme, buttonColor, buttonProps, buttonText } = this.props;

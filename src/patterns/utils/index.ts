@@ -1,2 +1,2 @@
 export { PatternPropTypes } from './pattern_prop_types';
-export { default as Oscillator } from './oscillator';
+export { Oscillator, ColorOscillator, NumericOscillator, isOscillatorWrapper } from './oscillator';

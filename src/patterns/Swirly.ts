@@ -126,7 +126,7 @@ export class Swirly extends BasePattern {
     }
 
     render (canopy) {
-        const brightness = this.getOscillatorValue('opacity');
+        const brightness = this.values.opacity;
         this.swirls.forEach((swirl) => {
             swirl.lights.forEach((light) => {
                 const color = swirl.color.withAlpha(brightness);

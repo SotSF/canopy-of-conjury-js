@@ -16,7 +16,7 @@ interface ICircle {
 }
 
 interface ConcentricCirclesProps {
-    color: Color
+    color: MaybeOscillator<Color>
     width: MaybeOscillator<number>
     frequency: number
     trail: number
@@ -30,7 +30,7 @@ export class ConcentricCircles extends BasePattern {
     static displayName = 'Concentric Circles';
 
     static propTypes = {
-        color: new PatternPropTypes.Color(),
+        color: new PatternPropTypes.Color().enableOscillation(),
         width: new PatternPropTypes.Range(1, 10).enableOscillation(),
         frequency: new PatternPropTypes.Range(100, 1, -1),
         trail: new PatternPropTypes.Range(0, 10)
@@ -53,8 +53,8 @@ export class ConcentricCircles extends BasePattern {
         if (this.iteration % this.props.frequency === 0) {
             this.circles.push({
                 pos: 0,
-                color: this.props.color,
-                width: this.getOscillatorValue('width'),
+                color: this.values.color,
+                width: this.values.width,
                 trail: this.props.trail
             });
         }

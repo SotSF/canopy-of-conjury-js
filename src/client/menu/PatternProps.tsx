@@ -27,12 +27,13 @@ export default class PatternProps extends React.Component<PatternPropsProps> {
         });
     }
 
-    static renderColor (prop, value, onChange) {
+    static renderColor (prop, type, value, onChange) {
         return (
             <ColorPicker
               color={value}
               key={prop}
               onChange={onChange}
+              oscillation={type.oscillation}
             />
         );
     }
@@ -64,7 +65,7 @@ export default class PatternProps extends React.Component<PatternPropsProps> {
         );
     }
 
-    static renderBoolean (prop, value, onChange) {
+    static renderBoolean (prop, type, value, onChange) {
         return (
             <Checkbox
               checked={value}
@@ -99,7 +100,7 @@ export default class PatternProps extends React.Component<PatternPropsProps> {
 
     renderProp (prop, type, value, onChange = (newVal => this.updateProp(prop, newVal))) {
         if (type instanceof PatternPropTypes.Color) {
-            return PatternProps.renderColor(prop, value, onChange);
+            return PatternProps.renderColor(prop, type, value, onChange);
         }
 
         if (type instanceof PatternPropTypes.Enum) {
@@ -111,7 +112,7 @@ export default class PatternProps extends React.Component<PatternPropsProps> {
         }
 
         if (type instanceof PatternPropTypes.Boolean) {
-            return PatternProps.renderBoolean(prop, value, onChange);
+            return PatternProps.renderBoolean(prop, type, value, onChange);
         }
 
         if (type instanceof PatternPropTypes.Array) {

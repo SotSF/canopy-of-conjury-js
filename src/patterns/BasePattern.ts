@@ -4,11 +4,12 @@ import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
 import { RGB } from '../colors';
 import { CanopyInterface, PatternInstance, PatternInterface } from '../types';
 import * as util from '../util';
-import { Oscillator, PatternPropTypes } from './utils';
+import { Oscillator, isOscillatorWrapper, PatternPropTypes } from './utils';
 
 
 export default abstract class BasePattern implements PatternInstance {
     props = null;
+    values = null;
     iteration = 0;
 
     // Patterns are typically produced assuming they will be run on a canopy with 96 strips
@@ -92,23 +93,19 @@ export default abstract class BasePattern implements PatternInstance {
 
     progress () {
         this.iteration++;
+
+        // If any of the props are oscillators
+        this.values = {};
+        Object.entries(this.props).forEach(([name, value]) => {
+            if (isOscillatorWrapper(value)) {
+                this.values[name] = value.value();
+            } else {
+                this. values[name] = value;
+            }
+        });
     }
 
     updateProps (props) {
         _.merge(this.props, props);
-    }
-
-    /**
-     * Given the name of a prop that may be an oscillator, this function will look up the prop,
-     * check if it's an oscillator and return the oscillator value if it is. If the prop is not an
-     * oscillator, the prop will be returned as is.
-     */
-    getOscillatorValue (propName) {
-        const prop = this.props[propName];
-        if (prop instanceof Oscillator) {
-            return prop.value;
-        } else {
-            return prop;
-        }
     }
 }

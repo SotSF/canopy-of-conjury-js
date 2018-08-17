@@ -143,7 +143,7 @@ export class Fireflies extends BasePattern {
             _.without(this.fireflies, firefly);
         }
 
-        const velocity = this.getOscillatorValue('velocity');
+        const velocity = this.values.velocity;
         if (velocity > 0) {
             const v = velocity / 2;
             firefly.radius += 0.1 * v * firefly.dir[1];

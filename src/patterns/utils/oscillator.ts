@@ -1,10 +1,17 @@
 
 import * as _ from 'lodash';
-import { IOscillator, IWaveParams, WaveType } from '../../types';
+import { HSV } from '../../colors';
+import {
+    IOscillator, IOscillatorWrapper,
+    IWaveParams,
+    IColorOscillator,
+    INumericOscillator,
+    WaveType
+} from '../../types';
 import * as util from '../../util';
 
 
-export default class Oscillator implements IOscillator<number> {
+export class Oscillator implements IOscillator {
     waveFunction = null;
     theta = 0;
 
@@ -77,23 +84,19 @@ export default class Oscillator implements IOscillator<number> {
             }
             case WaveType.Saw: {
                 const slope = -this.params.amplitude / (wavelength / 2);
-                this.waveFunction = (v) => (v % wavelength) * slope + this.params.amplitude;
+                this.waveFunction = (v: number): number => (v % wavelength) * slope + this.params.amplitude;
                 break;
             }
         }
     }
 
-    get value () {
+    get sample () {
         return this.waveFunction(this.theta);
     }
 
     get wavelength () {
         const period = 1 / this.params.frequency;
         return period * this.velocity;
-    }
-
-    scaled (min, max) {
-        return util.scale(this.value, -1, 1, min, max);
     }
 
     updateWave (params) {
@@ -106,5 +109,30 @@ export default class Oscillator implements IOscillator<number> {
             ...this.params,
             theta: this.theta
         };
+    }
+}
+
+export class OscillatorWrapper {
+    oscillator = null;
+
+    constructor (oscillator) {
+        this.oscillator = oscillator;
+    }
+}
+
+export const isOscillatorWrapper = (o: any): o is IOscillatorWrapper => {
+    return o.oscillator !== undefined;
+};
+
+export class NumericOscillator extends OscillatorWrapper implements INumericOscillator {
+    value () {
+        return this.oscillator.sample;
+    }
+}
+
+export class ColorOscillator extends OscillatorWrapper implements IColorOscillator {
+    value () {
+        const hue = util.scale(this.oscillator.sample, -1, 1, 0, 1);
+        return new HSV(hue, 1, 1);
     }
 }

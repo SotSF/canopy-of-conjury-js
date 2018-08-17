@@ -57,11 +57,11 @@ export class ShootingStars extends BasePattern {
             });
         }
 
-        const velocity = this.getOscillatorValue('velocity');
+        const velocity = this.values.velocity;
         this.stars.forEach((star) => {
             const directionalMultiplier = this.props.fromApex ? 1 : -1;
             star.led += velocity * directionalMultiplier;
-            star.strip = (star.strip + this.getOscillatorValue('vortex')) % NUM_STRIPS;
+            star.strip = (star.strip + this.values.vortex) % NUM_STRIPS;
 
             // Wrap the star if necessary
             if (star.strip < 0) {
@@ -78,7 +78,7 @@ export class ShootingStars extends BasePattern {
     }
 
     render (canopy) {
-        const color = this.props.color.withAlpha(this.getOscillatorValue('opacity'));
+        const color = this.props.color.withAlpha(this.values.opacity);
         this.stars.forEach((star) => {
             const converted = ShootingStars.convertCoordinate(star, canopy);
             const strip = Math.round(converted.strip) % NUM_STRIPS;

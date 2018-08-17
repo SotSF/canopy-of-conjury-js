@@ -1,15 +1,15 @@
 
 import * as React from 'react';
 import classNames from 'classnames';
-import * as _ from 'lodash';
 
 import Card from '@material-ui/core/Card';
 import { createStyles, withStyles, Theme, WithStyles } from '@material-ui/core/styles';
 import MaterialSlider from '@material-ui/lab/Slider';
 
 import { MaybeOscillator, IOscillator } from '../../../types';
+import { NumericOscillator } from '../../../patterns/utils';
 import Popover from '../../util/Popover';
-import NumericOscillator from './Oscillator';
+import Oscillator from './Oscillator';
 
 
 const styles = ({ spacing }: Theme) => createStyles({
@@ -39,9 +39,6 @@ interface SliderState {
 }
 
 class Slider extends React.Component<SliderProps, SliderState> {
-    // Callback used to cancel an oscillator subscription
-    unsubscribe = null;
-
     static defaultProps = {
         min: 1,
         max: 10,
@@ -64,54 +61,26 @@ class Slider extends React.Component<SliderProps, SliderState> {
         }
     }
 
-    manualUpdate = (e, value) => {
-        this.updateValue(value);
-
-        // If there's an oscillator, cancel it
-        _.result(this, 'unsubscribe');
-    };
+    manualUpdate = (e, value) => this.updateValue(value);
 
     updateValue = (value) => {
         this.props.onChange(value);
         this.setState({ value });
     };
 
-    subscribe = (oscillator: IOscillator<number>) => {
-        this.props.onChange(oscillator);
+    subscribe = (oscillator: IOscillator) => {
+        this.props.onChange(new NumericOscillator(oscillator));
     };
 
     renderOscillator () {
-        const { classes, min, max, oscillation } = this.props;
+        const { min, max, oscillation } = this.props;
         if (!oscillation) return null;
-
-        const positionalProps = {
-            anchorOrigin:{
-                vertical: 'top',
-                horizontal: 'right',
-            },
-            transformOrigin: {
-                vertical: 'top',
-                horizontal: 'left',
-            },
-        };
 
         const oscillatorProps = {
             amplitude: (max - min) / 2
         };
 
-        return (
-            <Popover
-              buttonText="Oscillator"
-              buttonProps={{
-                  className: classNames(classes.spacer)
-              }}
-              paperClasses={classes.spacer}
-              {...positionalProps}
-              transparent
-            >
-                <NumericOscillator onCreate={this.subscribe} oscillatorProps={oscillatorProps} />
-            </Popover>
-        );
+        return <Oscillator onCreate={this.subscribe} oscillatorProps={oscillatorProps} />;
     }
 
     render () {
@@ -148,7 +117,9 @@ class Slider extends React.Component<SliderProps, SliderState> {
                     />
                 </Card>
 
-                {this.renderOscillator()}
+                <div className={classes.spacer}>
+                    {this.renderOscillator()}
+                </div>
             </Popover>
         );
     }

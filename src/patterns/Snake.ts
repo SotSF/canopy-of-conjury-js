@@ -89,7 +89,7 @@ export class Snake extends BasePattern {
     }
     
     render (canopy) {
-        const opacity = this.getOscillatorValue('opacity');
+        const opacity = this.values.opacity;
         const tHSV = new HSV(this.iteration % 360 / 360, 1, 1);
         const tRGB = tHSV.toRgb().withAlpha(opacity);
 

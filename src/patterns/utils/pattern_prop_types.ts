@@ -1,26 +1,31 @@
 
 import { EnumType } from '../../types';
 
+class OscillationType {
+    oscillation = false;
+
+    enableOscillation () {
+        this.oscillation = true;
+        return this;
+    }
+}
+
 export namespace PatternPropTypes {
-    export class Range {
+    export class Range extends OscillationType {
         min = null;
         max = null;
         step = null;
-        oscillation = false;
 
         constructor (min, max, step = 1) {
+            super();
+
             this.min = min;
             this.max = max;
             this.step = step;
         }
-
-        enableOscillation () {
-            this.oscillation = true;
-            return this;
-        }
     }
 
-    export class Color {}
+    export class Color extends OscillationType {}
 
     export class Enum implements EnumType {
         options = null;

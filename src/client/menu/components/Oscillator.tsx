@@ -10,11 +10,11 @@ import { createStyles, withStyles, Theme, WithStyles } from '@material-ui/core/s
 import { IOscillator, WaveType } from '../../../types';
 import Popover from '../../util/Popover';
 import Slider from '../components/Slider';
-import Oscillator  from '../../../patterns/utils/oscillator';
+import { Oscillator }  from '../../../patterns/utils';
 
 
 interface WaveImageProps {
-    oscillator: IOscillator<number>
+    oscillator: IOscillator
 }
 
 interface WaveImageState {
@@ -43,7 +43,7 @@ class WaveImage extends React.Component<WaveImageProps, WaveImageState> {
 
     componentDidMount () {
         this.interval = setInterval(() => {
-            const value = this.props.oscillator.value;
+            const value = this.props.oscillator.sample;
             this.setState({
                 points: this.state.points.slice(1).concat(WaveImage.scaleValue(value))
             });
@@ -92,7 +92,7 @@ const wavePropsStyles = ({ spacing }: Theme) => createStyles({
 
 interface WavePropsProps extends WithStyles<typeof wavePropsStyles> {
     className?: string,
-    oscillator: IOscillator<number>
+    oscillator: IOscillator
 }
 
 class WaveProps extends React.Component<WavePropsProps> {
@@ -159,39 +159,67 @@ const styles = ({ spacing }: Theme) => createStyles({
 });
 
 
-interface NumericOscillatorProps extends WithStyles<typeof styles> {
-    oscillator?: IOscillator<number>
+interface OscillatorWidgetProps extends WithStyles<typeof styles> {
+    oscillator?: IOscillator
     oscillatorProps?: object
-    onCreate?: (osc: IOscillator<number>) => void
+    onCreate?: (osc: IOscillator) => void
 }
 
-interface NumericOscillatorState {
-    oscillator: IOscillator<number>
+interface OscillatorWidgetState {
+    oscillator: IOscillator
 }
 
-class NumericOscillator extends React.Component<NumericOscillatorProps, NumericOscillatorState> {
-    constructor (props) {
-        super(props);
+class OscillatorWidget extends React.Component<OscillatorWidgetProps, OscillatorWidgetState> {
+    state = {
+        oscillator: null
+    };
 
+    onOpen = () => {
         // If no oscillator was passed in, create one
-        const oscillatorProps = Object.assign({ type: WaveType.Sine }, props.oscillatorProps);
-        const oscillator = props.oscillator || new Oscillator(oscillatorProps);
-        if (oscillator !== props.oscillator) {
-            props.onCreate(oscillator);
+        const oscillatorProps = Object.assign(
+            { type: WaveType.Sine },
+            this.props.oscillatorProps
+        );
+
+        const oscillator = this.props.oscillator || new Oscillator(oscillatorProps);
+        if (oscillator !== this.props.oscillator) {
+            this.props.onCreate(oscillator);
         }
 
-        this.state = { oscillator };
-    }
+        this.setState({ oscillator });
+    };
 
     render () {
         const { classes } = this.props;
+        const { oscillator } = this.state;
+        const positionalProps = {
+            anchorOrigin: {
+                vertical: 'top',
+                horizontal: 'right',
+            },
+            transformOrigin: {
+                vertical: 'top',
+                horizontal: 'left',
+            },
+        };
+
         return (
-            <div className={classes.wrapper}>
-                <WaveImage oscillator={this.state.oscillator} />
-                <WavePropsStyled className={classes.spacer} oscillator={this.state.oscillator} />
-            </div>
+            <Popover
+              buttonText="Oscillator"
+              paperClasses={classes.spacer}
+              onOpen={this.onOpen}
+              transparent
+              {...positionalProps}
+            >
+                {oscillator ? (
+                    <div className={classes.wrapper}>
+                        <WaveImage oscillator={this.state.oscillator} />
+                        <WavePropsStyled className={classes.spacer} oscillator={this.state.oscillator} />
+                    </div>
+                ): null}
+            </Popover>
         );
     }
 }
 
-export default withStyles(styles)(NumericOscillator);
+export default withStyles(styles)(OscillatorWidget);

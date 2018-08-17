@@ -79,14 +79,26 @@ export interface ISerializedOscillator extends IWaveParams {
     theta: number
 }
 
-export interface IOscillator<T> {
+export interface IOscillator {
     readonly params: IWaveParams
-    scaled: (min: number, max: number) => number
     theta: number
     updateWave: (params: { amplitude?: number, frequency?: number, type?: WaveType }) => void
-    value: T
-    waveFunction: (x: number) => T
+    sample: number
+    waveFunction: (x: number) => number
     serialize: () => ISerializedOscillator
 }
 
-export type MaybeOscillator<T> = T | IOscillator<T>;
+export interface IOscillatorWrapper {
+    oscillator: IOscillator
+    value: () => any
+}
+
+export interface INumericOscillator extends IOscillatorWrapper {
+    value: () => number
+}
+
+export interface IColorOscillator extends IOscillatorWrapper {
+    value: () => Color
+}
+
+export type MaybeOscillator<T> = T | IOscillatorWrapper;
