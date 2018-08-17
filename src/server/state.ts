@@ -35,6 +35,12 @@ const addPattern = (msg: ClientMessage.AddPattern) => {
     console.info(`New "${name}" pattern created with id "${msg.id}"`);
 };
 
+/** Clears all active patterns */
+const clearPatterns = () => {
+    patterns = [];
+    console.info('Patterns cleared');
+};
+
 /** Removes a pattern from the set of active patterns */
 const removePattern = (msg: ClientMessage.RemovePattern) => {
     delete patterns[msg.patternId];
@@ -88,14 +94,17 @@ export default (ws, req) => {
             case MESSAGE_TYPE.addPattern:
                 addPattern(<ClientMessage.AddPattern>msg);
                 break;
+            case MESSAGE_TYPE.clearPatterns:
+                clearPatterns();
+                break;
             case MESSAGE_TYPE.removePattern:
                 removePattern(<ClientMessage.RemovePattern>msg);
                 break;
-            case MESSAGE_TYPE.updateProps:
-                updateProps(<ClientMessage.UpdateProps>msg);
-                break;
             case MESSAGE_TYPE.syncState:
                 syncState(ws);
+                break;
+            case MESSAGE_TYPE.updateProps:
+                updateProps(<ClientMessage.UpdateProps>msg);
                 break;
         }
 

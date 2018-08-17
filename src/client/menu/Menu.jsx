@@ -72,6 +72,7 @@ class Menu extends React.Component {
         this.props.canopy.clear();
         this.setState({ patterns: [] });
         updatePatterns([]);
+        messenger.state.clearPatterns();
     };
 
     addPattern = (pattern, params) => {

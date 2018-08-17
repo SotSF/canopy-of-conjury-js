@@ -35,6 +35,14 @@ export const state = {
         send(message);
     },
 
+    clearPatterns: () => {
+        const message: ClientMessage.ClearPatterns = {
+            type: MESSAGE_TYPE.clearPatterns,
+        };
+
+        send(message);
+    },
+
     removePattern: (patternId: string) => {
         const message: ClientMessage.RemovePattern = {
             type: MESSAGE_TYPE.removePattern,

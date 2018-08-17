@@ -72,7 +72,7 @@ class Pattern extends React.Component {
     };
 
     updateProps = (props) => {
-        this.props.pattern.instance.updateProps(props);
+        this.props.tpattern.instance.updateProps(props);
 
         messenger.state.updateProps(this.props.pattern.id, props);
 

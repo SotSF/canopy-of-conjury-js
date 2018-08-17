@@ -5,9 +5,10 @@ import { IPatternState } from '../types';
 /** Constants */
 export const enum MESSAGE_TYPE {
     addPattern,
+    clearPatterns,
     removePattern,
     updateProps,
-    syncState
+    syncState,
 }
 
 
@@ -20,6 +21,7 @@ interface IMessage {
 /** Messages from the client */
 export namespace ClientMessage {
     export type SyncState = IMessage;
+    export type ClearPatterns = IMessage;
 
     export interface AddPattern extends IMessage {
         id: string
