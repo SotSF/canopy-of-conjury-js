@@ -23,7 +23,6 @@ import theme from '../theme';
 
 import ActivePatterns from './ActiveLayers';
 import Patterns from './Patterns';
-import RenderSelection from './RenderSelection';
 
 
 const styles = theme => ({
@@ -145,8 +144,6 @@ class Menu extends React.Component {
                       patterns={this.state.patterns}
                       removePattern={this.removePattern}
                     />
-
-                    <RenderSelection />
                 </Drawer>
             </MuiThemeProvider>
         );
