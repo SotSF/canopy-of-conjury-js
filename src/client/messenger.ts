@@ -5,7 +5,7 @@
 import { w3cwebsocket as W3CWebSocket }  from 'websocket';
 import { getPatternByName } from '../patterns';
 import { updatePatterns } from './state';
-import { PatternInterface } from '../types';
+import { PatternInstance } from '../types';
 import {
     ClientMessage,
     ServerMessage,
@@ -24,11 +24,10 @@ stateSocket.onopen = () => {
 /** Message sending */
 const send = message => stateSocket.send(JSON.stringify(message));
 export const state = {
-    addPattern: (id, pattern: PatternInterface, props, order) => {
+    addPattern: (id, pattern: PatternInstance, props, order) => {
         const message: ClientMessage.AddPattern = {
             type: MESSAGE_TYPE.addPattern,
-            patternName: pattern.displayName,
-            props,
+            state: pattern.serialize(),
             id,
             order
         };

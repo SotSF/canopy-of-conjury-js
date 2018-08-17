@@ -46,6 +46,7 @@ export interface IPatternActive {
 
 // The serialized version of a pattern
 export interface IPatternState {
+    type: string
     props: object
     extra: object
     iteration: number
@@ -89,8 +90,15 @@ export interface IOscillator {
 }
 
 export interface IOscillatorWrapper {
+    type: string
     oscillator: IOscillator
     value: () => any
+    serialize: () => ISerializedOscillatorWrapper
+}
+
+export interface ISerializedOscillatorWrapper {
+    oscillator: ISerializedOscillator
+    type: string
 }
 
 export interface INumericOscillator extends IOscillatorWrapper {

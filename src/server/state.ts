@@ -14,21 +14,25 @@ export let patterns: IPatternActive[] = [];
 
 /** Adds a pattern to the set of active patterns */
 const addPattern = (msg: ClientMessage.AddPattern) => {
-    const PatternType: PatternInterface = getPatternByName(msg.patternName);
+    const name = msg.state.type;
+    const PatternType: PatternInterface = getPatternByName(name);
     if (!PatternType) {
-        console.error(`Unable to render pattern with invalid type: "${msg.patternName}"`);
+        console.error(`Unable to render pattern with invalid type: "${name}"`);
         return null;
     }
 
+    const instance = new PatternType(Object.assign({}, msg.state.props));
+    instance.deserialize(msg.state);
+
     const newPattern = {
         id: msg.id,
-        instance: new PatternType(Object.assign({}, msg.props)),
+        instance,
         order: msg.order,
-        name: msg.patternName
+        name
     };
 
     patterns.push(newPattern);
-    console.info(`New "${msg.patternName}" pattern created with id "${msg.id}"`);
+    console.info(`New "${name}" pattern created with id "${msg.id}"`);
 };
 
 /** Removes a pattern from the set of active patterns */

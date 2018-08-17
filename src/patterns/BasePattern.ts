@@ -4,7 +4,7 @@ import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
 import { RGB } from '../colors';
 import { CanopyInterface, PatternInstance, PatternInterface } from '../types';
 import * as util from '../util';
-import { Oscillator, isOscillatorWrapper, PatternPropTypes } from './utils';
+import { isOscillatorWrapper, OscillatorWrapper, PatternPropTypes } from './utils';
 
 
 export default abstract class BasePattern implements PatternInstance {
@@ -48,6 +48,8 @@ export default abstract class BasePattern implements PatternInstance {
         });
 
         return {
+            // @ts-ignore
+            type: this.constructor.displayName,
             props,
             extra: this.serializeExtra(),
             iteration: this.iteration
@@ -66,7 +68,7 @@ export default abstract class BasePattern implements PatternInstance {
             } else if (propType instanceof PatternPropTypes.Array) {
                 return value.map(v => parseProp(value.types, v));
             } else {
-                return Oscillator.fromObject(value) || value;
+                return OscillatorWrapper.fromObject(value) || value;
             }
         };
 

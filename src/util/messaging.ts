@@ -24,8 +24,7 @@ export namespace ClientMessage {
     export interface AddPattern extends IMessage {
         id: string
         order: number
-        patternName: string
-        props: any
+        state: IPatternState
     }
 
     export interface RemovePattern extends IMessage {

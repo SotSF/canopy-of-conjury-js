@@ -115,8 +115,27 @@ export class Oscillator implements IOscillator {
 export class OscillatorWrapper {
     oscillator = null;
 
+    static fromObject (object) {
+        switch (object.type) {
+            case 'numeric':
+                return new NumericOscillator(
+                    new Oscillator(object.oscillator),
+                    object.min,
+                    object.max
+                );
+            case 'color':
+                return new ColorOscillator(new Oscillator(object.oscillator),);
+            default:
+                return null;
+        }
+    }
+
     constructor (oscillator) {
         this.oscillator = oscillator;
+    }
+
+    serialize () {
+        return this.oscillator.serialize();
     }
 }
 
@@ -125,14 +144,42 @@ export const isOscillatorWrapper = (o: any): o is IOscillatorWrapper => {
 };
 
 export class NumericOscillator extends OscillatorWrapper implements INumericOscillator {
+    type = 'numeric';
+    min = null;
+    max = null;
+
+    constructor (oscillator, min, max) {
+        super(oscillator);
+        this.min = min;
+        this.max = max;
+    }
+
     value () {
-        return this.oscillator.sample;
+        return util.scale(this.oscillator.sample, -1, 1, this.min, this.max);
+    }
+
+    serialize () {
+        return {
+            type: this.type,
+            oscillator: super.serialize(),
+            min: this.min,
+            max: this.max
+        };
     }
 }
 
 export class ColorOscillator extends OscillatorWrapper implements IColorOscillator {
+    type = 'color';
+
     value () {
         const hue = util.scale(this.oscillator.sample, -1, 1, 0, 1);
         return new HSV(hue, 1, 1);
+    }
+
+    serialize () {
+        return {
+            type: this.type,
+            oscillator: super.serialize()
+        };
     }
 }

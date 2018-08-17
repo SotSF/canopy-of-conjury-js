@@ -161,7 +161,6 @@ const styles = ({ spacing }: Theme) => createStyles({
 
 interface OscillatorWidgetProps extends WithStyles<typeof styles> {
     oscillator?: IOscillator
-    oscillatorProps?: object
     onCreate?: (osc: IOscillator) => void
 }
 
@@ -176,12 +175,7 @@ class OscillatorWidget extends React.Component<OscillatorWidgetProps, Oscillator
 
     onOpen = () => {
         // If no oscillator was passed in, create one
-        const oscillatorProps = Object.assign(
-            { type: WaveType.Sine },
-            this.props.oscillatorProps
-        );
-
-        const oscillator = this.props.oscillator || new Oscillator(oscillatorProps);
+        const oscillator = this.props.oscillator || new Oscillator({ type: WaveType.Sine });
         if (oscillator !== this.props.oscillator) {
             this.props.onCreate(oscillator);
         }

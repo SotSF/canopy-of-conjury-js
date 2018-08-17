@@ -69,18 +69,15 @@ class Slider extends React.Component<SliderProps, SliderState> {
     };
 
     subscribe = (oscillator: IOscillator) => {
-        this.props.onChange(new NumericOscillator(oscillator));
+        const { max, min } = this.props;
+        this.props.onChange(new NumericOscillator(oscillator, min, max));
     };
 
     renderOscillator () {
         const { min, max, oscillation } = this.props;
         if (!oscillation) return null;
 
-        const oscillatorProps = {
-            amplitude: (max - min) / 2
-        };
-
-        return <Oscillator onCreate={this.subscribe} oscillatorProps={oscillatorProps} />;
+        return <Oscillator onCreate={this.subscribe} />;
     }
 
     render () {
