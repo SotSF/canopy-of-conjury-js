@@ -66,7 +66,7 @@ export default abstract class BasePattern implements PatternInstance {
             if (propType instanceof PatternPropTypes.Color) {
                 return RGB.fromObject(<RGB>value);
             } else if (propType instanceof PatternPropTypes.Array) {
-                return value.map(v => parseProp(value.types, v));
+                return value.map(v => parseProp(propType.types, v));
             } else {
                 return OscillatorWrapper.fromObject(value) || value;
             }
