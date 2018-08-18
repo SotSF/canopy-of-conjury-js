@@ -6,6 +6,7 @@ import {
     IWaveParams,
     IColorOscillator,
     INumericOscillator,
+    ISerializedOscillator,
     WaveType
 } from '../../types';
 import * as util from '../../util';
@@ -43,7 +44,8 @@ export class Oscillator implements IOscillator {
         type: WaveType.Sine
     };
 
-    constructor ({ theta = 0, ...params } = {}) {
+    constructor (serialization: Partial<ISerializedOscillator>) {
+        const { theta = 0, ...params } = serialization;
         this.updateWave(params);
         this.interval = setInterval(this.update, 10);
         this.theta = theta;
