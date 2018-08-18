@@ -1,14 +1,16 @@
 
 export interface HSV {
-    h: number,
-    s: number,
+    h: number
+    s: number
     v: number
+    a?: number
 }
 
 export interface RGB {
-    r: number,
-    g: number,
+    r: number
+    g: number
     b: number
+    a: number
 }
 
 export interface Color {

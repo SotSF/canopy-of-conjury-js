@@ -63,7 +63,7 @@ export const rgbToHsv = ({ r, g, b }: RGB): HSV => {
  * Assumes h, s, and v are contained in the set [0, 1] and
  * returns r, g, and b in the set [0, 255].
  */
-export const hsvToRgb = ({ h, s, v }: HSV): RGB => {
+export const hsvToRgb = ({ h, s, v, a }: HSV): RGB => {
     let r, g, b;
 
     const i = Math.floor(h * 6);
@@ -81,5 +81,5 @@ export const hsvToRgb = ({ h, s, v }: HSV): RGB => {
         case 5: r = v, g = p, b = q; break;
     }
 
-    return { r: r * 255, g: g * 255, b: b * 255 };
+    return { r: r * 255, g: g * 255, b: b * 255, a };
 };

@@ -2,7 +2,7 @@
 import * as THREE from 'three';
 import * as _ from 'lodash';
 import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../../canopy';
-import { BLACK } from '../../colors';
+import { BLACK, Color } from '../../colors';
 import { CanopyInterface, StripInterface } from '../../types';
 import * as util from '../../util';
 import Catenary from './catenary';
@@ -201,12 +201,13 @@ class LedStrip implements StripInterface {
      * color as RGB
     */
 
-    updateColor (i, newColor) {
+    updateColor (i, newColor: Color) {
         const { color } = this.particleSystem.geometry.attributes;
+        const { r, g, b, a } = newColor.toRgb();
         this.colors[i] = { 
-            r: util.lerp(color.array[i*3] * 255, newColor.r, newColor.a),
-            g: util.lerp(color.array[i*3 + 1] * 255, newColor.g, newColor.a),
-            b: util.lerp(color.array[i*3 + 2] * 255, newColor.b, newColor.a)
+            r: util.lerp(color.array[i*3] * 255, r, a),
+            g: util.lerp(color.array[i*3 + 1] * 255, g, a),
+            b: util.lerp(color.array[i*3 + 2] * 255, b, a)
         };
 
         // expects a float between 0.0 and 1.0
