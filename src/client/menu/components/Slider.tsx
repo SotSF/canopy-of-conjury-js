@@ -6,10 +6,10 @@ import Card from '@material-ui/core/Card';
 import { createStyles, withStyles, Theme, WithStyles } from '@material-ui/core/styles';
 import MaterialSlider from '@material-ui/lab/Slider';
 
-import { MaybeOscillator, IOscillator } from '../../../types';
-import { NumericOscillator, isOscillatorWrapper } from '../../../patterns/utils';
+import { MaybeOscillator, IOscillator, WaveType } from '../../../types';
+import { NumericOscillator, isOscillatorWrapper, Oscillator } from '../../../patterns/utils';
 import Popover from '../../util/Popover';
-import Oscillator from './Oscillator';
+import OscillatorWidget from './Oscillator';
 
 
 const styles = ({ spacing }: Theme) => createStyles({
@@ -68,23 +68,23 @@ class Slider extends React.Component<SliderProps, SliderState> {
         this.setState({ value });
     };
 
-    subscribe = (oscillator: IOscillator) => {
-        const { max, min } = this.props;
-        const newValue = new NumericOscillator(oscillator, min, max);
-        this.props.onChange(newValue);
-        this.setState({ value: newValue });
-    };
-
     renderOscillator () {
-        const { oscillation } = this.props;
+        const { max, min, oscillation } = this.props;
         if (!oscillation) return null;
 
         const { value } = this.state;
+
         const oscillator = isOscillatorWrapper(value)
             ? value.oscillator
             : null;
 
-        return <Oscillator onCreate={this.subscribe} oscillator={oscillator} />;
+        const createFn = () => {
+            const oscillator = new Oscillator;
+            this.updateValue(new NumericOscillator(oscillator, min, max));
+            return oscillator;
+        };
+
+        return <OscillatorWidget createFn={createFn} oscillator={oscillator} />;
     }
 
     render () {

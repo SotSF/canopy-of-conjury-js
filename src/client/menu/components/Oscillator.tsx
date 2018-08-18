@@ -161,6 +161,7 @@ const styles = ({ spacing }: Theme) => createStyles({
 
 interface OscillatorWidgetProps extends WithStyles<typeof styles> {
     buttonText?: string
+    createFn?: () => IOscillator
     oscillator?: IOscillator
     onCreate?: (osc: IOscillator) => void
 }
@@ -174,16 +175,12 @@ class OscillatorWidget extends React.Component<OscillatorWidgetProps, Oscillator
         oscillator: null
     };
 
-    onOpen = () => {
-        // If no oscillator was passed in, create one
-        const oscillator = this.props.oscillator || new Oscillator({ type: WaveType.Sine });
-        if (oscillator !== this.props.oscillator) {
-            this.props.onCreate(oscillator);
-        }
     static defaultProps = {
         buttonText: 'Oscillator'
     };
 
+    onOpen = () => {
+        const oscillator = this.props.oscillator || this.props.createFn();
         this.setState({ oscillator });
     };
 

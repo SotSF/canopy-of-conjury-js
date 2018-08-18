@@ -4,10 +4,10 @@ import { HuePicker } from 'react-color';
 import { createStyles, withStyles, Theme, WithStyles } from '@material-ui/core/styles';
 
 import { Color, RGB } from '../../../colors';
-import { IOscillator, MaybeOscillator } from '../../../types';
-import {ColorOscillator, isOscillatorWrapper} from '../../../patterns/utils';
+import { IOscillator, MaybeOscillator, WaveType } from '../../../types';
+import { ColorOscillator, isOscillatorWrapper, Oscillator } from '../../../patterns/utils';
 import Popover from '../../util/Popover';
-import Oscillator from './Oscillator';
+import OscillatorWidget from './Oscillator';
 
 
 const styles = ({ spacing }: Theme) => createStyles({
@@ -48,7 +48,6 @@ class ColorPicker extends React.Component<IColorPickerProps, IColorPickerState> 
     }
 
     updateColor = ({ rgb }) => this.setColor(new RGB(rgb.r, rgb.g, rgb.b));
-    setOscillator = (oscillator: IOscillator) => this.setColor(new ColorOscillator(oscillator));
 
     renderOscillator () {
         const { oscillation } = this.props;
@@ -59,7 +58,13 @@ class ColorPicker extends React.Component<IColorPickerProps, IColorPickerState> 
             ? color.oscillator
             : null;
 
-        return <Oscillator onCreate={this.setOscillator} oscillator={oscillator} />;
+        const createFn = () => {
+            const oscillator = new Oscillator({ frequency: 0.25 });
+            this.setColor(new ColorOscillator(oscillator));
+            return oscillator;
+        };
+
+        return <OscillatorWidget createFn={createFn} oscillator={oscillator} />;
     }
 
     render () {
