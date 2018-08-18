@@ -43,7 +43,7 @@ export class Oscillator implements IOscillator {
         type: WaveType.Sine
     };
 
-    constructor (params) {
+    constructor (params = {}) {
         this.updateWave(params);
         this.interval = setInterval(this.update, 10);
     }
@@ -92,6 +92,14 @@ export class Oscillator implements IOscillator {
 
     get sample () {
         return this.waveFunction(this.theta);
+    }
+
+    /** Samples the oscillator `n` times in the interval [0, 2_PI], offset by `theta` */
+    sampleN (n: number) {
+        const interval = 2 * Math.PI / n;
+        return _.range(n).map((i) => {
+            return this.waveFunction(i * interval + this.theta);
+        });
     }
 
     get wavelength () {
