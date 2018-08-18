@@ -3,7 +3,7 @@ import * as React from 'react';
 import Card from '@material-ui/core/Card';
 
 import { PatternPropTypes } from '../../patterns/utils';
-import { Checkbox, ColorPicker, EnumeratedList, Slider } from './components';
+import { Checkbox, ColorPicker, EnumeratedList, OscillatorWidget, Slider } from './components';
 
 
 const styles = {
@@ -76,6 +76,14 @@ export default class PatternProps extends React.Component<PatternPropsProps> {
         );
     }
 
+    static renderOscillator (prop, value) {
+        return (
+            <div className="pattern-prop">
+                <OscillatorWidget buttonText={prop} oscillator={value} />
+            </div>
+        );
+    }
+
     renderArray (prop, type, values, onChange) {
         const existing = values.map((value, i) => {
             const changeExisting = (newValue) => {
@@ -117,6 +125,10 @@ export default class PatternProps extends React.Component<PatternPropsProps> {
 
         if (type instanceof PatternPropTypes.Array) {
             return this.renderArray(prop, type.types, value, onChange);
+        }
+
+        if (type instanceof PatternPropTypes.Oscillator) {
+            return PatternProps.renderOscillator(prop, value);
         }
 
         // Shouldn't get here...

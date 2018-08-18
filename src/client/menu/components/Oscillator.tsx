@@ -160,6 +160,7 @@ const styles = ({ spacing }: Theme) => createStyles({
 
 
 interface OscillatorWidgetProps extends WithStyles<typeof styles> {
+    buttonText?: string
     oscillator?: IOscillator
     onCreate?: (osc: IOscillator) => void
 }
@@ -179,12 +180,15 @@ class OscillatorWidget extends React.Component<OscillatorWidgetProps, Oscillator
         if (oscillator !== this.props.oscillator) {
             this.props.onCreate(oscillator);
         }
+    static defaultProps = {
+        buttonText: 'Oscillator'
+    };
 
         this.setState({ oscillator });
     };
 
     render () {
-        const { classes } = this.props;
+        const { classes, buttonText } = this.props;
         const { oscillator } = this.state;
         const positionalProps = {
             anchorOrigin: {
@@ -199,7 +203,7 @@ class OscillatorWidget extends React.Component<OscillatorWidgetProps, Oscillator
 
         return (
             <Popover
-              buttonText="Oscillator"
+              buttonText={buttonText}
               paperClasses={classes.spacer}
               onOpen={this.onOpen}
               transparent

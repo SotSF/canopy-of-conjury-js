@@ -63,4 +63,6 @@ export namespace PatternPropTypes {
             this.types = new types();
         }
     }
+
+    export class Oscillator {}
 }
