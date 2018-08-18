@@ -18,7 +18,7 @@ import { withStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import * as patterns from '../../patterns';
+import { allPatterns } from '../../patterns';
 import { CanopySvg } from '../canopy';
 import PatternProps from './PatternProps';
 
@@ -185,74 +185,13 @@ export default class Patterns extends React.Component {
                     <List dense disablePadding classes={{
                         root: classes.list
                     }}>
-                        <PatternOption
-                          pattern={patterns.Bubbles}
-                          addPattern={this.props.addPattern}
-                        />
-                        <PatternOption
-                          pattern={patterns.ConcentricCircles}
-                          addPattern={this.props.addPattern}
-                        />
-                        <PatternOption
-                          pattern={patterns.Fade}
-                          addPattern={this.props.addPattern}
-                        />
-                        <PatternOption
-                          pattern={patterns.Fireflies}
-                          addPattern={this.props.addPattern}
-                        />
-                        <PatternOption
-                          pattern={patterns.GradientFlow}
-                          addPattern={this.props.addPattern}
-                        />
-                        <PatternOption
-                          pattern={patterns.GradientPulse}
-                          addPattern={this.props.addPattern}
-                        />
-                        <PatternOption
-                          pattern={patterns.Heartbeat}
-                          addPattern={this.props.addPattern}
-                        />
-                        <PatternOption
-                          pattern={patterns.Kaleidoscope}
-                          addPattern={this.props.addPattern}
-                        />
-                        <PatternOption
-                          pattern={patterns.Map}
-                          addPattern={this.props.addPattern}
-                        />
-                        <PatternOption
-                          pattern={patterns.RainbowSpiral}
-                          addPattern={this.props.addPattern}
-                        />
-                        <PatternOption
-                          pattern={patterns.Radar}
-                          addPattern={this.props.addPattern}
-                        />
-                        <PatternOption
-                          pattern={patterns.ShootingStars}
-                          addPattern={this.props.addPattern}
-                        />
-                        <PatternOption
-                          pattern={patterns.SineRing}
-                          addPattern={this.props.addPattern}
-                        />
-                        <PatternOption
-                          pattern={patterns.Snake}
-                          addPattern={this.props.addPattern}
-                        />
-                        <PatternOption
-                          pattern={patterns.Swirly}
-                          addPattern={this.props.addPattern}
-                        />
-                        <PatternOption
-                          pattern={patterns.SwirlyZig}
-                          addPattern={this.props.addPattern}
-                        />
-                        <PatternOption
-                          pattern={patterns.Triangles}
-                          addPattern={this.props.addPattern}
-                        />
+                        {allPatterns.map(Pattern =>
+                            <PatternOption
+                              key={Pattern.displayName}
+                              pattern={Pattern}
+                              addPattern={this.props.addPattern}
+                            />
+                        )}
                     </List>
                 </ExpansionPanelDetails>
             </ExpansionPanel>
