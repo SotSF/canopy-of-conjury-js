@@ -1,10 +1,10 @@
 
 import * as _ from 'lodash';
 import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
-import { RGB } from '../colors';
+import { RGB, isColor } from '../colors';
 import { CanopyInterface, PatternInstance, PatternInterface } from '../types';
 import * as util from '../util';
-import { isOscillatorWrapper, OscillatorWrapper, PatternPropTypes } from './utils';
+import { isOscillatorWrapper, Oscillator, OscillatorWrapper, PatternPropTypes } from './utils';
 
 
 export default abstract class BasePattern implements PatternInstance {
@@ -31,7 +31,7 @@ export default abstract class BasePattern implements PatternInstance {
 
     serialize () {
         const serializeProp = (value) => {
-            if (Object.hasOwnProperty.call(value, 'serialize')) {
+            if ('serialize' in value) {
                 // @ts-ignore
                 return value.serialize();
             } else if (_.isArray(value)) {
@@ -64,9 +64,15 @@ export default abstract class BasePattern implements PatternInstance {
     deserialize (state) {
         const parseProp = (propType, value) => {
             if (propType instanceof PatternPropTypes.Color) {
-                return RGB.fromObject(<RGB>value);
+                if (isColor(value)) {
+                    return RGB.fromObject(<RGB>value);
+                } else {
+                    return OscillatorWrapper.fromObject(value)
+                }
             } else if (propType instanceof PatternPropTypes.Array) {
                 return value.map(v => parseProp(propType.types, v));
+            } else if (propType instanceof PatternPropTypes.Oscillator) {
+                return new Oscillator(value);
             } else {
                 return OscillatorWrapper.fromObject(value) || value;
             }

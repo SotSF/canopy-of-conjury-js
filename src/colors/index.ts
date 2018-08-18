@@ -1,4 +1,5 @@
 
+import * as _ from 'lodash';
 import { Color } from './types';
 import { hsvToRgb, rgbToHex, rgbToHexString, rgbToHsv } from './util';
 
@@ -112,3 +113,16 @@ export class HSV implements Color {
 }
 
 export const BLACK = new RGB(0, 0, 0);
+
+export const isColor = (maybeColor: any): maybeColor is Color => {
+    const rgbProps = ['r', 'g', 'b', 'a'];
+    const hsvProps = ['h', 's', 'v', 'a'];
+
+    const hasColorProps = (colorProps) => _.every(
+        colorProps.map(
+            prop => Object.hasOwnProperty.call(maybeColor, prop)
+        )
+    );
+
+    return hasColorProps(rgbProps) || hasColorProps(hsvProps);
+};
