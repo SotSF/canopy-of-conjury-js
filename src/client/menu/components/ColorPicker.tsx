@@ -4,7 +4,7 @@ import { HuePicker } from 'react-color';
 import { createStyles, withStyles, Theme, WithStyles } from '@material-ui/core/styles';
 
 import { Color, RGB } from '../../../colors';
-import { IOscillator, MaybeOscillator, WaveType } from '../../../types';
+import { MaybeOscillator, IWaveParams } from '../../../types';
 import { ColorOscillator, isOscillatorWrapper, Oscillator } from '../../../patterns/utils';
 import Popover from '../../util/Popover';
 import OscillatorWidget from './Oscillator';
@@ -21,6 +21,7 @@ const styles = ({ spacing }: Theme) => createStyles({
 });
 
 interface IColorPickerProps extends WithStyles<typeof styles> {
+    defaults?: Partial<IWaveParams>
     color?: MaybeOscillator<Color>
     onChange: (color: MaybeOscillator<Color>) => void
     oscillation?: boolean
@@ -59,7 +60,8 @@ class ColorPicker extends React.Component<IColorPickerProps, IColorPickerState> 
             : null;
 
         const createFn = () => {
-            const oscillator = new Oscillator({ frequency: 0.25 });
+            const defaults = Object.assign({ frequency: 0.25 }, this.props.defaults);
+            const oscillator = new Oscillator(defaults);
             this.setColor(new ColorOscillator(oscillator));
             return oscillator;
         };

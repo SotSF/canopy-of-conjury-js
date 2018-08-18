@@ -1,11 +1,13 @@
 
-import { EnumType } from '../../types';
+import { EnumType, IWaveParams } from '../../types';
 
 class OscillationType {
     oscillation = false;
+    defaults: Partial<IWaveParams> = null;
 
-    enableOscillation () {
+    enableOscillation (defaults: Partial<IWaveParams> = null) {
         this.oscillation = true;
+        this.defaults = defaults;
         return this;
     }
 }
@@ -64,5 +66,10 @@ export namespace PatternPropTypes {
         }
     }
 
-    export class Oscillator {}
+    export class Oscillator {
+        defaults: Partial<IWaveParams> = null;
+        constructor (defaults) {
+            this.defaults = defaults;
+        }
+    }
 }

@@ -43,9 +43,10 @@ export class Oscillator implements IOscillator {
         type: WaveType.Sine
     };
 
-    constructor (params = {}) {
+    constructor ({ theta = 0, ...params } = {}) {
         this.updateWave(params);
         this.interval = setInterval(this.update, 10);
+        this.theta = theta;
     }
 
     private update = () => {
@@ -132,7 +133,7 @@ export class OscillatorWrapper {
                     object.max
                 );
             case 'color':
-                return new ColorOscillator(new Oscillator(object.oscillator),);
+                return new ColorOscillator(new Oscillator(object.oscillator));
             default:
                 return null;
         }
