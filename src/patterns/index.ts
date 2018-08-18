@@ -1,6 +1,7 @@
 
 import { PatternInstance, PatternInterface } from '../types';
 import { Bubbles } from './Bubbles';
+import { ColorWave } from './ColorWave';
 import { ConcentricCircles } from './ConcentricCircles';
 import { Fade } from './Fade';
 import { Fireflies } from './Fireflies';
@@ -21,6 +22,7 @@ import { Triangles } from './Triangles';
 
 export const allPatterns = [
     Bubbles,
+    ColorWave,
     ConcentricCircles,
     Fade,
     Fireflies,
@@ -41,6 +43,7 @@ export const allPatterns = [
 
 export {
     Bubbles,
+    ColorWave,
     ConcentricCircles,
     Fade,
     Fireflies,
