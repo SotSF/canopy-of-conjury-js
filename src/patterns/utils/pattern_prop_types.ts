@@ -3,9 +3,9 @@ import { EnumType, IWaveParams } from '../../types';
 
 class OscillationType {
     oscillation = false;
-    defaults: Partial<IWaveParams> = null;
+    defaults: Partial<IWaveParams> = {};
 
-    enableOscillation (defaults: Partial<IWaveParams> = null) {
+    enableOscillation (defaults: Partial<IWaveParams> = {}) {
         this.oscillation = true;
         this.defaults = defaults;
         return this;
@@ -67,8 +67,8 @@ export namespace PatternPropTypes {
     }
 
     export class Oscillator {
-        defaults: Partial<IWaveParams> = null;
-        constructor (defaults) {
+        defaults: Partial<IWaveParams> = {};
+        constructor (defaults: Partial<IWaveParams> = {}) {
             this.defaults = defaults;
         }
     }
