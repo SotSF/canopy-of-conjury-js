@@ -2,7 +2,7 @@
 import * as THREE from 'three';
 import * as _ from 'lodash';
 import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../../canopy';
-import { BLACK, Color } from '../../colors';
+import { Color, combine } from '../../colors';
 import { CanopyInterface, StripInterface } from '../../types';
 import * as util from '../../util';
 import Catenary from './catenary';
@@ -84,7 +84,7 @@ export default class CanopyThreeJs implements CanopyInterface {
 
     /** Clears all the LEDs */
     clear () {
-        this.strips.forEach(strip => strip.updateColors(BLACK));
+        this.strips.forEach(strip => strip.clear());
     }
 
     /**
@@ -111,7 +111,6 @@ class LedStrip implements StripInterface {
     colors = null;
     group = null;
     leds = null;
-    ledHitBoxes = null;
     offset = null;
     particleSystem = null;
     string = null;
@@ -176,12 +175,22 @@ class LedStrip implements StripInterface {
 
     _initializeLeds () {
         this.leds = this.catenary.coordinates.map(() => new THREE.Vector3(0, 0, 0));
-        this.colors = this.catenary.coordinates.map(() => 0x000000);
+        this.colors = this.catenary.coordinates.map(() => []);
     }
 
     clear () {
         this.colors = this.catenary.coordinates.map(() => []);
         _.range(this.leds.length).forEach(i => this.renderPixel(i));
+    }
+
+    renderPixel (i) {
+        const { color } = this.particleSystem.geometry.attributes;
+        const combined = combine(this.colors[i]);
+
+        color.array[i * 3]     = combined.r / 255;
+        color.array[i * 3 + 1] = combined.g / 255;
+        color.array[i * 3 + 2] = combined.b / 255;
+        color.needsUpdate = true;
     }
 
     /** Updates the positions of the LEDs and the string */
@@ -202,30 +211,22 @@ class LedStrip implements StripInterface {
         this.string.geometry.setFromPoints(points);
     }
 
-    /** Updates the color of a single pixel in the string 
-     * color as RGB
-    */
-
+    /** Updates the color of a single pixel in the string */
     updateColor (i, newColor: Color) {
         const { color } = this.particleSystem.geometry.attributes;
         const { r, g, b, a } = newColor.toRgb();
-        this.colors[i] = { 
-            r: util.lerp(color.array[i*3] * 255, r, a),
-            g: util.lerp(color.array[i*3 + 1] * 255, g, a),
-            b: util.lerp(color.array[i*3 + 2] * 255, b, a)
-        };
 
-        // expects a float between 0.0 and 1.0
-        color.array[i * 3] = this.colors[i].r / 255;
-        color.array[i * 3 + 1] = this.colors[i].g / 255;
-        color.array[i * 3 + 2] = this.colors[i].b / 255;
-        color.needsUpdate = true;
-        
+        const pixelColors = this.colors[i];
+        pixelColors.push({
+            r: util.lerp(color.array[i * 3] * 255, r, a),
+            g: util.lerp(color.array[i * 3 + 1] * 255, g, a),
+            b: util.lerp(color.array[i * 3 + 2] * 255, b, a)
+        });
+
+        this.renderPixel(i);
     }
 
-    /** Shorthand for updating the color of the entire strip 
-     * color as RGB
-    */
+    /** Shorthand for updating the color of the entire strip */
     updateColors (newColor) {
         _.range(this.leds.length).forEach(i => this.updateColor(i, newColor));
     }

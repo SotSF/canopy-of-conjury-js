@@ -126,3 +126,28 @@ export const isColor = (maybeColor: any): maybeColor is Color => {
 
     return hasColorProps(rgbProps) || hasColorProps(hsvProps);
 };
+
+/** Takes an array of colors and reduces them to a single color. Returns black if array is empty */
+export const combine = (colors: RGB[]): RGB => {
+    if (colors.length === 0) {
+        return new RGB(0, 0, 0, 0);
+    }
+
+    let r = 0, g = 0, b = 0, a = 0;
+
+    colors.forEach((color) => {
+        r += color.r;
+        g += color.g;
+        b += color.b;
+        a += color.a;
+    });
+
+    // Most naive implementation-- just average the values
+    return new RGB(
+        r / colors.length,
+        g / colors.length,
+        b / colors.length,
+        a / colors.length,
+    );
+};
+

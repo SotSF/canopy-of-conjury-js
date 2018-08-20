@@ -2,8 +2,10 @@
 import * as React from 'react';
 import * as _ from 'lodash';
 
-import { CanopyInterface, PatternInstance } from '../../types';
 import Canopy from '../../canopy/Canopy';
+import { combine } from '../../colors';
+import { CanopyInterface, PatternInstance } from '../../types';
+import * as util from '../../util';
 
 
 // Rendering constants
@@ -27,16 +29,19 @@ const Strip = ({ leds, length, rotation }) => {
 
     return (
         <g transform={transform}>
-            {_.range(numToRender).map((i) =>
-                <circle
-                  fill={leds[i].toString()}
-                  fillOpacity={leds[i].a}
-                  key={i}
-                  r={LED_RADIUS}
-                  cx={interval * i}
-                  cy={0}
-                />
-            )}
+            {_.range(numToRender).map((i) => {
+                const fill = combine(leds[i]);
+                return (
+                    <circle
+                      fill={fill.toString()}
+                      fillOpacity={util.clamp(fill.a, 0.2, 1)}
+                      key={i}
+                      r={LED_RADIUS}
+                      cx={interval * i}
+                      cy={0}
+                    />
+                );
+            })}
         </g>
     );
 };

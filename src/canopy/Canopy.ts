@@ -8,7 +8,7 @@ class Strip implements StripInterface {
     leds = null;
 
     constructor (numLedsPerStrip) {
-        this.leds = _.range(numLedsPerStrip).map(() => new RGB(0, 0, 0));
+        this.leds = _.range(numLedsPerStrip).map(() => []);
     }
 
     get length () {
@@ -16,7 +16,7 @@ class Strip implements StripInterface {
     }
 
     updateColor (index, color) {
-        this.leds[index] = color;
+        this.leds[index].push(color.toRgb());
     }
 
     updateColors(color) {
@@ -25,7 +25,7 @@ class Strip implements StripInterface {
 
     clear () {
         for (let i = 0; i < this.leds.length; i++) {
-            this.leds[i] = new RGB(0, 0, 0);
+            this.leds[i] = [];
         }
     }
 }
