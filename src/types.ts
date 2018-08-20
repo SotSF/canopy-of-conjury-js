@@ -15,13 +15,15 @@ export interface LedInterface {
 }
 
 export interface StripInterface {
-    leds: LedInterface[]
+    clear: () => void
+    leds: LedInterface[][]
     length: number
     updateColor: (position: number, color: Color) => void
     updateColors: (color: Color) => void
 }
 
 export interface CanopyInterface {
+    clear: () => void
     strips: StripInterface[]
     stripLength: number
 }

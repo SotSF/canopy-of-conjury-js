@@ -179,6 +179,11 @@ class LedStrip implements StripInterface {
         this.colors = this.catenary.coordinates.map(() => 0x000000);
     }
 
+    clear () {
+        this.colors = this.catenary.coordinates.map(() => []);
+        _.range(this.leds.length).forEach(i => this.renderPixel(i));
+    }
+
     /** Updates the positions of the LEDs and the string */
     updatePositions () {
         // LEDs
