@@ -3,6 +3,7 @@ import { PatternInstance, PatternInterface } from '../types';
 import { Bubbles } from './Bubbles';
 import { ColorWave } from './ColorWave';
 import { ConcentricCircles } from './ConcentricCircles';
+import { Drops } from './Drops';
 import { Fade } from './Fade';
 import { Fireflies } from './Fireflies';
 import { GradientFlow } from './GradientFlow';
@@ -24,6 +25,7 @@ export const allPatterns = [
     Bubbles,
     ColorWave,
     ConcentricCircles,
+    Drops,
     Fade,
     Fireflies,
     GradientFlow,
@@ -45,6 +47,7 @@ export {
     Bubbles,
     ColorWave,
     ConcentricCircles,
+    Drops,
     Fade,
     Fireflies,
     GradientFlow,
