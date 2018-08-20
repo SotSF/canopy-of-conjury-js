@@ -43,12 +43,6 @@ export class ColorWave extends BasePattern {
         };
     }
 
-    progress () {
-        super.progress();
-
-
-    }
-
     render (canopy) {
         // Sample the wave once for each LED in a strip
         const values = this.values.oscillator.sampleN(NUM_LEDS_PER_STRIP);

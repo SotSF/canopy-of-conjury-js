@@ -73,6 +73,8 @@ export class Swirly extends BasePattern {
     }
 
     progress () {
+        super.progress();
+
         if (this.swirls.length < this.values.quantity) {
             this.makeSwirl();
         }

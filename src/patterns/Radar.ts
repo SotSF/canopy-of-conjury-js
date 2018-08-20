@@ -39,6 +39,8 @@ export class Radar extends BasePattern {
     head = 0;
 
     progress () {
+        super.progress();
+
         const directionalMultiplier = this.values.clockwise ? -1 : 1;
         this.head += this.values.velocity * directionalMultiplier;
         if (this.head > NUM_STRIPS - 1) this.head = 0;

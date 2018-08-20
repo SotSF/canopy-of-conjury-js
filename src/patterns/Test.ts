@@ -24,8 +24,6 @@ export class TestLEDs extends BasePattern {
         new RGB(255,150,150)
     ];
 
-    progress () {}
-
     render (canopy) {
         var c = 0;
         for (let s = 0; s < NUM_STRIPS; s++) {

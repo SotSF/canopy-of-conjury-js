@@ -44,6 +44,8 @@ export class GradientPulse extends BasePattern {
     dir = 1;
 
     progress () {
+        super.progress();
+
         // any consts dependent on tunable params need to be set here
         // to account for dynamic changes
         const color1 = this.values.color1;
