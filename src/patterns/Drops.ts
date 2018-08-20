@@ -46,7 +46,7 @@ export class Drops extends BasePattern {
     currHue = 0;
     progress () {
         super.progress();
-        if (this.iteration % this.props.dropFrequency === 0) {
+        if (this.iteration % this.values.dropFrequency === 0) {
             const x = Math.floor(Math.random() * this.dimension);
             const y = Math.floor(Math.random() * this.dimension);
             this.drops.push({
@@ -89,7 +89,7 @@ export class Drops extends BasePattern {
                     if (_.inRange(x2, 0, this.dimension) && _.inRange(y2, 0, this.dimension)) {
                         const co = memoizedMap.mapCoords(x2,y2);
                         if (_.inRange(co.led, 0, NUM_LEDS_PER_STRIP)) {
-                            const color = this.props.color.withAlpha(ring.opacity / 100 * drop.opacity / 100);
+                            const color = this.values.color.withAlpha(ring.opacity / 100 * drop.opacity / 100);
                             canopy.strips[co.strip].updateColor(co.led, color);
                         }
                     }
