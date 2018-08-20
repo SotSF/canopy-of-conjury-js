@@ -1,14 +1,15 @@
 
-import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
+import * as _ from 'lodash';
 import { RGB, Color } from '../colors';
-import { pattern } from '../types';
+import { MaybeOscillator, pattern } from '../types';
+import * as util from '../util';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 import Memoizer from './memoizer';
 
 
 interface SineRingProps {
-    color: Color,
+    color: MaybeOscillator<Color>,
     width: number,
     frequency: number,
     amplitude: number,
@@ -22,14 +23,14 @@ interface SineRingProps {
 export class SineRing extends BasePattern {
     static displayName = 'Sine Ring';
     static propTypes = {
-        color: new PatternPropTypes.Color(),
+        color: new PatternPropTypes.Color().enableOscillation(),
         width: new PatternPropTypes.Range(1, 10),
         frequency: new PatternPropTypes.Range(1, 16),
         amplitude: new PatternPropTypes.Range(0, 30),
         radius: new PatternPropTypes.Range(5, 30),
-        velocity: new PatternPropTypes.Range(0, 10),
+        velocity: new PatternPropTypes.Range(0, 5, 0.5),
         rotate: new PatternPropTypes.Range(-10, 10),
-        opacity: new PatternPropTypes.Range(0, 100)
+        opacity: new PatternPropTypes.Range(0, 1, 0.01)
     };
 
     static defaultProps () : SineRingProps {
@@ -41,7 +42,7 @@ export class SineRing extends BasePattern {
             radius: 10,
             velocity: 1,
             rotate: 0,
-            opacity: 100
+            opacity: 1
         };
     }
 
@@ -66,7 +67,7 @@ export class SineRing extends BasePattern {
     render(canopy) {
         const radius = this.values.radius + 20;
         
-        const color = this.values.color.withAlpha(this.values.opacity / 100);
+        const color = this.values.color.withAlpha(this.values.opacity);
         const memoizedMap = this.memoizer.createMap(200, canopy);
 
         let angle = 0;
@@ -75,14 +76,13 @@ export class SineRing extends BasePattern {
             const x = Math.floor((radius + (Math.sin(angle * this.values.frequency) * this.amp)) * Math.cos(angle));
             const y = Math.floor((radius + (Math.sin(angle * this.values.frequency) * this.amp)) * Math.sin(angle));
             const co = memoizedMap.mapCoords(x + 100, y + 100);
-            let s = co.strip + (this.values.rotate * this.iteration) % NUM_STRIPS;
-            if (s < 0) { s += NUM_STRIPS; }
-            else if (s >= NUM_STRIPS) { s %= NUM_STRIPS; }
+
+            let s = util.clampModular(co.strip + (this.values.rotate * this.iteration), 0, canopy.strips.length);
             for (let l = 0; l < this.values.width; l++) {
+                // If the coordinate is beyond the canopy, don't do anything
                 const led = l + co.led;
-                if (led >= 0 && led < NUM_LEDS_PER_STRIP) {
-                    canopy.strips[s].updateColor(led, color);
-                }
+                if (!_.inRange(led, 0, canopy.stripLength)) continue;
+                canopy.strips[s].updateColor(led, color);
             }
         }
     }
@@ -95,7 +95,7 @@ export class SineRing extends BasePattern {
     }
 
     deserializeExtra (object) {
-        this.amp = object.map;
+        this.amp = object.amp;
         this.dir = object.dir;
     }
 }

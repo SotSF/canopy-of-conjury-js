@@ -52,6 +52,7 @@ export class Heartbeat extends BasePattern {
     render (canopy) {
         const memoizedMap = this.memoizer.createMap(this.dimension, canopy);
         const color = this.values.color.withAlpha(this.values.opacity);
+
         let t = 0;
         while ( t < 500 ) {
             const x = (1 + this.pulse) * (16 * Math.sin(t) * Math.sin(t) * Math.sin(t));
@@ -60,9 +61,10 @@ export class Heartbeat extends BasePattern {
             const y2 = Math.floor(y * 2 + this.dimension / 2);
             const co = memoizedMap.mapCoords(x2, y2);
             
-            for (let l = 0; l <= co.led; l++) {
+            for (let l = 0; l <= Math.min(co.led, canopy.stripLength - 1); l++) {
                 canopy.strips[co.strip].updateColor(l, color);
             }
+
             t++;
         }
     }

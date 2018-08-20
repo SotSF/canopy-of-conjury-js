@@ -42,14 +42,14 @@ export class Bubbles extends BasePattern {
     static propTypes = {
         color1: new PatternPropTypes.Color(),
         color2: new PatternPropTypes.Color(),
-        opacity: new PatternPropTypes.Range(0,100)
+        opacity: new PatternPropTypes.Range(0,1, 0.01)
     };
 
     static defaultProps () : BubblesProps {
         return {
             color1: RGB.random(),
             color2: RGB.random(),
-            opacity: 100
+            opacity: 1
         };
     }
 
@@ -92,43 +92,57 @@ export class Bubbles extends BasePattern {
             const memoizedMap = this.memoizer.createMap(this.dimension, canopy);
             const halfCanvas = this.dimension / 2;
             //const center = memoizedMap.mapCoords(Math.floor(bubble.x + halfCanvas), Math.floor(bubble.y + halfCanvas));
+
             bubble.color = new RGB(
                 util.lerp(color1.r, color2.r, bubble.lerp),
                 util.lerp(color1.g, color2.g, bubble.lerp),
                 util.lerp(color1.b, color2.b, bubble.lerp)
             );
-            const color = bubble.color.withAlpha(bubble.opacity * this.values.opacity / 100);
-            const center = memoizedMap.mapCoords(Math.floor(bubble.x + halfCanvas),Math.floor(bubble.y + halfCanvas));
+            const color = bubble.color.withAlpha(bubble.opacity * this.values.opacity);
+
             let t = 0;
             while (t < 30) {
                 const x = (bubble.x + halfCanvas) + (bubble.size * Math.cos(t));
                 const y = (bubble.y + halfCanvas) + (bubble.size * Math.sin(t));
-                if (_.inRange(x,0,this.dimension+1) && _.inRange(y, 0, this.dimension + 1)) {
-                    const co = memoizedMap.mapCoords(Math.floor(x),Math.floor(y));
-                    const l = co.led - 20;
-                    if (_.inRange(l,0,NUM_LEDS_PER_STRIP)) {
-                        canopy.strips[co.strip].updateColor(l, color); // bubble fill
-                    }
-                    this.fill(bubble.x + halfCanvas,bubble.y + halfCanvas,x,y,canopy,memoizedMap,color);
-                }
+                const validX = _.inRange(x, 0, this.dimension + 1);
+                const validY = _.inRange(y, 0, this.dimension + 1);
                 t++;
-            }
 
+                if (!validX || !validY) continue;
+
+                const co = memoizedMap.mapCoords(Math.floor(x), Math.floor(y));
+
+                // If the coordinate is beyond the canopy, don't do anything
+                if (!_.inRange(co.led, 0, canopy.strips[0].length)) continue;
+
+                canopy.strips[co.strip].updateColor(co.led, color);
+                this.fill(
+                    bubble.x + halfCanvas,
+                    bubble.y + halfCanvas,
+                    x,
+                    y,
+                    canopy,
+                    memoizedMap,
+                    color
+                );
+            }
         })
     }
 
-    fill(x1,y1,x2,y2,canopy,memo,color) {
-        const startX = x1 < x2 ? x1 : x2 ;
-        const startY = y1 < y2 ? y1 : y2 ;
-        const endX = x1 >= x2 ? x1 : x2;
-        const endY = y1 >= y2 ? y1 : y2;
-        for(let x = startX; x <= endX; x++) {
+    fill (x1, y1, x2, y2, canopy, memo, color) {
+        const startX = x1 <  x2 ? x1 : x2;
+        const startY = y1 <  y2 ? y1 : y2;
+        const endX   = x1 >= x2 ? x1 : x2;
+        const endY   = y1 >= y2 ? y1 : y2;
+
+        for (let x = startX; x <= endX; x++) {
             for (let y = startY; y <= endY; y++) {
-                const co = memo.mapCoords(Math.floor(x),Math.floor(y));
-                const l = co.led - 20;
-                if (_.inRange(l,0,NUM_LEDS_PER_STRIP)) {
-                    canopy.strips[co.strip].updateColor(l, color); // bubble fill
-                }
+                const co = memo.mapCoords(Math.floor(x), Math.floor(y));
+
+                // If the coordinate is beyond the canopy, don't do anything
+                if (!_.inRange(co.led, 0, canopy.strips[0].length)) continue;
+
+                canopy.strips[co.strip].updateColor(co.led, color);
             }
         }
     }

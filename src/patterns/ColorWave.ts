@@ -55,7 +55,7 @@ export class ColorWave extends BasePattern {
 
         _.range(NUM_LEDS_PER_STRIP).forEach((ledIndex) => {
             const unboundedStrip = Math.round(this.values.midPoint + values[ledIndex] * 10);
-            const waveStrip = util.clampModular(unboundedStrip, 0, NUM_STRIPS - 1);
+            const waveStrip = util.clampModular(unboundedStrip, 0, NUM_STRIPS);
             canopy.strips[waveStrip].updateColor(ledIndex, this.values.color);
         });
     }

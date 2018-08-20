@@ -121,15 +121,17 @@ export class Kaleidoscope extends BasePattern {
                 const x = t + this.dimension / 2
                 const y = Math.floor(wave.flip * wave.amp * Math.sin(t * 0.2 * wave.amp)) + this.dimension / 2;
                 const co = memoizedMap.mapCoords(x % this.dimension, y % this.dimension);
-                if (co.led >= 0 && co.led < NUM_LEDS_PER_STRIP) {
-                    for (let s = 0; s < this.frequency; s++) {
-                        for (let i = 0; i < wave.width; i++) {
-                            let strip = Math.floor((this.iteration / 3 * this.values.rotate) + co.strip + i + mirror * s) % NUM_STRIPS;
-                            canopy.strips[strip].updateColor(co.led, color);
-                        }
+
+                // If the coordinate is beyond the canopy, don't do anything
+                if (!_.inRange(co.led, 0, canopy.stripLength)) continue
+
+                for (let s = 0; s < this.frequency; s++) {
+                    for (let i = 0; i < wave.width; i++) {
+                        let strip = Math.floor((this.iteration / 3 * this.values.rotate) + co.strip + i + mirror * s) % NUM_STRIPS;
+                        canopy.strips[strip].updateColor(co.led, color);
                     }
                 }
-                
+
             }
         });
     }

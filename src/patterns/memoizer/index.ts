@@ -20,6 +20,11 @@ class MemoizedMap implements IMemoizedMap {
 
     private memoize (canvasSize: number, canopy: CanopyInterface) {
         const numStrips = canopy.strips.length;
+        const numLedsPerStrip = canopy.strips[0].length;
+
+        // Compute the constant to scale the magnitude of the pixel radius
+        const halfCanvas = canvasSize / 2;
+        const scaleFactor = numLedsPerStrip / halfCanvas;
 
         // Maps a single pixel in the canvas to the strip and LED in the canopy
         const mapToCanopy = (x, y) => {
@@ -30,14 +35,14 @@ class MemoizedMap implements IMemoizedMap {
                 theta += TWO_PI
             }
 
-            const radius = Math.sqrt(x ** 2 + y ** 2);
+            const radius = Math.sqrt(x ** 2 + y ** 2) * scaleFactor;
+
             return {
                 strip: Math.floor(theta * numStrips / TWO_PI),
-                led: Math.floor(radius)
+                led: Math.round(radius)
             };
         };
 
-        const halfCanvas = canvasSize / 2;
         for (let x = 0; x <= canvasSize; x++) {
             for (let y = 0; y <= canvasSize; y++) {
                 this.map[`${x}.${y}`] = mapToCanopy(x - halfCanvas, y - halfCanvas);

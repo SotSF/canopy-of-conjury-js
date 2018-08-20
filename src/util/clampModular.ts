@@ -1,6 +1,6 @@
 /**
  * Clamp function which takes a value, a minimum and a maximum and returns the value modulated to be
- * within the range [min, max]
+ * within the range [min, max)
  */
 
 export default (value: number, min: number, max: number) => {
@@ -11,10 +11,11 @@ export default (value: number, min: number, max: number) => {
         return value + quotient * width;
     }
 
+    let valInRange = value;
     if (value > max) {
         const quotient = Math.ceil((value - max) / width);
-        return value - quotient * width;
+        valInRange = value - quotient * width;
     }
 
-    return value;
+    return valInRange === max ? min : valInRange;
 };

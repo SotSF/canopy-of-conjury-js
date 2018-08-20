@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
 import { RGB, Color } from '../colors';
 import { MaybeOscillator, pattern } from '../types';
+import * as util from '../util';
 import BasePattern from './BasePattern';
 import Memoizer from './memoizer';
 import { PatternPropTypes } from './utils';
@@ -115,19 +116,22 @@ export class Fireflies extends BasePattern {
         const y2 = Math.floor(y + (firefly.y + this.dimension / 2));
         const co = memoMap.mapCoords(x2 % this.dimension,y2 % this.dimension);
        
-        let rotation = this.iteration * this.values.rotation;
-        let strip = (co.strip + rotation) % NUM_STRIPS;
-        if (strip < 0)  { strip += NUM_STRIPS; }
+        const rotation = this.iteration * this.values.rotation;
+        const strip = util.clampModular(co.strip + rotation, 0, NUM_STRIPS);
+
+        // If the coordinate is beyond the canopy, don't do anything
+        if (!_.inRange(co.led, 0, canopy.strips[0].length)) return;
         canopy.strips[strip].updateColor(co.led, color);
+
         if (firefly.size > 1) {
             const l = (co.led + 1);
             if (l >= 0 && l < NUM_LEDS_PER_STRIP) {
                 canopy.strips[strip].updateColor(l, color);
             }
         }
+
         if (firefly.size > 2) {
-            let s = (strip + 1) % NUM_STRIPS;
-            if (s < 0) s += NUM_STRIPS;
+            const s = (strip + 1) % NUM_STRIPS;
             canopy.strips[s].updateColor(co.led, color);
         }
     }
@@ -140,7 +144,7 @@ export class Fireflies extends BasePattern {
 
         firefly.age++;
         if (firefly.age >= this.lifespan) {
-            _.without(this.fireflies, firefly);
+            this.fireflies = _.without(this.fireflies, firefly);
         }
 
         const velocity = this.values.velocity;
