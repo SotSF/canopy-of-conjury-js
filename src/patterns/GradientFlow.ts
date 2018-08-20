@@ -1,5 +1,6 @@
 
 import * as _ from 'lodash';
+import * as util from '../util';
 import { NUM_LEDS_PER_STRIP } from '../canopy';
 import { RGB, Color, HSV } from '../colors';
 import { MaybeOscillator, pattern } from '../types';
@@ -61,6 +62,7 @@ export class GradientFlow extends BasePattern {
     constructor (props) {
         super(props);
         this.interpolation = this.interpolateColors();
+        this.ringColors = this.interpolation;
     }
 
     updateProps (props) {
@@ -76,30 +78,15 @@ export class GradientFlow extends BasePattern {
 
     private interpolateColors () : Color[] {
         const interpolatedColors: Color[] = [];
-
-        const color1 = this.values.color1.toHSV();
-        const color2 = this.values.color2.toHSV();
-
-        // use HSB for this
-        const hueStart    = color1.h;
-        const satStart    = color1.s;
-        const brightStart = color1.v;
-        const hueEnd      = color2.h;
-        const satEnd      = color2.s;
-        const brightEnd   = color2.v;
-
-        // augmentation values
-        const hueAugment    = (hueEnd - hueStart) / (NUM_LEDS_PER_STRIP - 1);
-        const satAugment    = (satEnd - satStart) / (NUM_LEDS_PER_STRIP - 1);
-        const brightAugment = (brightEnd - brightStart) / (NUM_LEDS_PER_STRIP - 1);
+        const { color1, color2 } = this.props;
 
         // iterate over the length of the LED strips and derive the interpolated value
         for (let i = 0; i < NUM_LEDS_PER_STRIP; i++) {
-            interpolatedColors[i] = new HSV(
-                hueStart    + hueAugment * i,
-                satStart    + satAugment * i,
-                brightStart + brightAugment * i
-            ).toRgb();
+            interpolatedColors[i] = new RGB(
+                util.lerp(color1.r, color2.r, i / NUM_LEDS_PER_STRIP),
+                util.lerp(color1.g, color2.g, i / NUM_LEDS_PER_STRIP),
+                util.lerp(color1.b, color2.b, i / NUM_LEDS_PER_STRIP)
+            );
         }
 
         return interpolatedColors;
