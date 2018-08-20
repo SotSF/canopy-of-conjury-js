@@ -30,7 +30,7 @@ function animate() {
         canopy.clear();
 
         // Reverse the patterns so that the bottom one is rendered first
-        patterns.reverse().forEach((pattern) => {
+        patterns.slice().reverse().forEach((pattern) => {
             pattern.instance.progress();
             pattern.instance.render(canopy);
         });
