@@ -112,9 +112,9 @@ export class Bubbles extends BasePattern {
                 const co = memoizedMap.mapCoords(Math.floor(x), Math.floor(y));
 
                 // If the coordinate is beyond the canopy, don't do anything
-                if (!_.inRange(co.led, 0, canopy.strips[0].length)) continue;
+                if (!_.inRange(co.led - 20, 0, canopy.strips[0].length)) continue;
 
-                canopy.strips[co.strip].updateColor(co.led, color);
+                canopy.strips[co.strip].updateColor(co.led - 20, color);
                 this.fill(
                     bubble.x + halfCanvas,
                     bubble.y + halfCanvas,
@@ -139,9 +139,9 @@ export class Bubbles extends BasePattern {
                 const co = memo.mapCoords(Math.floor(x), Math.floor(y));
 
                 // If the coordinate is beyond the canopy, don't do anything
-                if (!_.inRange(co.led, 0, canopy.strips[0].length)) continue;
+                if (!_.inRange(co.led - 20, 0, canopy.strips[0].length)) continue;
 
-                canopy.strips[co.strip].updateColor(co.led, color);
+                canopy.strips[co.strip].updateColor(co.led - 20, color);
             }
         }
     }
