@@ -1,7 +1,7 @@
 
 import * as _ from 'lodash';
-import { NUM_LEDS_PER_STRIP, NUM_STRIPS } from '../canopy';
-import { pattern } from '../types';
+import { NUM_STRIPS } from '../canopy';
+import { MaybeOscillator, pattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 import { HSV } from '../colors';
@@ -61,8 +61,8 @@ class Wave {
 }
 
 interface KaleidoscopePropTypes {
-    velocity: number,
-    opacity: number,
+    velocity: number
+    opacity: MaybeOscillator<number>
     rotate: number
 }
 
@@ -71,8 +71,8 @@ export class Kaleidoscope extends BasePattern {
     static displayName = 'Kaleidoscope';
     static propTypes = {
         velocity: new PatternPropTypes.Range(1,5),
-        opacity: new PatternPropTypes.Range(0, 1, 0.01),
-        rotate: new PatternPropTypes.Range(0,2)
+        opacity: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation(),
+        rotate: new PatternPropTypes.Range(0, 2)
     };
 
     static defaultProps () : KaleidoscopePropTypes {

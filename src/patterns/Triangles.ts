@@ -12,7 +12,7 @@ interface TrianglesProps {
     quantity: number
     radius: MaybeOscillator<number>
     size: MaybeOscillator<number>
-    opacity: number
+    opacity: MaybeOscillator<number>
     rainbow: boolean
     inverted: boolean
 }
@@ -25,7 +25,7 @@ export class Triangles extends BasePattern {
         quantity: new PatternPropTypes.Range(2,12),
         radius: new PatternPropTypes.Range(0,60).enableOscillation(),
         size : new PatternPropTypes.Range(3,15).enableOscillation(),
-        opacity: new PatternPropTypes.Range(0,1, 0.01),
+        opacity: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation(),
         rainbow: new PatternPropTypes.Boolean,
         inverted: new PatternPropTypes.Boolean
     };

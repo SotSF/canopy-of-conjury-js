@@ -1,8 +1,7 @@
 
 import * as _ from 'lodash';
-import { NUM_LEDS_PER_STRIP } from '../canopy';
 import { Color, RGB } from '../colors';
-import { pattern } from '../types';
+import { MaybeOscillator, pattern } from '../types';
 import * as util from '../util';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
@@ -32,7 +31,7 @@ interface SerializedBubble {
 interface BubblesProps {
     color1: Color,
     color2: Color,
-    opacity: number
+    opacity: MaybeOscillator<number>
 }
 
 @pattern()
@@ -42,7 +41,7 @@ export class Bubbles extends BasePattern {
     static propTypes = {
         color1: new PatternPropTypes.Color(),
         color2: new PatternPropTypes.Color(),
-        opacity: new PatternPropTypes.Range(0,1, 0.01)
+        opacity: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation()
     };
 
     static defaultProps () : BubblesProps {

@@ -1,19 +1,25 @@
 
-import { RGB } from '../colors';
-import { pattern } from '../types';
+import { Color, RGB } from '../colors';
+import { MaybeOscillator, pattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 import Memoizer from './memoizer';
+
+
+interface HeartbeatProps {
+    color: Color
+    opacity: MaybeOscillator<number>
+}
 
 @pattern()
 export class Heartbeat extends BasePattern {
     static displayName = 'Heartbeat';
     static propTypes = {
         color: new PatternPropTypes.Color,
-        opacity: new PatternPropTypes.Range(0, 1, 0.01)
+        opacity: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation()
     };
 
-    static defaultProps () {
+    static defaultProps (): HeartbeatProps {
          return {
             color: RGB.random(),
             opacity: 1

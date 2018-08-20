@@ -16,7 +16,7 @@ interface SineRingProps {
     radius: number,
     velocity: number,
     rotate: number,
-    opacity: number
+    opacity: MaybeOscillator<number>
 }
 
 @pattern()
@@ -30,7 +30,7 @@ export class SineRing extends BasePattern {
         radius: new PatternPropTypes.Range(5, 30),
         velocity: new PatternPropTypes.Range(0, 5, 0.5),
         rotate: new PatternPropTypes.Range(-10, 10),
-        opacity: new PatternPropTypes.Range(0, 1, 0.01)
+        opacity: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation()
     };
 
     static defaultProps () : SineRingProps {
