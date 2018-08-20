@@ -31,7 +31,7 @@ export default abstract class BasePattern implements PatternInstance {
 
     serialize () {
         const serializeProp = (value) => {
-            if ('serialize' in value) {
+            if (typeof value === 'object' && 'serialize' in value) {
                 // @ts-ignore
                 return value.serialize();
             } else if (_.isArray(value)) {
