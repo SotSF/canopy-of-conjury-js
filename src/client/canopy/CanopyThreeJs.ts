@@ -213,16 +213,7 @@ class LedStrip implements StripInterface {
 
     /** Updates the color of a single pixel in the string */
     updateColor (i, newColor: Color) {
-        const { color } = this.particleSystem.geometry.attributes;
-        const { r, g, b, a } = newColor.toRgb();
-
-        const pixelColors = this.colors[i];
-        pixelColors.push({
-            r: util.lerp(color.array[i * 3] * 255, r, a),
-            g: util.lerp(color.array[i * 3 + 1] * 255, g, a),
-            b: util.lerp(color.array[i * 3 + 2] * 255, b, a)
-        });
-
+        this.colors[i].push(newColor.toRgb());
         this.renderPixel(i);
     }
 

@@ -133,21 +133,16 @@ export const combine = (colors: RGB[]): RGB => {
         return new RGB(0, 0, 0, 0);
     }
 
-    let r = 0, g = 0, b = 0, a = 0;
-
+    let r = 0, g = 0, b = 0, a = 1;
+    
     colors.forEach((color) => {
-        r += color.r;
-        g += color.g;
-        b += color.b;
-        a += color.a;
+        r = util.lerp(r,color.r,color.a);
+        g = util.lerp(g,color.g,color.a);
+        b = util.lerp(b,color.b,color.a);
     });
 
-    // Most naive implementation-- just average the values
     return new RGB(
-        r / colors.length,
-        g / colors.length,
-        b / colors.length,
-        a / colors.length,
+       r,g,b,a
     );
 };
 
