@@ -1,4 +1,4 @@
-
+import { combine } from '../colors';
 import * as request from 'request';
 import * as btoa from 'btoa';
 
@@ -48,9 +48,10 @@ export default class Transmitter {
         const data = [];
 
         canopy.strips.forEach((strip) => {
-            strip.colors.forEach((color, i) => {
+            strip.leds.forEach((led, i) => { // led : Color[]
                 if (i < 0 || i >= canopy.numLedsPerStrip) return;
-                const { r, g, b } = color;
+                const combined = combine(led);
+                const { r,g,b } = combined;
                 data.push(r, g, b);
             });
         });
