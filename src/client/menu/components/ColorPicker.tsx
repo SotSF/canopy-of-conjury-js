@@ -35,11 +35,7 @@ class ColorPicker extends React.Component<IColorPickerProps, IColorPickerState> 
     constructor (props) {
         super(props);
         this.state = {
-            color: props.color || new RGB(
-                Math.floor(Math.random() * 256),
-                Math.floor(Math.random() * 256),
-                Math.floor(Math.random() * 256)
-            )
+            color: props.color || RGB.random()
         };
     }
 

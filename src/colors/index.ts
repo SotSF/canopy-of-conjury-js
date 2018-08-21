@@ -2,6 +2,7 @@
 import * as _ from 'lodash';
 import { Color } from './types';
 import { hsvToRgb, rgbToHex, rgbToHexString, rgbToHsv } from './util';
+import * as util from '../util';
 
 export * from './types';
 export * from './util';
@@ -14,11 +15,16 @@ export class RGB implements Color {
     a = null;
 
     static random () {
+        /*
         return new RGB(
             Math.floor(Math.random() * 256),
             Math.floor(Math.random() * 256),
             Math.floor(Math.random() * 256)
         );
+        */
+        // constrain to Hue Picker
+        return new HSV(Math.random(), 1, 1).toRgb();
+
     }
 
     static fromObject (obj: RGB): RGB {
@@ -41,7 +47,7 @@ export class RGB implements Color {
         return this;
     }
 
-    toHSV () {
+    toHsv () {
         const { h, s, v } = rgbToHsv(this);
         return new HSV(h, s, v);
     }
@@ -97,6 +103,10 @@ export class HSV implements Color {
     toRgb () {
         const { r, g, b } = hsvToRgb(this);
         return new RGB(r, g, b);
+    }
+
+    toHsv () { 
+        return this;
     }
 
     toString () {
