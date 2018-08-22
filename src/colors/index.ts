@@ -14,15 +14,8 @@ export class RGB implements Color {
     b = null;
     a = null;
 
+    // Randomly selects a hue for the color, but returns RGB
     static random () {
-        /*
-        return new RGB(
-            Math.floor(Math.random() * 256),
-            Math.floor(Math.random() * 256),
-            Math.floor(Math.random() * 256)
-        );
-        */
-        // constrain to Hue Picker
         return new HSV(Math.random(), 1, 1).toRgb();
 
     }
