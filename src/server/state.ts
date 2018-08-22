@@ -57,7 +57,7 @@ const removePattern = (msg: ClientMessage.RemovePattern) => {
 /** Updates the property of an active pattern */
 const updateProps = (msg: ClientMessage.UpdateProps) => {
     const pattern: IPatternActive = _.find(patterns, { id: msg.patternId });
-    pattern.instance.updateProps(msg.props);
+    pattern.instance.updateProps(pattern.instance.deserializeProps(msg.props));
 
     const patternInterface = getPatternClassFromInstance(pattern.instance);
     console.info(`Pattern "${patternInterface.displayName}" (id "${msg.patternId}") props updated`);

@@ -34,9 +34,10 @@ export interface PatternInstance {
     updateProps: (o: object) => void
     render: (canopy: CanopyInterface) => void
     serialize: () => IPatternState
-    deserialize: (state: IPatternState) => void
     serializeExtra?: () => object
-    deserializeExtra?: (object) => void
+    deserialize: (state: IPatternState) => void
+    deserializeExtra?: (o: object) => void
+    deserializeProps: (o: object) => object
 }
 
 export interface IPatternActive {

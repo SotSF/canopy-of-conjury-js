@@ -61,7 +61,7 @@ export default abstract class BasePattern implements PatternInstance {
     serializeExtra () { return {}; }
     deserializeExtra (extra) {}
 
-    deserialize (state) {
+    deserializeProps (props) {
         const parseProp = (propType, value) => {
             if (propType instanceof PatternPropTypes.Color) {
                 if (isColor(value)) {
@@ -79,13 +79,17 @@ export default abstract class BasePattern implements PatternInstance {
         };
 
         // Deserialize the props
-        const props = {};
-        Object.entries(state.props).forEach(([name, value]) => {
+        const deserialized = {};
+        Object.entries(props).forEach(([name, value]) => {
             const propType = (<PatternInterface>this.constructor).propTypes[name];
-            props[name] = parseProp(propType, value);
+            deserialized[name] = parseProp(propType, value);
         });
 
-        this.updateProps(props);
+        return deserialized;
+    }
+
+    deserialize (state) {
+        this.updateProps(this.deserializeProps(state.props));
         this.deserializeExtra(state.extra);
         this.iteration = state.iteration;
     }
