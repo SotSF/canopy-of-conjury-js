@@ -1,25 +1,15 @@
 
-import * as _ from 'lodash';
-import { NUM_LEDS_PER_STRIP } from '../canopy';
-import { Color, RGB, HSV } from '../colors';
-import { MaybeOscillator, pattern } from '../types';
-import * as util from '../util';
+import { RGB } from '../colors';
+import { pattern } from '../types';
 import BasePattern from './BasePattern';
-import { PatternPropTypes } from './utils';
-import Memoizer from "./memoizer/index";
 
 @pattern()
 export class Time extends BasePattern {
     static displayName = 'Time';
-
-    static propTypes = {
-    };
+    static propTypes = {};
 
     static defaultProps () {
         return {};
-    }
-    progress () {
-        super.progress();
     }
 
     render (canopy) {
@@ -33,6 +23,7 @@ export class Time extends BasePattern {
                 }
             }
         }
+
         // render hands
         const time = new Date();
         const hour = time.getHours();
@@ -40,8 +31,7 @@ export class Time extends BasePattern {
         const second = time.getSeconds();
 
         let hourStrip = Math.floor(canopy.strips.length - 1 - (hour * 2 * canopy.strips.length / 24));
-        const minuteFactor = Math.floor(minute / 60 * canopy.strips.length / 12);
-        hourStrip -= minuteFactor;
+        hourStrip -= Math.floor(minute / 60 * canopy.strips.length / 12);;
         let minuteStrip = Math.floor(canopy.strips.length - 1 - (minute * canopy.strips.length / 60));
         let secondStrip = Math.floor(canopy.strips.length - 1 - (second * canopy.strips.length / 60));
         
@@ -64,10 +54,8 @@ export class Time extends BasePattern {
    
 
     serializeExtra () {
-        return {
-        }
+        return {};
     }
 
-    deserializeExtra (obj) {
-    }
+    deserializeExtra (obj) {}
 }
