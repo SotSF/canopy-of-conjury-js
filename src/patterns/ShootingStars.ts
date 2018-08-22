@@ -12,7 +12,8 @@ interface ShootingStarsProps {
     velocity: MaybeOscillator<number>
     vortex: MaybeOscillator<number>
     opacity: MaybeOscillator<number>
-    fromApex: boolean
+    fromApex: boolean,
+    trail: number
 }
 
 @pattern()
@@ -24,6 +25,7 @@ export class ShootingStars extends BasePattern {
         vortex: new PatternPropTypes.Range(-2, 2, 0.1).enableOscillation(),
         opacity: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation(),
         fromApex: new PatternPropTypes.Boolean(),
+        trail: new PatternPropTypes.Range(1,30)
     };
 
     static defaultProps () : ShootingStarsProps {
@@ -33,6 +35,7 @@ export class ShootingStars extends BasePattern {
             vortex: 0,
             opacity: 1,
             fromApex: true,
+            trail: 1
         };
     }
 
@@ -80,11 +83,21 @@ export class ShootingStars extends BasePattern {
     }
 
     render (canopy) {
-        const color = this.values.color.withAlpha(this.values.opacity);
+        
         this.stars.forEach((star) => {
-            const converted = ShootingStars.convertCoordinate(star, canopy);
-            const strip = Math.round(converted.strip) % NUM_STRIPS;
-            canopy.strips[strip].updateColor(converted.led, color);
+            for (let l = 0; l <= this.values.trail; l++) {
+                let coord = {
+                    strip: star.strip,
+                    led: this.values.fromApex ? star.led - l : star.led + l
+                }
+                if (coord.led < 0) coord.led = 0;
+                if (coord.led >= canopy.stripLength) coord.led = canopy.stripLength - 1;
+                const converted = ShootingStars.convertCoordinate(coord, canopy);
+                const strip = Math.round(converted.strip) % NUM_STRIPS;
+                const color = this.values.color.withAlpha(this.values.opacity * ((this.values.trail - l) / this.values.trail));
+                canopy.strips[strip].updateColor(converted.led, color);
+            }
+          
         });
     }
 
