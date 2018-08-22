@@ -184,7 +184,7 @@ export class ColorOscillator extends OscillatorWrapper implements IColorOscillat
 
     value () {
         const hue = util.scale(this.oscillator.sample, -1, 1, 0, 1);
-        return new HSV(hue, 1, 1);
+        return new HSV(hue, 1, 1).toRgb();
     }
 
     serialize () {
