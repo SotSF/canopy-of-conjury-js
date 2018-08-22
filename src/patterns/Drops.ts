@@ -54,7 +54,7 @@ export class Drops extends BasePattern {
                 y,
                 rings: [],
                 added: this.iteration,
-                opacity: 100
+                opacity: 1
             });
             this.currHue += 10;
             this.currHue %= 360;
@@ -64,15 +64,15 @@ export class Drops extends BasePattern {
             const t = this.iteration - drop.added;
             if (t % this.ringDist === 0) {
                 drop.rings.push({
-                    opacity: 100,
+                    opacity: 1,
                     radius: 0
                 });
             }
             drop.rings.forEach(ring => {
                 ring.radius++;
-                if (ring.opacity > 0) { ring.opacity--; }
+                if (ring.opacity > 0) { ring.opacity -= 0.01; }
             })
-            drop.opacity--;
+            drop.opacity -= 0.01;
             if (drop.opacity <= 0) { this.drops = _.without(this.drops, drop); }
         });
     }
@@ -89,7 +89,7 @@ export class Drops extends BasePattern {
                     if (_.inRange(x2, 0, this.dimension) && _.inRange(y2, 0, this.dimension)) {
                         const co = memoizedMap.mapCoords(x2,y2);
                         if (_.inRange(co.led, 0, NUM_LEDS_PER_STRIP)) {
-                            const color = this.values.color.withAlpha(ring.opacity / 100 * drop.opacity / 100);
+                            const color = this.values.color.withAlpha(ring.opacity * drop.opacity);
                             canopy.strips[co.strip].updateColor(co.led, color);
                         }
                     }
