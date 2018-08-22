@@ -21,8 +21,8 @@ interface SwirlyProps {
 export class Swirly extends BasePattern {
     static displayName = 'Swirly';
     static propTypes = {
-        color1: new PatternPropTypes.Color(),
-        color2: new PatternPropTypes.Color(),
+        color1: new PatternPropTypes.Color().enableOscillation(),
+        color2: new PatternPropTypes.Color().enableOscillation(),
         quantity: new PatternPropTypes.Range(1, 100),
         opacity: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation(),
         fromApex: new PatternPropTypes.Boolean(),
