@@ -4,10 +4,12 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import Button from '@material-ui/core/Button';
+import ButtonBase from '@material-ui/core/ButtonBase';
 import Card from '@material-ui/core/Card';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -24,6 +26,9 @@ import PatternProps from './PatternProps';
 
 
 const patternOptionStyles = {
+    button: {
+        width: '100%'
+    },
     canopy: {
         marginLeft: '0.2rem',
     },
@@ -125,11 +130,10 @@ class PatternOption extends React.Component {
         const { anchorEl } = this.state;
 
         return (
-            <ListItem key={name} button>
-                <ListItemText
-                  primary={pattern.displayName}
-                  onClick={this.handleClick}
-                />
+            <Grid item sm={6} key={name} >
+                <ButtonBase onClick={this.handleClick} className={ classes.button }>
+                <p>{pattern.displayName}</p>
+                </ButtonBase>
                 <Popover
                   open={!!anchorEl}
                   anchorEl={anchorEl}
@@ -149,7 +153,7 @@ class PatternOption extends React.Component {
                 >
                     {this.renderPattern()}
                 </Popover>
-            </ListItem>
+            </Grid>
         )
     }
 }
@@ -162,8 +166,9 @@ const styles = theme => ({
         width: '100%',
     },
     panelDetails: {
-        padding: 0,
-    },
+        padding: 0
+    }
+
 });
 
 @withStyles(styles)
@@ -182,9 +187,7 @@ export default class Patterns extends React.Component {
                 <ExpansionPanelDetails classes={{
                     root: classes.panelDetails
                 }}>
-                    <List dense disablePadding classes={{
-                        root: classes.list
-                    }}>
+                    <Grid container spacing={0}>
                         {allPatterns.map(Pattern =>
                             <PatternOption
                               key={Pattern.displayName}
@@ -192,7 +195,7 @@ export default class Patterns extends React.Component {
                               addPattern={this.props.addPattern}
                             />
                         )}
-                    </List>
+                    </Grid>
                 </ExpansionPanelDetails>
             </ExpansionPanel>
         );
