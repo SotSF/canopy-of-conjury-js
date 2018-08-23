@@ -10,6 +10,7 @@ import { GradientFlow } from './GradientFlow';
 import { GradientPulse } from './GradientPulse';
 import { Heartbeat } from './Heartbeat';
 import { Kaleidoscope } from './Kaleidoscope';
+import { Mandala } from './Mandala';
 import { Map } from './Map';
 import { Radar } from './Radar';
 import { RainbowSpiral } from './RainbowSpiral';
@@ -33,6 +34,7 @@ export const allPatterns = [
     GradientPulse,
     Heartbeat,
     Kaleidoscope,
+    Mandala,
     Map,
     Radar,
     RainbowSpiral,
@@ -56,6 +58,7 @@ export {
     GradientPulse,
     Heartbeat,
     Kaleidoscope,
+    Mandala,
     Map,
     Radar,
     RainbowSpiral,
