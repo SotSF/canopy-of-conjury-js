@@ -1,6 +1,6 @@
 
 import * as _ from 'lodash';
-import { Color, RGB } from '../colors';
+import { Color, RGB, HSV } from '../colors';
 import { MaybeOscillator, pattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
@@ -19,6 +19,13 @@ enum Direction {
     counterClockwise
 }
 
+enum ColorScheme {
+    rainbow,
+    random,
+    warm,
+    cool
+}
+
 interface Shape {
     type: ShapeType,
     size: number,
@@ -34,25 +41,38 @@ export class Mandala extends BasePattern {
     static displayName = 'Mandala';
 
     static propTypes = {
-        opacity: new PatternPropTypes.Range(0, 1, 0.01)
+        opacity: new PatternPropTypes.Range(0, 1, 0.01),
+        colorScheme: new PatternPropTypes.Enum(ColorScheme)
     }
 
     static defaultProps () {
         return {
-            opacity: 1
+            opacity: 1,
+            colorScheme: ColorScheme.random
         }
     }
-
+    currHue = 0;
     shapes : Shape[] = [];
     progress() {
         super.progress();
         if (this.iteration % 10 === 0) {
             const type : ShapeType = Math.floor(Math.random() * Object.keys(ShapeType).length / 2);
+            const color = (() => {
+                switch (this.values.colorScheme) {
+                    case ColorScheme.rainbow: {
+                        this.currHue = (this.currHue + 0.01) % 1;
+                        return new HSV(this.currHue, 1, 1).toRgb();
+                    }
+                    case ColorScheme.random: return RGB.random();
+                    case ColorScheme.warm: return new RGB(Math.random() * 255, Math.random() * 255, 0);
+                    case ColorScheme.cool: return new RGB(0, Math.random() * 255, Math.random() * 255);
+                }
+            })();
             const sizeMod = type < 2 ? 10 : 5
             this.shapes.push({
                 type,
                 size: Math.floor(Math.random() * sizeMod) + 1,
-                color: RGB.random(),
+                color,
                 radius: Math.floor(Math.random() * (NUM_LEDS_PER_STRIP - 10)),
                 stripProgress: 1,
                 startStrip: Math.floor(Math.random() * NUM_STRIPS),
