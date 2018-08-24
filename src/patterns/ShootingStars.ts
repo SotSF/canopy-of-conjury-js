@@ -65,8 +65,8 @@ export class ShootingStars extends BasePattern {
         const velocity = this.values.velocity;
         this.stars.forEach((star) => {
             const directionalMultiplier = this.values.fromApex ? 1 : -1;
-            star.led += velocity * directionalMultiplier;
-            star.strip = (star.strip + this.values.vortex) % NUM_STRIPS;
+            star.led += Math.floor(velocity * directionalMultiplier);
+            star.strip = Math.floor(star.strip + this.values.vortex) % NUM_STRIPS;
 
             // Wrap the star if necessary
             if (star.strip < 0) {
