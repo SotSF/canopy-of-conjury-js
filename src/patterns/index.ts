@@ -24,6 +24,7 @@ import { SwirlyZig } from './SwirlyZig';
 import { TestLEDs } from './Test';
 import { Time } from './Time';
 import { Triangles } from './Triangles';
+import { Venn } from './Venn';
 
 export const allPatterns = [
     Bubbles,
@@ -49,6 +50,7 @@ export const allPatterns = [
     SwirlyZig,
     Time,
     Triangles,
+    Venn
 ];
 
 export {
@@ -75,6 +77,7 @@ export {
     SwirlyZig,
     Time,
     Triangles,
+    Venn,
 
     // Test patterns
     TestLEDs,
