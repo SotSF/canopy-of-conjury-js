@@ -1,6 +1,7 @@
 
 import { PatternInstance, PatternInterface } from '../types';
 import { Bubbles } from './Bubbles';
+import { CircleBurst } from './CircleBurst';
 import { ColorWave } from './ColorWave';
 import { ConcentricCircles } from './ConcentricCircles';
 import { Drops } from './Drops';
@@ -17,6 +18,7 @@ import { RainbowSpiral } from './RainbowSpiral';
 import { ShootingStars } from './ShootingStars';
 import { SineRing } from './SineRing';
 import { Snake } from './Snake';
+import { Swarm } from './Swarm';
 import { Swirly } from './Swirly';
 import { SwirlyZig } from './SwirlyZig';
 import { TestLEDs } from './Test';
@@ -25,6 +27,7 @@ import { Triangles } from './Triangles';
 
 export const allPatterns = [
     Bubbles,
+    CircleBurst,
     ColorWave,
     ConcentricCircles,
     Drops,
@@ -41,6 +44,7 @@ export const allPatterns = [
     ShootingStars,
     SineRing,
     Snake,
+    Swarm,
     Swirly,
     SwirlyZig,
     Time,
@@ -49,6 +53,7 @@ export const allPatterns = [
 
 export {
     Bubbles,
+    CircleBurst,
     ColorWave,
     ConcentricCircles,
     Drops,
@@ -65,6 +70,7 @@ export {
     ShootingStars,
     SineRing,
     Snake,
+    Swarm,
     Swirly,
     SwirlyZig,
     Time,
