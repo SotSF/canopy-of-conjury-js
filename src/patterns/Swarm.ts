@@ -27,14 +27,12 @@ export class Swarm extends BasePattern {
     static displayName = 'Swarm';
 
     static propTypes = {
-        color: new PatternPropTypes.Color(),
-        swarmSize: new PatternPropTypes.Range(10,200,5)
+        color: new PatternPropTypes.Color()
     }
 
     static defaultProps () {
         return {
-            color: RGB.random(),
-            swarmSize: 20
+            color: RGB.random()
         }
     }
    
@@ -46,12 +44,13 @@ export class Swarm extends BasePattern {
         center: { x: 0, y: 0}, // for centering new bugs
         bugs: []
     };
+    swarmSize = 200;
     swarmTime = 50;
     swarmClock = 0;
     target : ICoord = { x: 0, y: 0};
     constructor(props) {
         super(props);
-        for (let i = 0; i < this.props.swarmSize; i++) {
+        for (let i = 0; i < this.swarmSize; i++) {
             const center = {
                 x: this.swarm.center.x + Math.floor((Math.random() * (this.maxSwarmRadius + this.maxSwarmRadius + 1)) - this.maxSwarmRadius),
                 y: this.swarm.center.y + Math.floor((Math.random() * (this.maxSwarmRadius + this.maxSwarmRadius + 1)) - this.maxSwarmRadius),
@@ -124,24 +123,6 @@ export class Swarm extends BasePattern {
         if (this.swarm.center.y != target.y) {
             if (this.swarm.center.y < target.y) this.swarm.center.y += 1;
             else this.swarm.center.y += -1;
-        }
-
-        if (this.swarm.bugs.length > this.values.swarmSize) { this.swarm.bugs = this.swarm.bugs.slice(0, this.values.swarmSize); }
-        else if (this.swarm.bugs.length < this.values.swarmSize) {
-            const toAdd = this.values.swarmSize - this.swarm.bugs.length;
-            for (let i = 0; i < toAdd; i++) {
-                const center = {
-                    x: this.swarm.center.x + Math.floor((Math.random() * (this.maxSwarmRadius + this.maxSwarmRadius + 1)) - this.maxSwarmRadius),
-                    y: this.swarm.center.y + Math.floor((Math.random() * (this.maxSwarmRadius + this.maxSwarmRadius + 1)) - this.maxSwarmRadius),
-                }
-                this.swarm.bugs.push({
-                   center,
-                   radius: 1,
-                   theta: 0,
-                   velocity: Math.floor(Math.random() * 5 + 1),
-                   jitter: [1,1]
-                });
-            }
         }
     }
 

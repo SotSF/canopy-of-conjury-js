@@ -45,23 +45,25 @@ export class Venn extends BasePattern {
         const TWO_PI = Math.PI * 2;
         const half = this.dimension / 2;
         this.circles.forEach(circle => {
-            for (let i = 0; i < this.values.quantity; i++) {
-                const x = Math.floor(centerRadius * Math.cos(TWO_PI / this.values.quantity * i) + half);
-                const y = Math.floor(centerRadius * Math.sin(TWO_PI / this.values.quantity * i) + half);
-
-                let t = 0;
-                while (t < 100) {
-                    const x2 = x + Math.floor(circle * Math.cos(t));
-                    const y2 = y + Math.floor(circle * Math.sin(t));
-                    if (_.inRange(x2,0,this.dimension) && _.inRange(y2,0,this.dimension)) {
-                        const co = memoMap.mapCoords(x2,y2);
-                        if (_.inRange(co.led,0,canopy.stripLength)) {
-                            canopy.strips[co.strip].updateColor(co.led, this.values.color.withAlpha((100 - circle) / 100));
+            const x = Math.floor(centerRadius * Math.cos(TWO_PI / this.values.quantity) + half);
+            const y = Math.floor(centerRadius * Math.sin(TWO_PI / this.values.quantity) + half);
+            let t = 0;
+            while (t < 100) {
+                const x2 = x + Math.floor(circle * Math.cos(t));
+                const y2 = y + Math.floor(circle * Math.sin(t));
+                if (_.inRange(x2,0,this.dimension) && _.inRange(y2,0,this.dimension)) {
+                    const co = memoMap.mapCoords(x2,y2);
+                    if (_.inRange(co.led,0,canopy.stripLength)) {
+                        for (let i = 0; i < this.values.quantity; i++) {
+                            const strip = co.strip + Math.floor(i * canopy.strips.length / this.values.quantity);
+                            canopy.strips[strip % canopy.strips.length].updateColor(co.led, this.values.color.withAlpha((100 - circle) / 100));
                         }
+                        
                     }
-                    t++;
                 }
+                t++;
             }
+            
         });
     }
 
