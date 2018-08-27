@@ -6,9 +6,16 @@ import { PatternPropTypes } from './utils';
 import Memoizer from './memoizer';
 
 
+enum BeatPattern {
+    deepBreath,
+    shallowBreath,
+    beating
+}
+
 interface HeartbeatProps {
     color: Color
-    opacity: MaybeOscillator<number>
+    opacity: MaybeOscillator<number>,
+    beatPattern: BeatPattern
 }
 
 @pattern()
@@ -16,13 +23,15 @@ export class Heartbeat extends BasePattern {
     static displayName = 'Heartbeat';
     static propTypes = {
         color: new PatternPropTypes.Color,
-        opacity: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation()
+        opacity: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation(),
+        beatPattern: new PatternPropTypes.Enum(BeatPattern)
     };
 
     static defaultProps (): HeartbeatProps {
          return {
             color: RGB.random(),
-            opacity: 1
+            opacity: 1,
+            beatPattern: BeatPattern.deepBreath
         }; 
     }
 
@@ -34,15 +43,13 @@ export class Heartbeat extends BasePattern {
 
     pulse = 0;
     grow = true;
-
+    
+    pause = false;
+    beatCount = 0;
     progress () {
         super.progress();
 
-        if (this.grow) {
-            this.pulse += this.velocity;
-        } else {
-            this.pulse += -this.velocity * 1.5;
-        }
+        this.applyBeatPattern();
 
         if (this.pulse > this.maxPulse) {
             this.pulse = this.maxPulse;
@@ -72,6 +79,37 @@ export class Heartbeat extends BasePattern {
             }
 
             t++;
+        }
+    }
+
+    applyBeatPattern() {
+        switch (this.values.beatPattern) {
+            case BeatPattern.deepBreath: {
+                if (this.grow) { this.pulse += this.velocity * 0.75; } 
+                else { this.pulse += -this.velocity * 1.5; }                
+                break;
+            }
+            case BeatPattern.shallowBreath: {
+                if (this.grow) { this.pulse += this.velocity * 10; }
+                else { this.pulse += -this.velocity * 8; }   
+                break;
+            }
+            case BeatPattern.beating: {
+                if (!this.pause && this.beatCount === 2 ||
+                    this.pause && this.beatCount === 6) {
+                    this.pause = !this.pause;
+                    this.beatCount = 0;
+                };
+                if (!this.pause) {
+                    if (this.grow) { this.pulse += this.velocity * 10; }
+                    else {
+                        this.pulse = this.minPulse - 1;
+                        this.beatCount++;
+                    }   
+                }
+                else { this.beatCount++; }
+                break;
+            }
         }
     }
 

@@ -16,7 +16,7 @@ export default class Transmitter {
     }
 
     private _post (uri, data) {
-        return request.post([this.host, 'api', uri].join('/'), data);
+        return request.post([this.host, 'api', uri].join('/'), {body: data});
     }
 
     /** Canopy API method wrappers */
@@ -55,7 +55,6 @@ export default class Transmitter {
                 data.push(r, g, b);
             });
         });
-
         const u8 = new Uint8Array(data);
         const b64encoded = btoa(String.fromCharCode.apply(null, u8));
         this._post('render', b64encoded);

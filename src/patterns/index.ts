@@ -1,6 +1,7 @@
 
 import { PatternInstance, PatternInterface } from '../types';
 import { Bubbles } from './Bubbles';
+import { CircleBurst } from './CircleBurst';
 import { ColorWave } from './ColorWave';
 import { ConcentricCircles } from './ConcentricCircles';
 import { Drops } from './Drops';
@@ -10,20 +11,24 @@ import { GradientFlow } from './GradientFlow';
 import { GradientPulse } from './GradientPulse';
 import { Heartbeat } from './Heartbeat';
 import { Kaleidoscope } from './Kaleidoscope';
+import { Mandala } from './Mandala';
 import { Map } from './Map';
 import { Radar } from './Radar';
 import { RainbowSpiral } from './RainbowSpiral';
 import { ShootingStars } from './ShootingStars';
 import { SineRing } from './SineRing';
 import { Snake } from './Snake';
+import { Swarm } from './Swarm';
 import { Swirly } from './Swirly';
 import { SwirlyZig } from './SwirlyZig';
 import { TestLEDs } from './Test';
 import { Time } from './Time';
 import { Triangles } from './Triangles';
+import { Venn } from './Venn';
 
 export const allPatterns = [
     Bubbles,
+    CircleBurst,
     ColorWave,
     ConcentricCircles,
     Drops,
@@ -33,20 +38,24 @@ export const allPatterns = [
     GradientPulse,
     Heartbeat,
     Kaleidoscope,
+    Mandala,
     Map,
     Radar,
     RainbowSpiral,
     ShootingStars,
     SineRing,
     Snake,
+    Swarm,
     Swirly,
     SwirlyZig,
     Time,
     Triangles,
+    Venn
 ];
 
 export {
     Bubbles,
+    CircleBurst,
     ColorWave,
     ConcentricCircles,
     Drops,
@@ -56,16 +65,19 @@ export {
     GradientPulse,
     Heartbeat,
     Kaleidoscope,
+    Mandala,
     Map,
     Radar,
     RainbowSpiral,
     ShootingStars,
     SineRing,
     Snake,
+    Swarm,
     Swirly,
     SwirlyZig,
     Time,
     Triangles,
+    Venn,
 
     // Test patterns
     TestLEDs,
