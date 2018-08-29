@@ -127,14 +127,14 @@ class Menu extends React.Component {
                                     <ListItemText primary="Clear" onClick={this.clear} />
                                 </ListItem>
 
-                                {Menu.presets.map(({ pattern, name }) =>
+                                {/* {Menu.presets.map(({ pattern, name }) =>
                                     <ListItem button key={name}>
                                         <ListItemText
                                           primary={name}
                                           onClick={() => this.addPattern(pattern, name)}
                                         />
                                     </ListItem>
-                                )}
+                                )} */}
                             </List>
                         </ExpansionPanelDetails>
                     </ExpansionPanel>
