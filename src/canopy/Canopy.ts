@@ -16,7 +16,7 @@ class Strip implements StripInterface {
     }
 
     updateColor (index, color) {
-        this.leds[index].push(color.toRgb());
+        this.leds[index].push(color.toRgb().withAlpha(0.02));
     }
 
     updateColors(color) {
