@@ -27,6 +27,22 @@ const addOscToGui = (gui, parameters, oscName) => {
   oscFolder.add(parameters, `${oscName}Sync`, -10, 10);
 };
 
+const osc = (parameters, oscName) => {
+  const {
+    [`${oscName}FreqExp`]: oscFreqExp,
+    [`${oscName}Mix`]: oscMix,
+    [`${oscName}Sync`]: oscSync,
+  } = parameters;
+
+  const oscFreq = Math.pow(10, oscFreqExp);
+
+  return (t, ledIndex) => {
+    return oscMix * (
+      sine(oscFreq, Math.PI * t * oscSync, ledIndex / SCAN_SPEED) + 1
+    ) * 255/2;
+  }
+};
+
 @pattern()
 export class Synth extends BasePattern {
   parameters = {
@@ -61,23 +77,9 @@ export class Synth extends BasePattern {
   render(canopy) {
     const t = Date.now() / 1000;
 
-    const {
-      osc1FreqExp,
-      osc1Mix,
-      osc1Sync,
-      osc2FreqExp,
-      osc2Mix,
-      osc2Sync,
-      osc3FreqExp,
-      osc3Mix,
-      osc3Sync,
-    } = this.parameters;
-
-    // const osc1Func = createOscFunc(this.parameters, 'osc1');
-    const osc1Freq = Math.pow(10, osc1FreqExp);
-    const osc2Freq = Math.pow(10, osc2FreqExp);
-    const osc3Freq = Math.pow(10, osc3FreqExp);
-
+    const osc1 = osc(this.parameters, 'osc1');
+    const osc2 = osc(this.parameters, 'osc2');
+    const osc3 = osc(this.parameters, 'osc3');
 
     for(let i = 0; i < NUM_STRIPS; i++) {
       for(let j = 0; j < NUM_LEDS_PER_STRIP; j++) {
@@ -86,9 +88,9 @@ export class Synth extends BasePattern {
         // const timeOffset = numLedsOffset / SCAN_SPEED * 1000;
         // console.log(timeOffset);
 
-        const r = osc1Mix * (sine(osc1Freq, Math.PI * t * osc1Sync, ledIndex / SCAN_SPEED) + 1) * 255/2;
-        const g = osc2Mix * (sine(osc2Freq, Math.PI * t * osc2Sync, ledIndex / SCAN_SPEED) + 1) * 255/2;
-        const b = osc3Mix * (sine(osc3Freq, Math.PI * t * osc3Sync, ledIndex / SCAN_SPEED) + 1) * 255/2;
+        const r = osc1(t, ledIndex);
+        const g = osc2(t, ledIndex);
+        const b = osc3(t, ledIndex);
 
         canopy.strips[i].updateColor(j, new RGB(r, g, b));
       }
