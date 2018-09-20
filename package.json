@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "webpack": "webpack --watch"
+    "webpack": "webpack --watch",
+    "start": "npm run webpack",
+    "install-all": "npm i && pushd src/client && npm i && popd && pushd src/server && npm i"
   },
   "author": "",
   "license": "ISC",
