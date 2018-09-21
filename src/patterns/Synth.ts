@@ -20,6 +20,7 @@ const buildOscParameters = (oscName) => ({
   [`${oscName}Sync`]: 0,
   [`${oscName}Wave`]: 'sine',
   [`${oscName}Mix`]: 1,
+  [`${oscName}PulseWidth`]: 0.5,
 });
 
 const addOscToGui = (gui, parameters, oscName) => {
@@ -28,6 +29,7 @@ const addOscToGui = (gui, parameters, oscName) => {
   oscFolder.add(parameters, `${oscName}Sync`, -10, 10);
   oscFolder.add(parameters, `${oscName}Wave`, Object.keys(waves));
   oscFolder.add(parameters, `${oscName}Mix`, 0, 1);
+  oscFolder.add(parameters, `${oscName}PulseWidth`, 0, 0.5);
 };
 
 // oscillates between 0 and 1
@@ -37,10 +39,11 @@ const osc = (parameters, oscName) => {
     [`${oscName}Mix`]: oscMix,
     [`${oscName}Sync`]: oscSync,
     [`${oscName}Wave`]: oscWave,
+    [`${oscName}PulseWidth`]: oscPulseWidth,
   } = parameters;
 
   const oscFreq = Math.pow(10, oscFreqExp);
-  const wave = waves[oscWave];
+  const wave = waves[oscWave](oscPulseWidth);
 
   return (t, ledIndex) => {
     return oscMix * (
