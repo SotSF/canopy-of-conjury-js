@@ -24,6 +24,7 @@ import { SwirlyZig } from './SwirlyZig';
 import { TestLEDs } from './Test';
 import { Time } from './Time';
 import { Triangles } from './Triangles';
+import {Synth} from './Synth';
 import { Venn } from './Venn';
 
 export const allPatterns = [
@@ -48,6 +49,7 @@ export const allPatterns = [
     Swarm,
     Swirly,
     SwirlyZig,
+    Synth,
     Time,
     Triangles,
     Venn
