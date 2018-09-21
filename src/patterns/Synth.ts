@@ -5,41 +5,47 @@ import * as _ from "lodash";
 import {NUM_LEDS_PER_STRIP, NUM_STRIPS} from "../canopy";
 import * as util from "../util";
 import * as dat from 'dat.gui';
+import * as waves from './Synth/waves';
 
 // const sine = (freq, pha, t) => Math.sin(2 * Math.PI * freq * t + pha);
-const sine = (freq, pha, t) => {
-  return Math.abs(t * 2 * freq + pha) % 2 - 1
-};
-let TOTAL_NUM_LEDS = NUM_STRIPS * NUM_LEDS_PER_STRIP;
+// const sine = (freq, pha, t) => {
+//   return Math.abs(t * 2 * freq + pha) % 2 - 1
+// };
+const TOTAL_NUM_LEDS = NUM_STRIPS * NUM_LEDS_PER_STRIP;
 const SCAN_SPEED = TOTAL_NUM_LEDS;
 // leds / sec
 
 const buildOscParameters = (oscName) => ({
   [`${oscName}FreqExp`]: 0,
-  [`${oscName}Mix`]: 1,
   [`${oscName}Sync`]: 0,
+  [`${oscName}Wave`]: 'sine',
+  [`${oscName}Mix`]: 1,
 });
 
 const addOscToGui = (gui, parameters, oscName) => {
   const oscFolder = gui.addFolder(oscName);
   oscFolder.add(parameters, `${oscName}FreqExp`, -1, 5);
-  oscFolder.add(parameters, `${oscName}Mix`, 0, 1);
   oscFolder.add(parameters, `${oscName}Sync`, -10, 10);
+  oscFolder.add(parameters, `${oscName}Wave`, Object.keys(waves));
+  oscFolder.add(parameters, `${oscName}Mix`, 0, 1);
 };
 
+// oscillates between 0 and 1
 const osc = (parameters, oscName) => {
   const {
     [`${oscName}FreqExp`]: oscFreqExp,
     [`${oscName}Mix`]: oscMix,
     [`${oscName}Sync`]: oscSync,
+    [`${oscName}Wave`]: oscWave,
   } = parameters;
 
   const oscFreq = Math.pow(10, oscFreqExp);
+  const wave = waves[oscWave];
 
   return (t, ledIndex) => {
     return oscMix * (
-      sine(oscFreq, Math.PI * t * oscSync, ledIndex / SCAN_SPEED) + 1
-    ) * 255/2;
+      wave(oscFreq, t * oscSync, ledIndex / SCAN_SPEED) + 1
+    ) / 2;
   }
 };
 
@@ -88,9 +94,11 @@ export class Synth extends BasePattern {
         // const timeOffset = numLedsOffset / SCAN_SPEED * 1000;
         // console.log(timeOffset);
 
-        const r = osc1(t, ledIndex);
-        const g = osc2(t, ledIndex);
-        const b = osc3(t, ledIndex);
+        const r = osc1(t, ledIndex) * 255;
+        // const g = r;
+        // const b = r;
+        const g = osc2(t, ledIndex) * 255;
+        const b = osc3(t, ledIndex) * 255;
 
         canopy.strips[i].updateColor(j, new RGB(r, g, b));
       }
