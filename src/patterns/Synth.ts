@@ -16,19 +16,23 @@ const SCAN_SPEED = TOTAL_NUM_LEDS;
 
 const buildOscParameters = (oscName) => ({
   [`${oscName}FreqExp`]: 0,
+  [`${oscName}FreqFine`]: 0,
   [`${oscName}Sync`]: 0,
   [`${oscName}Wave`]: 'sine',
   [`${oscName}PulseWidth`]: 0.5,
   [`${oscName}Mix`]: 1,
+  [`${oscName}Mod`]: 0,
 });
 
 const addOscToGui = (gui, parameters, oscName) => {
   const oscFolder = gui.addFolder(oscName);
 
   oscFolder.add(parameters, `${oscName}FreqExp`, -1, 5);
+  oscFolder.add(parameters, `${oscName}FreqFine`, 0, 100);
   oscFolder.add(parameters, `${oscName}Sync`, -10, 10);
   oscFolder.add(parameters, `${oscName}Wave`, Object.keys(waves));
   oscFolder.add(parameters, `${oscName}PulseWidth`, 0, 0.5);
+  oscFolder.add(parameters, `${oscName}Mod`, 0, 1);
   oscFolder.addColor(parameters, `${oscName}Color`);
   oscFolder.add(parameters, `${oscName}Mix`, 0, 1);
 };
@@ -37,18 +41,18 @@ const addOscToGui = (gui, parameters, oscName) => {
 const osc = (parameters, oscName) => {
   const {
     [`${oscName}FreqExp`]: oscFreqExp,
-    [`${oscName}Mix`]: oscMix,
     [`${oscName}Sync`]: oscSync,
     [`${oscName}Wave`]: oscWave,
     [`${oscName}PulseWidth`]: oscPulseWidth,
+    [`${oscName}FreqFine`]: oscFreqFine
   } = parameters;
 
-  const oscFreq = Math.pow(10, oscFreqExp);
+  const oscFreq = Math.pow(10, oscFreqExp + oscFreqFine/1000);
   const wave = waves[oscWave](oscPulseWidth);
 
-  return (t, ledIndex) => {
-    return oscMix * (
-      wave(oscFreq, t * oscSync, ledIndex / SCAN_SPEED) + 1
+  return (t, ledIndex, phase=0) => {
+    return (
+      wave(oscFreq, t * oscSync + phase, ledIndex / SCAN_SPEED) + 1
     ) / 2;
   }
 };
@@ -103,6 +107,14 @@ export class Synth extends BasePattern {
   render(canopy) {
     const t = Date.now() / 1000;
 
+    const {
+      osc1Mix,
+      osc2Mix,
+      osc3Mix,
+      osc2Mod,
+      osc3Mod,
+    } = this.parameters;
+
     const osc1 = osc(this.parameters, 'osc1');
     const osc2 = osc(this.parameters, 'osc2');
     const osc3 = osc(this.parameters, 'osc3');
@@ -114,9 +126,12 @@ export class Synth extends BasePattern {
         // const timeOffset = numLedsOffset / SCAN_SPEED * 1000;
         // console.log(timeOffset);
 
-        const osc1Color = applyColor(this.parameters.osc1Color, osc1(t, ledIndex));
-        const osc2Color = applyColor(this.parameters.osc2Color, osc2(t, ledIndex));
-        const osc3Color = applyColor(this.parameters.osc3Color, osc3(t, ledIndex));
+        const osc1Value = osc1(t, ledIndex);
+        const osc2Value = osc2(t, ledIndex, osc1Value * osc2Mod);
+        const osc3Value = osc3(t, ledIndex, osc2Value * osc3Mod);
+        const osc1Color = applyColor(this.parameters.osc1Color, osc1Value * osc1Mix);
+        const osc2Color = applyColor(this.parameters.osc2Color, osc2Value * osc2Mix);
+        const osc3Color = applyColor(this.parameters.osc3Color, osc3Value * osc3Mix);
 
         const r = Math.max(osc1Color[0], osc2Color[0], osc3Color[0]);
         const g = Math.max(osc1Color[1], osc2Color[1], osc3Color[1]);
