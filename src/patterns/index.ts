@@ -13,6 +13,7 @@ import { Heartbeat } from './Heartbeat';
 import { Kaleidoscope } from './Kaleidoscope';
 import { Mandala } from './Mandala';
 import { Map } from './Map';
+import { Oscillator } from './Oscillator';
 import { Radar } from './Radar';
 import { RainbowSpiral } from './RainbowSpiral';
 import { ShootingStars } from './ShootingStars';
@@ -28,6 +29,7 @@ import {Synth} from './Synth';
 import { Venn } from './Venn';
 
 export const allPatterns = [
+    
     Bubbles,
     CircleBurst,
     ColorWave,
@@ -41,6 +43,7 @@ export const allPatterns = [
     Kaleidoscope,
     Mandala,
     Map,
+    Oscillator,
     Radar,
     RainbowSpiral,
     ShootingStars,
@@ -56,6 +59,7 @@ export const allPatterns = [
 ];
 
 export {
+    
     Bubbles,
     CircleBurst,
     ColorWave,
@@ -69,6 +73,7 @@ export {
     Kaleidoscope,
     Mandala,
     Map,
+    Oscillator,
     Radar,
     RainbowSpiral,
     ShootingStars,
@@ -82,7 +87,7 @@ export {
     Venn,
 
     // Test patterns
-    TestLEDs,
+    TestLEDs
 }
 
 /** Takes the display name of a pattern and returns the pattern class */
