@@ -24,20 +24,25 @@ canopy.initialize(scene);
 animate();
 
 function animate() {
-    setTimeout( function() {
-        requestAnimationFrame( animate );
-        controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
-        canopy.clear();
+    requestAnimationFrame( animate );
+    controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
+    canopy.clear();
 
-        // Reverse the patterns so that the bottom one is rendered first
-        patterns.slice().reverse().forEach((pattern) => {
-            pattern.instance.progress();
+    // Reverse the patterns so that the bottom one is rendered first
+    let phase = 0;
+    patterns.slice().reverse().forEach((pattern, i) => {
+        pattern.instance.progress();        
+        
+        if (pattern.instance.constructor == "Oscillator") {
+            pattern.instance.render(canopy, phase);
+            phase = i == 0 ? 0 : pattern.instance.OscValue();
+        }
+        else {
             pattern.instance.render(canopy);
-        });
+        }
+    });
 
-        renderer.render(scene, camera);
-    }, 1000 / 30 );
-  
+    renderer.render(scene, camera); 
 }
 
 window.onkeydown = e => {

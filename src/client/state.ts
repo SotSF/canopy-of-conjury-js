@@ -3,7 +3,6 @@ import * as PubSub from 'pubsub-js';
 import { IPatternActive } from '../types';
 import events from './events';
 
-
 // The global array of actively rendering patterns
 export const patterns: IPatternActive[] = [];
 

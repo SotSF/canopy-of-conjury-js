@@ -137,8 +137,26 @@ export const isColor = (maybeColor: any): maybeColor is Color => {
     return hasColorProps(rgbProps) || hasColorProps(hsvProps);
 };
 
-/** Takes an array of colors and reduces them to a single color. Returns black if array is empty */
 export const combine = (colors: RGB[]): RGB => {
+    if (colors.length === 0) {
+        return new RGB(0, 0, 0, 0);
+    }
+
+    let r = 0, g = 0, b = 0, a = 1;
+
+    colors.forEach((color) => {
+        r = Math.max(r, color.r);
+        g = Math.max(g, color.g);
+        b = Math.max(b, color.b);
+    });
+
+    return new RGB(
+        r,g,b,1
+     );
+}
+
+/** Takes an array of colors and reduces them to a single color. Returns black if array is empty */
+export const lerp = (colors: RGB[]): RGB => {
     if (colors.length === 0) {
         return new RGB(0, 0, 0, 0);
     }
