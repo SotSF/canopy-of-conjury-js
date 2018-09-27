@@ -108,10 +108,15 @@ export class Synth extends BasePattern {
     const t = Date.now() / 1000;
 
     const {
+      // @ts-ignore
       osc1Mix,
+      // @ts-ignore
       osc2Mix,
+      // @ts-ignore
       osc3Mix,
+      // @ts-ignore
       osc2Mod,
+      // @ts-ignore
       osc3Mod,
     } = this.parameters;
 
