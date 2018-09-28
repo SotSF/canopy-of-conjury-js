@@ -22,7 +22,7 @@ let previousFrequencyAvg : number = 0;
 
 export function BeatDetect(frequencyArray : Uint8Array) : boolean {
     const avg = GetAverageAmplitude(frequencyArray.slice(0,frequencyArray.length / 2));
-    const isBeat = avg > previousFrequencyAvg * 1.075;
+    const isBeat = avg > previousFrequencyAvg * 1.1;
     previousFrequencyAvg = avg;
     return isBeat;
 }
