@@ -63,7 +63,8 @@ export class Oscillator extends BasePattern {
     applyColor = (color, oscValue) => {
         return new RGB(color.r * oscValue,
             color.g * oscValue,
-            color.b * oscValue
+            color.b * oscValue,
+            oscValue
         )
       };
 
