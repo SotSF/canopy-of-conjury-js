@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { CanopyThreeJs } from './canopy';
 import * as Menu from './menu';
 import { patterns } from './state';
-
+import * as messenger from './messenger'
 
 
 
@@ -42,6 +42,7 @@ function animate() {
     if (soundOn) {
         frequencyArray = new Uint8Array(analyser.frequencyBinCount);
         analyser.getByteFrequencyData(frequencyArray);
+        messenger.state.syncSound(soundOn, frequencyArray);
     }
 
 
@@ -52,14 +53,18 @@ function animate() {
     // Reverse the patterns so that the bottom one is rendered first
     let phase = 0;
     patterns.slice().reverse().forEach((pattern, i) => {
-        pattern.instance.progress(soundOn, frequencyArray);        
+        const sound = {
+            audio: soundOn,
+            frequencyArray: frequencyArray
+        }
+        pattern.instance.progress(sound);        
         
         if (pattern.instance.constructor == "Oscillator") {
             pattern.instance.render(canopy, phase);
             phase = i == 0 ? 0 : pattern.instance.OscValue();
         }
         else {
-            pattern.instance.render(canopy, soundOn, frequencyArray);
+            pattern.instance.render(canopy);
         }
     });
 
@@ -100,7 +105,7 @@ function soundError (error) {
 
 $(document).ready(() => {
     window.audio = new Audio();
-    audio.src = "/static/soundfile"; // drop a soundfile into /static for now
+    audio.src = "/static/One Day They'll Know (Odesza Remix).mp3"; // drop a soundfile into /static for now
     audio.controls = true;
     $('#controls').append(audio);
     const context = new AudioContext();

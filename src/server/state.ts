@@ -12,6 +12,11 @@ import { ClientMessage, ServerMessage, MESSAGE_TYPE } from '../util/messaging';
 // The set of patterns that will be rendered
 export let patterns: IPatternActive[] = [];
 
+export let sound = {
+    audioOn : false,
+    frequencyArray : new Uint8Array()
+}
+
 /** Adds a pattern to the set of active patterns */
 const addPattern = (msg: ClientMessage.AddPattern) => {
     const name = msg.state.type;
@@ -79,6 +84,13 @@ const syncState = (ws) => {
 
     ws.send(JSON.stringify(message));
 };
+
+const syncSound = (msg: ClientMessage.SyncSound) => {
+    sound.audioOn = msg.audio
+    if (sound.audioOn) {
+        sound.frequencyArray = msg.freqs;
+    }
+}
 
 export default (ws, req) => {
     ws.on('message', (rawMsg: string) => {

@@ -1,5 +1,5 @@
 import BasePattern from "./BasePattern";
-import { CanopyInterface } from "../types";
+import { CanopyInterface, SoundOptions } from "../types";
 import * as sound from '../util/sound';
 import { RGB, HSV } from "../colors/index";
 import { NUM_LEDS_PER_STRIP } from "../canopy/constants";
@@ -52,9 +52,12 @@ export class SoundTest extends BasePattern {
         this.offset++;
     }
 
-    progress(soundOn = false, freqs = []) {
+    progress(sound? : SoundOptions) {
         super.progress();
-        if (soundOn) { this.processAudio(freqs); } 
+
+        if (sound && sound.audio) {
+            this.processAudio(sound.frequencyArray);
+        }
         else { }
         
         

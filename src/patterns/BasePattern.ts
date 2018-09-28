@@ -2,7 +2,7 @@
 import * as _ from 'lodash';
 import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
 import { RGB, isColor } from '../colors';
-import { CanopyInterface, PatternInstance, PatternInterface } from '../types';
+import { CanopyInterface, PatternInstance, PatternInterface, SoundOptions } from '../types';
 import * as util from '../util';
 import { isOscillatorWrapper, Oscillator, OscillatorWrapper, PatternPropTypes } from './utils';
 
@@ -91,7 +91,7 @@ export default abstract class BasePattern implements PatternInstance {
     }
 
     // These must each be implemented in inheriting classes
-    abstract render (canopy: CanopyInterface);
+    abstract render (canopy: CanopyInterface, prevOsc? : number);
 
     constructor (props) {
         // If no props are provided, use the default props
@@ -99,7 +99,7 @@ export default abstract class BasePattern implements PatternInstance {
         this.props = props || this.constructor.defaultProps();
     }
 
-    progress () {
+    progress (sound? : SoundOptions) {
         this.iteration++;
 
         // If any of the props are oscillators

@@ -9,6 +9,7 @@ export const enum MESSAGE_TYPE {
     removePattern,
     updateProps,
     syncState,
+    syncSound
 }
 
 
@@ -36,6 +37,11 @@ export namespace ClientMessage {
     export interface UpdateProps extends IMessage {
         patternId: string
         props: any // TODO: make this type more precise...
+    }
+
+    export interface SyncSound extends IMessage {
+        audio: boolean
+        freqs: Uint8Array
     }
 }
 

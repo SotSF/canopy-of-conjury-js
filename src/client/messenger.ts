@@ -69,6 +69,16 @@ export const state = {
         };
 
         send(message);
+    },
+
+    syncSound: (audio : boolean, freqs : Uint8Array) => {
+        const message: ClientMessage.SyncSound = {
+            type: MESSAGE_TYPE.syncSound,
+            audio,
+            freqs
+        };
+
+        send(message);
     }
 };
 

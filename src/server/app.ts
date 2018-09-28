@@ -9,8 +9,9 @@ import * as logger from 'morgan';
 import * as path from 'path';
 
 import { Canopy } from '../canopy';
-import state, { patterns } from './state';
+import state, { patterns, sound } from './state';
 import Transmitter from './transmitter';
+import { SoundOptions } from "../types";
 
 
 /** Set up the app object */
@@ -77,12 +78,16 @@ connectToApi(config.api_host).then((transmitter: Transmitter) => {
   console.log('Connected to canopy API');
 
   const canopy = new Canopy(96, 75);
+  const { audioOn, frequencyArray } = sound;
 
   setInterval(() => {
     canopy.clear();
-
+    const sound : SoundOptions = {
+      audio: audioOn,
+      frequencyArray 
+    }
     patterns.forEach((pattern) => {
-      pattern.instance.progress();
+      pattern.instance.progress(sound);
       pattern.instance.render(canopy);
     });
 

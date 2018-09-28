@@ -80,7 +80,8 @@ export class Oscillator extends BasePattern {
         }
     }
 
-    render (canopy, prevOsc = 0) {
+    render (canopy, prevOsc : number) {
+
         canopy.strips.forEach((strip, s) => {
             strip.leds.forEach((led, l) => {
                 const ledIndex = (s * NUM_LEDS_PER_STRIP + l);

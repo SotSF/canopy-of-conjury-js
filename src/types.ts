@@ -1,6 +1,10 @@
 
 import { Color } from './colors';
 
+export interface SoundOptions {
+    audio : boolean
+    frequencyArray : Uint8Array
+}
 
 export interface EnumType {
     values: () => string[]
@@ -30,9 +34,9 @@ export interface CanopyInterface {
 
 export interface PatternInstance {
     props: any
-    progress: () => void
+    progress: (sound? : SoundOptions) => void
     updateProps: (o: object) => void
-    render: (canopy: CanopyInterface) => void
+    render: (canopy: CanopyInterface, prevOsc ? : number) => void
     serialize: () => IPatternState
     deserialize: (state: IPatternState) => void
     serializeExtra?: () => object
