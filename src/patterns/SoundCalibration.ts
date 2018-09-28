@@ -22,7 +22,7 @@ export class SoundCalibrate extends BasePattern {
 
     avgs : FreqAvg[] = [];
     frequencies = [];
-
+    offset = 0;
     
     constructor(...props) {
         //@ts-ignore
@@ -39,14 +39,17 @@ export class SoundCalibrate extends BasePattern {
             });
             i++;
         }
+        
     }
     
     processAudio(freqs) {
         this.frequencies = freqs;
         for (let i = 0; i < this.avgs.length; i++) {
+            const h = 120 + (i * 10) + this.offset;
+            this.avgs[i].color = new HSV(h / 360,1,1).toRgb();
             this.avgs[i].value = sound.GetFrequencyBandAverage(freqs, this.avgs[i].band);
         }
-
+        this.offset++;
     }
 
     progress(soundOn = false, freqs = []) {
@@ -73,7 +76,7 @@ export class SoundCalibrate extends BasePattern {
                 }
             }
 
-            const lightBand = Math.floor(NUM_LEDS_PER_STRIP / this.avgs.length);
+            const lightBand = Math.floor(NUM_LEDS_PER_STRIP / this.avgs.length) - 5;
             this.avgs.forEach((a,i) => {
                 const start = i * lightBand;
                 for (let l = start; l < start + lightBand; l++) {
