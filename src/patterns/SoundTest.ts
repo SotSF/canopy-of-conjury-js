@@ -23,7 +23,7 @@ export class SoundTest extends BasePattern {
     avgs : FreqAvg[] = [];
     beat : boolean = false;
     beatAvg : number = 0;
-    frequencies = [];
+    frequencies : Uint8Array = new Uint8Array();
     offset = 0;
     
     constructor(...props) {
@@ -44,7 +44,7 @@ export class SoundTest extends BasePattern {
         
     }
     
-    processAudio(freqs) {
+    processAudio(freqs : Uint8Array) {
         this.frequencies = freqs;
         for (let i = 0; i < this.avgs.length; i++) {
             const h = 120 + (i * 10) + this.offset;
@@ -53,9 +53,9 @@ export class SoundTest extends BasePattern {
         }
         this.beat = sound.BeatDetect(freqs);
         if (this.beat) {
-            this.beatAvg = 255;
+            this.beatAvg = Math.max(...Array.from(freqs));
         }
-        this.offset++;
+        
     }
 
     progress(sound? : SoundOptions) {
@@ -64,9 +64,13 @@ export class SoundTest extends BasePattern {
         if (sound && sound.audio) {
             this.processAudio(sound.frequencyArray);
         }
-        else { }
+        else { 
 
-        if (this.beatAvg > 0) this.beatAvg -= 5;
+
+        }
+
+        if (this.beatAvg > 0) this.beatAvg -= 10;
+        this.offset++;
         
         
     }
@@ -74,15 +78,12 @@ export class SoundTest extends BasePattern {
         const bandWidth = Math.round(this.frequencies.length / canopy.strips.length);
         canopy.strips.forEach((strip, s) => {
             const band = s * bandWidth;
-            let avg = 0;
-            for (let i = band; i <= band + bandWidth; i++) {
-                avg += this.frequencies[i];
-            }
-            avg = Math.ceil(avg / bandWidth / 5);
+           
             const color = new HSV(s / canopy.strips.length,1,1).toRgb();
             strip.updateColor(NUM_LEDS_PER_STRIP - 1, color);
             const lightBand = Math.floor(NUM_LEDS_PER_STRIP / this.avgs.length) - 5;
 
+            // center rings
             this.avgs.forEach((a,i) => {
                 const start = i * lightBand;
                 for (let l = start; l < start + lightBand; l++) {
@@ -91,15 +92,23 @@ export class SoundTest extends BasePattern {
                 }
             });
             
+            // rainbow beat ring
             for (let l = 45; l < 65; l++) {
                 const h = (canopy.strips.length - s + this.offset) % canopy.strips.length ;
                 const c = new HSV(h / canopy.strips.length,1,1).toRgb().withAlpha(this.beatAvg/255);
                 strip.updateColor(l,c);
             }
 
+            // outer waveform
+            let avg = 0;
+            for (let i = band; i <= band + bandWidth; i++) {
+                const f = i + this.offset;
+                avg += this.frequencies[f % this.frequencies.length];
+            }
+            avg = Math.ceil(avg / bandWidth / 5);
             if (avg > 0) {
                 for (let l = NUM_LEDS_PER_STRIP - avg; l < NUM_LEDS_PER_STRIP - 1; l++) {
-                    strip.updateColor(l, color)
+                    strip.updateColor(l, color.withAlpha(0.8))
                 }
             }
         });
