@@ -21,6 +21,8 @@ export class SoundTest extends BasePattern {
     }
 
     avgs : FreqAvg[] = [];
+    beat : boolean = false;
+    beatAvg : number = 0;
     frequencies = [];
     offset = 0;
     
@@ -49,6 +51,10 @@ export class SoundTest extends BasePattern {
             this.avgs[i].color = new HSV(h / 360,1,1).toRgb();
             this.avgs[i].value = sound.GetFrequencyBandAverage(freqs, this.avgs[i].band);
         }
+        this.beat = sound.BeatDetect(freqs);
+        if (this.beat) {
+            this.beatAvg = 255;
+        }
         this.offset++;
     }
 
@@ -59,6 +65,8 @@ export class SoundTest extends BasePattern {
             this.processAudio(sound.frequencyArray);
         }
         else { }
+
+        if (this.beatAvg > 0) this.beatAvg -= 5;
         
         
     }
@@ -73,13 +81,8 @@ export class SoundTest extends BasePattern {
             avg = Math.ceil(avg / bandWidth / 5);
             const color = new HSV(s / canopy.strips.length,1,1).toRgb();
             strip.updateColor(NUM_LEDS_PER_STRIP - 1, color);
-            if (avg > 0) {
-                for (let l = NUM_LEDS_PER_STRIP - avg; l < NUM_LEDS_PER_STRIP - 1; l++) {
-                    strip.updateColor(l, color)
-                }
-            }
-
             const lightBand = Math.floor(NUM_LEDS_PER_STRIP / this.avgs.length) - 5;
+
             this.avgs.forEach((a,i) => {
                 const start = i * lightBand;
                 for (let l = start; l < start + lightBand; l++) {
@@ -87,6 +90,18 @@ export class SoundTest extends BasePattern {
                     strip.updateColor(l, aColor);
                 }
             });
+            
+            for (let l = 45; l < 65; l++) {
+                const h = (canopy.strips.length - s + this.offset) % canopy.strips.length ;
+                const c = new HSV(h / canopy.strips.length,1,1).toRgb().withAlpha(this.beatAvg/255);
+                strip.updateColor(l,c);
+            }
+
+            if (avg > 0) {
+                for (let l = NUM_LEDS_PER_STRIP - avg; l < NUM_LEDS_PER_STRIP - 1; l++) {
+                    strip.updateColor(l, color)
+                }
+            }
         });
     }
 

@@ -27,6 +27,15 @@ const FrequencyRange = {
 
 const sampleRate = 44100;
 
+let previousFrequencyAvg : number = 0;
+
+export function BeatDetect(frequencyArray : Uint8Array) : boolean {
+    const avg = GetAverageAmplitude(frequencyArray.slice(0,frequencyArray.length / 2));
+    const isBeat = avg > previousFrequencyAvg * 1.075;
+    previousFrequencyAvg = avg;
+    return isBeat;
+}
+
 export function GetFrequencyBand(frequencyArray : Uint8Array, band : string) : Uint8Array {
     const fftSize = frequencyArray.length * 2;
     const freqRes = sampleRate / fftSize;;
