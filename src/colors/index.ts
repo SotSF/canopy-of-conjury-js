@@ -137,7 +137,7 @@ export const isColor = (maybeColor: any): maybeColor is Color => {
     return hasColorProps(rgbProps) || hasColorProps(hsvProps);
 };
 
-export const combine = (colors: RGB[]): RGB => {
+export const average = (colors: RGB[]): RGB => {
     if (colors.length === 0) {
         return new RGB(0, 0, 0, 0);
     }
@@ -156,7 +156,7 @@ export const combine = (colors: RGB[]): RGB => {
 }
 
 /** Takes an array of colors and reduces them to a single color. Returns black if array is empty */
-export const lerp = (colors: RGB[]): RGB => {
+export const combine = (colors: RGB[]): RGB => {
     if (colors.length === 0) {
         return new RGB(0, 0, 0, 0);
     }

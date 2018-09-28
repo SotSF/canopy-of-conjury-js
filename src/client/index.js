@@ -100,7 +100,7 @@ function soundError (error) {
 
 $(document).ready(() => {
     window.audio = new Audio();
-    audio.src = "/static/20180823-Clouds.mp3";
+    audio.src = "/static/soundfile"; // drop a soundfile into /static for now
     audio.controls = true;
     $('#controls').append(audio);
     const context = new AudioContext();
@@ -112,4 +112,5 @@ $(document).ready(() => {
     analyser.fftSize = 1024;
 
     audio.mp3 = true;
+    
 })
