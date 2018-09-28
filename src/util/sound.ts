@@ -7,15 +7,6 @@ export enum FrequencyBand {
     High = "High" //8000-20000
 }
 
-export enum Threshold {
-    Sub,
-    Bass = 250,
-    LowMid,
-    Mid,
-    HighMid,
-    High
-}
-
 const FrequencyRange = {
     Sub: [20,60],
     Bass: [55,130],
@@ -46,11 +37,7 @@ export function GetFrequencyBand(frequencyArray : Uint8Array, band : string) : U
 
 export function GetFrequencyBandAverage(frequencyArray : Uint8Array, band : string) : number {
     const freqRange = GetFrequencyBand(frequencyArray, band);
-    let a = 0;
-    freqRange.forEach(n => {
-        a += n;
-    });
-    return a / freqRange.length;
+    return GetAverageAmplitude(freqRange);
 }
 
 export function GetAverageAmplitude(frequencyArray : Uint8Array) {
