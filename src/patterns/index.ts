@@ -25,7 +25,7 @@ import { SwirlyZig } from './SwirlyZig';
 import { TestLEDs } from './Test';
 import { Time } from './Time';
 import { Triangles } from './Triangles';
-import { SoundCalibrate } from './SoundCalibration';
+import { SoundTest } from './SoundTest';
 import {Synth} from './Synth';
 import { Venn } from './Venn';
 
@@ -50,7 +50,7 @@ export const allPatterns = [
     ShootingStars,
     SineRing,
     Snake,
-    SoundCalibrate,
+    SoundTest,
     Swarm,
     Swirly,
     SwirlyZig,
@@ -80,7 +80,7 @@ export {
     RainbowSpiral,
     ShootingStars,
     SineRing,
-    SoundCalibrate,
+    SoundTest,
     Snake,
     Swarm,
     Swirly,

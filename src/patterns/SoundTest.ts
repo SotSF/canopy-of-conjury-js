@@ -11,8 +11,8 @@ class FreqAvg {
     color: Color
 }
 
-export class SoundCalibrate extends BasePattern {
-    static displayName = 'Sound Calibration';
+export class SoundTest extends BasePattern {
+    static displayName = 'Sound Test';
     static propTypes = {
     };
 
