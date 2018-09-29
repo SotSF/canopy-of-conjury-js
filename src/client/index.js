@@ -4,6 +4,7 @@ import { CanopyThreeJs } from './canopy';
 import * as Menu from './menu';
 import { patterns } from './state';
 import * as messenger from './messenger'
+import { Oscillator } from '../patterns';
 
 
 
@@ -59,8 +60,8 @@ function animate() {
         }
         pattern.instance.progress(sound);        
         
-        if (pattern.instance.constructor == "Oscillator") {
-            pattern.instance.render(canopy, phase);
+        if (pattern.instance.constructor === Oscillator) {
+            pattern.instance.render(canopy, phase); // probably wanna put this info in state
             phase = i == 0 ? 0 : pattern.instance.OscValue();
         }
         else {
@@ -105,7 +106,7 @@ function soundError (error) {
 
 $(document).ready(() => {
     window.audio = new Audio();
-    audio.src = "/static/One Day They'll Know (Odesza Remix).mp3"; // drop a soundfile into /static for now
+    audio.src = "/static/20180823-Clouds.mp3"; // drop a soundfile into /static for now
     audio.controls = true;
     $('#controls').append(audio);
     const context = new AudioContext();
