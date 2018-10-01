@@ -61,7 +61,7 @@ export class SoundTest extends BasePattern {
     progress(sound? : SoundOptions) {
         super.progress();
 
-        if (sound && sound.audio) {
+        if (sound.audio) {
             this.processAudio(sound.frequencyArray);
         }
         else { 

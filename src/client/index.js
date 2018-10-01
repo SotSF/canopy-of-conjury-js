@@ -5,6 +5,7 @@ import * as Menu from './menu';
 import { patterns } from './state';
 import * as messenger from './messenger'
 import { Oscillator } from '../patterns';
+import { PreviousFrequency } from '../util/sound';
 
 
 
@@ -26,6 +27,7 @@ canopy.initialize(scene);
 
 // Sound
 let soundOn = false;
+let freqArray = new Uint8Array();
 let analyser;
 window.audio={
     paused:true,
@@ -38,12 +40,12 @@ animate();
 
 function animate() {
     // Sound
-    let frequencyArray = [];
     soundOn = audio.mp3 ? !audio.paused : soundOn;
     if (soundOn) {
-        frequencyArray = new Uint8Array(analyser.frequencyBinCount);
-        analyser.getByteFrequencyData(frequencyArray);
-        messenger.state.syncSound(soundOn, frequencyArray);
+        PreviousFrequency(freqArray);
+        freqArray = new Uint8Array(analyser.frequencyBinCount);
+        analyser.getByteFrequencyData(freqArray);
+        messenger.state.syncSound(soundOn, freqArray);
     }
 
 
@@ -56,7 +58,7 @@ function animate() {
     patterns.slice().reverse().forEach((pattern, i) => {
         const sound = {
             audio: soundOn,
-            frequencyArray: frequencyArray
+            frequencyArray: freqArray
         }
         pattern.instance.progress(sound);        
         

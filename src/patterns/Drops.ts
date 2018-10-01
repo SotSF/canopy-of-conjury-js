@@ -1,11 +1,12 @@
 import * as _ from 'lodash';
 import { NUM_LEDS_PER_STRIP } from '../canopy';
 import { Color, RGB, HSV } from '../colors';
-import { MaybeOscillator, pattern } from '../types';
+import { MaybeOscillator, pattern, SoundOptions } from '../types';
 import * as util from '../util';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 import Memoizer from "./memoizer/index";
+import * as sound from "../util/sound";
 
 
 
@@ -44,20 +45,35 @@ export class Drops extends BasePattern {
     dimension = 300;
     ringDist = 20;
     currHue = 0;
-    progress () {
+    addDrop(x,y) {
+        this.drops.push({
+            x,
+            y,
+            rings: [],
+            added: this.iteration,
+            opacity: 1
+        });
+    }
+    processAudio(frequencyArray) {
+        if (sound.BeatDetect(frequencyArray)) {
+            const x = Math.floor(Math.random() * 255);
+            const y = Math.floor(Math.random() * 255);
+            this.addDrop(x,y);
+        }
+    }
+
+    progress (sound? : SoundOptions) {
         super.progress();
-        if (this.iteration % this.values.dropFrequency === 0) {
-            const x = Math.floor(Math.random() * this.dimension);
-            const y = Math.floor(Math.random() * this.dimension);
-            this.drops.push({
-                x,
-                y,
-                rings: [],
-                added: this.iteration,
-                opacity: 1
-            });
-            this.currHue += 10;
-            this.currHue %= 360;
+        if (sound.audio) {
+            this.processAudio(sound.frequencyArray);
+        } else {
+            if (this.iteration % this.values.dropFrequency === 0) {
+                const x = Math.floor(Math.random() * this.dimension);
+                const y = Math.floor(Math.random() * this.dimension);
+                this.addDrop(x,y);
+                this.currHue += 10;
+                this.currHue %= 360;
+            }
         }
 
         this.drops.forEach(drop => {

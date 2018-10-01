@@ -26,6 +26,7 @@ import { TestLEDs } from './Test';
 import { Time } from './Time';
 import { Triangles } from './Triangles';
 import { SoundTest } from './SoundTest';
+import { SoundBeat } from './SoundBeat';
 import {Synth} from './Synth';
 import { Venn } from './Venn';
 
@@ -50,6 +51,7 @@ export const allPatterns = [
     ShootingStars,
     SineRing,
     Snake,
+    SoundBeat,
     SoundTest,
     Swarm,
     Swirly,
@@ -80,6 +82,7 @@ export {
     RainbowSpiral,
     ShootingStars,
     SineRing,
+    SoundBeat,
     SoundTest,
     Snake,
     Swarm,

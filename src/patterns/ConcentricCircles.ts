@@ -1,11 +1,12 @@
 
 import * as _ from 'lodash';
 import { NUM_LEDS_PER_STRIP } from '../canopy';
-import { Color, RGB } from '../colors';
-import { MaybeOscillator, pattern } from '../types';
+import { Color, RGB, HSV } from '../colors';
+import { MaybeOscillator, pattern, SoundOptions } from '../types';
 import * as util from '../util';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
+import * as sound from '../util/sound';
 
 
 interface ICircle {
@@ -46,17 +47,34 @@ export class ConcentricCircles extends BasePattern {
     }
 
     circles: ICircle[] = [];
-
-    progress () {
-        super.progress();
-
-        if (this.iteration % this.values.frequency === 0) {
+    processAudio(frequencyArray : Uint8Array) {
+        const band = sound.FrequencyBand.Bass;
+        const isBeat = sound.BeatDetect(frequencyArray, band);
+        if (isBeat) {
+            const avg = sound.GetFrequencyBandAverage(frequencyArray, band);
+            const width = Math.ceil(Math.log10(avg) * 2);
             this.circles.push({
                 pos: 0,
                 color: this.values.color,
-                width: this.values.width,
-                trail: this.values.trail
-            });
+                width,
+                trail: width * 3
+            })
+        }
+    }
+
+    progress (sound? : SoundOptions) {
+        super.progress();
+
+        if (sound.audio) { this.processAudio(sound.frequencyArray); }
+        else {
+            if (this.iteration % this.values.frequency === 0) {
+                this.circles.push({
+                    pos: 0,
+                    color: this.values.color,
+                    width: this.values.width,
+                    trail: this.values.trail
+                });
+            }
         }
 
         // go through every position in beatList, and light up the corresponding LED in all strips
