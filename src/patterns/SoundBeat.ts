@@ -52,7 +52,13 @@ export class SoundBeat extends BasePattern {
     progress (sound? : SoundOptions) {
         super.progress();
         if (sound.audio) { this.processAudio(sound.frequencyArray); }
-        else {  this.currHue++; }
+        else {  
+            this.rings.forEach(ring => {
+                if (ring.opacity < 0 && Math.random() > 0.5) ring.opacity = 1;
+                ring.opacity -= 0.05;
+            })
+            this.currHue++; 
+        }
        
     }
 
