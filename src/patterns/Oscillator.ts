@@ -46,7 +46,7 @@ export class Oscillator extends BasePattern {
             Color: RGB.random(),
             FreqExp: 0,
             FreqFine: 0,
-            Sync: 0,
+            Sync: 1,
             Wave: WaveType.Sine,
             PulseWidth: 0.5,
             Mix: 1,
@@ -57,7 +57,7 @@ export class Oscillator extends BasePattern {
     private val : number = 0;
 
     OscValue() {
-        this.val;
+        return this.val;
     }
 
     applyColor = (color, oscValue) => {
