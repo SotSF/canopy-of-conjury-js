@@ -92,8 +92,7 @@ $(document).ready(() => Menu.initialize(canopy));
 function soundSuccess (stream) {
     window.persistAudioStream = stream;
     const audioContent = new AudioContext();
-    //const audioStream = audioContent.createMediaStreamSource(stream);
-    const audioStream = audioContent.createMediaElementSource(stream);
+    const audioStream = audioContent.createMediaStreamSource(stream);
     analyser = audioContent.createAnalyser();
     audioStream.connect(analyser);
     analyser.fftSize = 1024;
@@ -105,7 +104,7 @@ function soundError (error) {
 }
 
 $(document).ready(() => {
-    navigator.mediaDevices.getUserMedia({audio:true}.then(soundSuccess).catch(soundError);
+    navigator.mediaDevices.getUserMedia({audio:true}).then(soundSuccess).catch(soundError);
 });
 */
 
