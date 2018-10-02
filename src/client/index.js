@@ -26,7 +26,7 @@ const canopy = new CanopyThreeJs;
 canopy.initialize(scene);
 
 // Sound
-let soundOn = false;
+let listeningToMic = false;
 let freqArray = new Uint8Array();
 let analyser;
 window.audio={
@@ -40,7 +40,7 @@ animate();
 
 function animate() {
     // Sound
-    soundOn = audio.mp3 ? !audio.paused : soundOn;
+    const soundOn = audio.mp3 ? !audio.paused : listeningToMic;
     if (soundOn) {
         PreviousFrequency(freqArray);
         freqArray = new Uint8Array(analyser.frequencyBinCount);
@@ -97,18 +97,21 @@ function soundSuccess (stream) {
     analyser = audioContent.createAnalyser();
     audioStream.connect(analyser);
     analyser.fftSize = 1024;
-    soundOn = true;
+    listeningToMic = true;
 }
 
 function soundError (error) {
-    alert("Sound disabled; no sound integration");
-    console.log(error);
+    console.log("Unable to listen to mic line in.");
 }
+
+$(document).ready(() => {
+    navigator.mediaDevices.getUserMedia({audio:true}.then(soundSuccess).catch(soundError);
+});
 */
 
 $(document).ready(() => {
     window.audio = new Audio();
-    audio.src = "/static/20180823-Clouds.mp3"; // drop a soundfile into /static for now
+    audio.src = "/static/One Day They'll Know (Odesza Remix).mp3"; // drop a soundfile into /static for now
     audio.controls = true;
     $('#controls').append(audio);
     const context = new AudioContext();
