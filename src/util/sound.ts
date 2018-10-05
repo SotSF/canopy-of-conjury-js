@@ -27,7 +27,7 @@ export function BeatDetect(frequencyArray : Uint8Array, band? : string) : boolea
     const curr = band ? GetFrequencyBand(frequencyArray,band) : frequencyArray.slice(0,frequencyArray.length / 2) ;
     const previousFrequencyAvg = GetAverageAmplitude(prev);
     const avg = GetAverageAmplitude(curr);
-    const isBeat = avg > previousFrequencyAvg * 1.05;
+    const isBeat = Math.abs(avg - previousFrequencyAvg) > previousFrequencyAvg * 0.05;
     return isBeat;
 }
 
