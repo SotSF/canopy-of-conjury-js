@@ -17,6 +17,16 @@ interface Lightstrip {
 export class SoundStrip extends BasePattern {
     static displayName = 'Sound Strip';
 
+    static propTypes = {
+    };
+
+    static defaultProps () {
+        return {
+            
+        }
+    }
+
+    
     currentCenter: number = 0;
     currentHue: number = 0;
     

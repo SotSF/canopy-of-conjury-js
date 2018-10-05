@@ -47,6 +47,7 @@ export class ConcentricCircles extends BasePattern {
     }
 
     circles: ICircle[] = [];
+    currentHue = 0;
     processAudio(frequencyArray : Uint8Array) {
         const band = sound.FrequencyBand.Bass;
         const isBeat = sound.BeatDetect(frequencyArray, band);
@@ -55,10 +56,11 @@ export class ConcentricCircles extends BasePattern {
             const width = Math.ceil(Math.log10(avg) * 2);
             this.circles.push({
                 pos: 0,
-                color: this.values.color,
+                color: new HSV(this.currentHue,1,1),
                 width,
-                trail: width * 3
+                trail: width
             })
+            this.currentHue = (this.currentHue + 0.01) % 1;
         }
     }
 
