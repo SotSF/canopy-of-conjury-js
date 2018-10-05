@@ -27,6 +27,7 @@ import { Time } from './Time';
 import { Triangles } from './Triangles';
 import { SoundTest } from './SoundTest';
 import { SoundBeat } from './SoundBeat';
+import { SoundStrip } from './SoundStrip';
 import {Synth} from './Synth';
 import { Venn } from './Venn';
 
@@ -52,6 +53,7 @@ export const allPatterns = [
     SineRing,
     Snake,
     SoundBeat,
+    SoundStrip,
     SoundTest,
     Swarm,
     Swirly,
@@ -83,6 +85,7 @@ export {
     ShootingStars,
     SineRing,
     SoundBeat,
+    SoundStrip,
     SoundTest,
     Snake,
     Swarm,
