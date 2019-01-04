@@ -1,5 +1,6 @@
 
 import { PatternInstance, PatternInterface } from '../types';
+import { BackgroundColor } from './BackgroundColor';
 import { Bubbles } from './Bubbles';
 import { CircleBurst } from './CircleBurst';
 import { ColorWave } from './ColorWave';
@@ -27,6 +28,7 @@ import { Triangles } from './Triangles';
 import { Venn } from './Venn';
 
 export const allPatterns = [
+    BackgroundColor,
     Bubbles,
     CircleBurst,
     ColorWave,
@@ -54,6 +56,7 @@ export const allPatterns = [
 ];
 
 export {
+    BackgroundColor,
     Bubbles,
     CircleBurst,
     ColorWave,
