@@ -1,6 +1,6 @@
 
 import * as _ from 'lodash';
-import { NUM_LEDS_PER_STRIP } from '../canopy';
+import { NUM_ROWS } from '../grid';
 import { RGB, Color } from '../colors';
 import { MaybeOscillator, pattern } from '../types';
 import * as util from '../util';
@@ -77,17 +77,17 @@ export class GradientPulse extends BasePattern {
             beat.pos++;
 
             // remove if the position is too big
-            if (beat.pos >= NUM_LEDS_PER_STRIP) {
+            if (beat.pos >= NUM_ROWS) {
                 this.beatList = _.without(this.beatList, beat);
             }
         });
     }
 
-    render (canopy) {
+    render (grid) {
         this.beatList.forEach((beat) => {
             const opacity = this.values.opacity;
             const color = beat.color.withAlpha(opacity);
-            canopy.strips.forEach((strip) => strip.updateColor(beat.pos, color));
+            grid.strips.forEach((strip) => strip.updateColor(beat.pos, color));
         });
     }
 
