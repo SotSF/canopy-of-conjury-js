@@ -14,6 +14,11 @@ export interface LedInterface {
     g: number
 }
 
+export interface Coordinateinterface {
+    row: number
+    col: number
+}
+
 export interface StripInterface {
     clear: () => void
     leds: LedInterface[][]
