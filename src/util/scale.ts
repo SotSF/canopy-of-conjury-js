@@ -10,6 +10,11 @@
  *
  * @returns {float}
  */
-export default (value, istart, istop, ostart, ostop) => {
+export default (value: number, istart: number, istop: number, ostart: number, ostop: number): number => {
+    // If the input range has 0 width, it's impossible to scale
+    if (istart - istop === 0) {
+        throw new Error('Unable to scale with input range of 0 width');
+    }
+
     return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
 };
