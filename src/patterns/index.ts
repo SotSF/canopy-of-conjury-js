@@ -1,7 +1,6 @@
 
 import { PatternInstance, PatternInterface } from '../types';
 import { BackgroundColor } from './BackgroundColor';
-import { CircleBurst } from './CircleBurst';
 import { Fade } from './Fade';
 import { Fireflies } from './Fireflies';
 import { GradientFlow } from './GradientFlow';
@@ -14,7 +13,6 @@ import { Venn } from './Venn';
 
 export const allPatterns = [
     BackgroundColor,
-    CircleBurst,
     Fade,
     Fireflies,
     GradientFlow,
@@ -27,7 +25,6 @@ export const allPatterns = [
 
 export {
     BackgroundColor,
-    CircleBurst,
     Fade,
     Fireflies,
     GradientFlow,
