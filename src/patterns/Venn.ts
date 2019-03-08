@@ -1,3 +1,4 @@
+
 import * as _ from 'lodash';
 import { Color, RGB } from '../colors';
 import { MaybeOscillator, pattern } from '../types';
@@ -26,6 +27,7 @@ export class Venn extends BasePattern {
     circles = [];
     dimension = 200;
     memoizer = new Memoizer();
+
     progress() {
         super.progress();
         if (this.iteration % this.values.frequency === 0) {
@@ -63,7 +65,6 @@ export class Venn extends BasePattern {
                 }
                 t++;
             }
-            
         });
     }
 
