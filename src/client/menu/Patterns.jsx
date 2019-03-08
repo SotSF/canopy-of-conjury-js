@@ -106,7 +106,7 @@ class PatternOption extends React.Component {
                 />
 
                 <Card className={classNames(classes.card, classes.canopy)} raised>
-                    <GridSvg mini pattern={patternInstance} patternProps={patternProps} />
+                    <GridSvg pattern={patternInstance} patternProps={patternProps} />
                 </Card>
 
                 <Button

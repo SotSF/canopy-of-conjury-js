@@ -1,6 +1,7 @@
 
 import * as React from 'react';
 import * as _ from 'lodash';
+import { createStyles, withStyles, Theme, WithStyles } from '@material-ui/core/styles';
 
 import { Grid, NUM_COLS, NUM_ROWS } from '../../grid';
 import { combine } from '../../colors';
@@ -9,22 +10,17 @@ import * as util from '../../util';
 
 
 // Rendering constants
-const LED_RADIUS = 2;
-const LED_GAP = 3;
+const LED_RADIUS = 0.3;
 
-const Strip = ({ leds, length, rowNum }) => {
-    const interval = LED_RADIUS * 2 + LED_GAP;
-
-    // We render as many LEDs from the array as we can, respecting the spacing rules
-    const numToRender = Math.floor(length / interval) - 1;
-
-    // The strip is rotated a specified amount, then translated along its radial path as though
-    // there was an invisible LED at the center of the canopy
-    const transform = `translate(0 ${rowNum * interval})`;
+// Renders a column of LEDs
+const Strip = ({ leds, numRows, colNum }) => {
+    // The strip is rendered with its first LED at the bottom, with each subsequent column
+    // one to the right of the last
+    const transform = `translate(${colNum - LED_RADIUS} ${-LED_RADIUS})`;
 
     return (
         <g transform={transform}>
-            {_.range(numToRender).map((i) => {
+            {_.range(numRows).map((i) => {
                 const fill = combine(leds[i]);
                 return (
                     <circle
@@ -32,8 +28,8 @@ const Strip = ({ leds, length, rowNum }) => {
                       fillOpacity={util.clamp(fill.a, 0.2, 1)}
                       key={i}
                       r={LED_RADIUS}
-                      cx={interval * i}
-                      cy={0}
+                      cx={0}
+                      cy={i}
                     />
                 );
             })}
@@ -41,19 +37,22 @@ const Strip = ({ leds, length, rowNum }) => {
     );
 };
 
-interface GridSvgProps {
-    mini?: boolean,
-    width?: number,
+const styles = ({ spacing }: Theme) => createStyles({
+    svg: {
+        padding: '5px',
+    },
+});
+
+interface GridSvgProps extends WithStyles<typeof styles> {
     pattern: PatternInstance,
-    patternProps: object
+    patternProps: object,
 }
 
 interface GridSvgState {
     grid: GridInterface,
-    width: number
 }
 
-export default class GridSvg extends React.Component<GridSvgProps, GridSvgState> {
+class GridSvg extends React.Component<GridSvgProps, GridSvgState> {
     patternInterval = null;
 
     static defaultProps = {
@@ -63,10 +62,7 @@ export default class GridSvg extends React.Component<GridSvgProps, GridSvgState>
 
     constructor (props) {
         super(props);
-
-        const { mini, width } = props;
         this.state = {
-            width: mini ? 200 : width,
             grid: this.makeGrid()
         };
     }
@@ -98,17 +94,27 @@ export default class GridSvg extends React.Component<GridSvgProps, GridSvgState>
     };
 
     render () {
-        const { grid, width } = this.state;
+        const { classes } = this.props;
+        const { grid } = this.state;
+        
+        const width = 200;
+        const height = width / grid.numCols * grid.numRows;
 
-        const halfWidth = width / 2;
-        const viewBox = `-${halfWidth} -${halfWidth} ${width} ${width}`;
+        // Set up the viewbox to account for a small margin around the LEDs
+        const margin = LED_RADIUS;
+        const viewBox = `${-margin} ${-margin} ${grid.numCols - 1 + margin * 2} ${grid.numRows - 1 + margin * 2}`;
+        const translate = `translate(${margin} ${margin})`;
 
         return (
-            <svg viewBox={viewBox} width={width} height={width}>
-                {grid.strips.map((strip, i) => {
-                    return <Strip key={i} leds={strip.leds} length={halfWidth} rowNum={i} />;
-                })}
+            <svg viewBox={viewBox} width={width} height={height} className={classes.svg}>
+                <g transform={translate}>
+                    {grid.strips.map((strip, i) => {
+                        return <Strip key={i} leds={strip.leds} numRows={grid.numRows} colNum={i} />;
+                    })}
+                </g>
             </svg>
         );
     }
 }
+
+export default withStyles(styles)(GridSvg);
