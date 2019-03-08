@@ -23,7 +23,7 @@ export interface StripInterface {
 }
 
 export interface GridInterface {
-    clear: () => void
+    clear(): void
     strips: StripInterface[]
     numRows: number
     numCols: number

@@ -8,9 +8,9 @@ import * as http from 'http';
 import * as logger from 'morgan';
 import * as path from 'path';
 
-import { Canopy } from '../canopy';
+import { Grid, NUM_COLS, NUM_ROWS } from '../grid';
 import state, { patterns } from './state';
-import Transmitter from './transmitter';
+import { connect, render } from './transmitter';
 
 
 /** Set up the app object */
@@ -40,48 +40,23 @@ app.get('/', function(req, res) {
     res.sendFile(path.join(serverDirectory, '../static/index.html'));
 });
 
-
 /** Config reader */
 interface AppConfig {
-    api_host: string
+    host: string,
+    port: number
 }
 
 const config: AppConfig = (() => {
     try {
         return JSON.parse(fs.readFileSync('./config.json', 'utf8'));
     } catch (e) {
+        console.log('Using default connection config');
         return {
-            api_host: null
+            host: 'localhost',
+            port: 7890
         };
     }
 })();
-
-/** Create a connection to the API */
-const transmitter = new Transmitter(config.api_host);
-
-transmitter.ping().on('response', () => {
-    console.log('Connected to canopy API');
-})
-.on('error', function(err) {
-    console.log('Unable to connect to canopy API');
-});
-
-setInterval(() => {
-    transmitter.ping().on('response', () => {
-        const canopy = new Canopy(96, 75);
-        
-            //setInterval(() => {
-                canopy.clear();
-                patterns.forEach((pattern) => {
-                    pattern.instance.progress();
-                    pattern.instance.render(canopy);
-                });
-                transmitter.render(canopy);
-            //}, 1000); // TODO: set this to a different interval; this will set the framerate
-        })
-        .on('error', (err) => {});
-}, 1000 / 30);
-
 
 /** Create HTTP server. */
 const server = http.createServer(app);
@@ -108,6 +83,26 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
+
+/** Initializes the web socket connection and rendering loop */
+(async () => {
+    /** Create a connection to the API */
+    await connect({ host: config.host, port: config.port });
+
+    const grid = new Grid(NUM_ROWS, NUM_COLS)
+    setInterval(() => {
+        //transmitter.ping().on('response', () => {
+            grid.clear();
+            patterns.forEach((pattern) => {
+                pattern.instance.progress();
+                pattern.instance.render(grid);
+            });
+
+            render(grid);
+        //})
+        //.on('error', (err) => {});
+    }, 1000 / 30);
+})();
 
 export {
     app,

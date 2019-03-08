@@ -10,9 +10,6 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Grid from '@material-ui/core/Grid';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
@@ -21,7 +18,7 @@ import AddIcon from '@material-ui/icons/Add';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import { allPatterns } from '../../patterns';
-import { CanopySvg } from '../canopy';
+import { GridSvg } from '../canopy';
 import PatternProps from './PatternProps';
 
 
@@ -109,7 +106,7 @@ class PatternOption extends React.Component {
                 />
 
                 <Card className={classNames(classes.card, classes.canopy)} raised>
-                    <CanopySvg mini pattern={patternInstance} patternProps={patternProps} />
+                    <GridSvg mini pattern={patternInstance} patternProps={patternProps} />
                 </Card>
 
                 <Button

@@ -1,6 +1,6 @@
 
 import { HSV } from '../colors';
-import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
+import { NUM_COLS, NUM_ROWS } from '../grid';
 import { MaybeOscillator } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
@@ -27,8 +27,8 @@ export class Snake extends BasePattern {
 
     static getPoint () {
         return {
-            strip: Math.floor(Math.random() * NUM_STRIPS),
-            led: Math.floor(Math.random() * NUM_LEDS_PER_STRIP)
+            row: Math.floor(Math.random() * NUM_ROWS),
+            col: Math.floor(Math.random() * NUM_COLS)
         };
     }
 
@@ -51,59 +51,60 @@ export class Snake extends BasePattern {
         let lastPoint = { ...this.snake[0] };
         if (this.tail.length > 0 && this.snake.length < this.values.maxLength) {
             this.snake.push({
-                strip: this.tail[0].strip,
-                led: this.tail[0].led
+                row: this.tail[0].row,
+                col: this.tail[0].col
             });
 
             this.tail = this.tail.slice(1);
         }
 
-        const ds = Snake.getDirection(this.snake[0].strip, this.target.strip, NUM_STRIPS);
-        const dl = Snake.getDirection(this.snake[0].led, this.target.led, NUM_LEDS_PER_STRIP);
+        const snakeHead = this.snake[0];
+        const ds = Snake.getDirection(snakeHead.row, this.target.row, NUM_ROWS);
+        const dl = Snake.getDirection(snakeHead.col, this.target.col, NUM_COLS);
 
-        this.snake[0].strip += ds;
-        if (this.snake[0].strip >= NUM_STRIPS) {
-            this.snake[0].strip %= NUM_STRIPS;
-        } else if (this.snake[0].strip < 0) {
-            this.snake[0].strip += NUM_STRIPS;
+        snakeHead.row += ds;
+        if (snakeHead.row >= NUM_ROWS) {
+            snakeHead.row %= NUM_ROWS;
+        } else if (snakeHead.row < 0) {
+            snakeHead.row += NUM_ROWS;
         }
 
-        this.snake[0].led += dl;
-        if (this.snake[0].led >= NUM_LEDS_PER_STRIP) {
-            this.snake[0].led %= NUM_LEDS_PER_STRIP;
-        } else if (this.snake[0].led < 0) {
-            this.snake[0].led += NUM_LEDS_PER_STRIP;
+        snakeHead.col += dl;
+        if (snakeHead.col >= NUM_COLS) {
+            snakeHead.col %= NUM_COLS;
+        } else if (snakeHead.col < 0) {
+            snakeHead.col += NUM_COLS;
         }
 
         for (let i = 1; i < this.snake.length ; i++) {
-            const { strip, led } = this.snake[i];
+            const { row, col } = this.snake[i];
             this.snake[i] = lastPoint;
-            lastPoint = { strip, led };
+            lastPoint = { row, col };
         }
 
-        if (this.snake[0].strip === this.target.strip && this.snake[0].led === this.target.led) {
+        if (snakeHead.row === this.target.row && snakeHead.col === this.target.col) {
             this.target = Snake.getPoint();
             this.tail.push({ ...lastPoint });
         }
         this.iteration++;
     }
     
-    render (canopy) {
+    render (grid) {
         const opacity = this.values.opacity;
         const tHSV = new HSV(this.iteration % 360 / 360, 1, 1);
         const tRGB = tHSV.toRgb().withAlpha(opacity);
 
-        const target = Snake.convertCoordinate({ strip: this.target.strip, led: this.target.led }, canopy);
-        canopy.strips[target.strip].updateColor(target.led, tRGB);
+        const target = Snake.convertCoordinate({ strip: this.target.row, led: this.target.col }, grid);
+        grid.strips[target.row].updateColor(target.col, tRGB);
 
         for (let i = 0; i < this.snake.length; i++) {
-            const point = Snake.convertCoordinate(this.snake[i], canopy);
+            const point = Snake.convertCoordinate(this.snake[i], grid);
 
             const h = i / this.values.maxLength + this.iteration;
             const hsv = new HSV(h % 1, 1, 1);
             const color = hsv.toRgb().withAlpha(opacity);
 
-            canopy.strips[point.strip].updateColor(point.led, color);
+            grid.strips[point.row].updateColor(point.col, color);
         }
     }
 

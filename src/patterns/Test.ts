@@ -1,5 +1,5 @@
 
-import { NUM_STRIPS } from '../canopy';
+import { NUM_COLS } from '../grid';
 import { RGB } from '../colors';
 import { pattern } from '../types';
 import BasePattern from './BasePattern';
@@ -18,17 +18,14 @@ export class TestLEDs extends BasePattern {
         new RGB(255,255,0),
         new RGB(0,255,0),
         new RGB(0,255,255),
-        new RGB(0,0,255),
-        new RGB(255,0,255),
-        new RGB(150,150,255),
-        new RGB(255,150,150)
+        new RGB(0,0,255)
     ];
 
     render (canopy) {
         var c = 0;
-        for (let s = 0; s < NUM_STRIPS; s++) {
+        for (let s = 0; s < NUM_COLS; s++) {
             canopy.strips[s].updateColors(this.colors[c]);
-            if ((s + 1) % 8 == 0) c++;
+            if ((s + 1) % this.colors.length == 0) c++;
             if (c >= this.colors.length) { c = 0; }
         }
     }

@@ -1,13 +1,13 @@
 
-import { CanopyInterface } from '../../types';
+import { GridInterface } from '../../types';
 import { IMemoizedMap, IMemoizer } from './types';
 
 
 class MemoizedMap implements IMemoizedMap {
     map = {};
 
-    constructor (canvasSize: number, canopy: CanopyInterface) {
-        this.memoize(canvasSize, canopy);
+    constructor (canvasSize: number, grid: GridInterface) {
+        this.memoize(canvasSize, grid);
     }
 
     /**
@@ -18,15 +18,15 @@ class MemoizedMap implements IMemoizedMap {
         return this.map[`${x}.${y}`];
     }
 
-    private memoize (canvasSize: number, canopy: CanopyInterface) {
-        const numStrips = canopy.strips.length;
-        const numLedsPerStrip = canopy.strips[0].length;
+    private memoize (canvasSize: number, grid: GridInterface) {
+        const numStrips = grid.strips.length;
+        const numLedsPerStrip = grid.strips[0].length;
 
         // Compute the constant to scale the magnitude of the pixel radius
         const halfCanvas = canvasSize / 2;
         const scaleFactor = numLedsPerStrip / halfCanvas;
 
-        // Maps a single pixel in the canvas to the strip and LED in the canopy
+        // Maps a single pixel in the canvas to the strip and LED in the grid
         const mapToCanopy = (x, y) => {
             const TWO_PI = Math.PI * 2;
 
@@ -52,16 +52,15 @@ class MemoizedMap implements IMemoizedMap {
 }
 
 /**
- * When converting canvas coordinates to canopy coordinates (basically a mapping from cartesian to
+ * When converting canvas coordinates to grid coordinates (basically a mapping from cartesian to
  * polar) it helps to have the pixel-to-led mapping pre-computed. This memoizer assists in the rapid
  * conversion between pattern spaces.
  */
 export default class Memoizer implements IMemoizer {
     maps = {};
 
-    createMap (canvasSize: number, canopy: CanopyInterface) {
-        const numStrips = canopy.strips.length;
-        const mapKey = `${numStrips}.${canopy.stripLength}`;
+    createMap (canvasSize: number, grid: GridInterface) {
+        const mapKey = `${grid.numRows}.${grid.numCols}`;
 
         // If we have already created a map of this size, don't do it again
         if (Object.hasOwnProperty.call(this.maps, mapKey)) {
@@ -69,6 +68,6 @@ export default class Memoizer implements IMemoizer {
         }
 
         // Otherwise, time to make a new one
-        return this.maps[mapKey] = new MemoizedMap(canvasSize, canopy);
+        return this.maps[mapKey] = new MemoizedMap(canvasSize, grid);
     }
 }

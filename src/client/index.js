@@ -1,6 +1,6 @@
 
 import * as THREE from 'three';
-import { CanopyThreeJs } from './canopy';
+import { GridThreeJs } from './canopy';
 import * as Menu from './menu';
 import { patterns } from './state';
 
@@ -18,7 +18,7 @@ renderer.domElement.id = "idRenderer";
 document.getElementById('renderer-wrapper').appendChild(renderer.domElement);
 
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
-const canopy = new CanopyThreeJs;
+const canopy = new GridThreeJs;
 canopy.initialize(scene);
 
 animate();

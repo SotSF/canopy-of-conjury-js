@@ -144,8 +144,6 @@ export const combine = (colors: RGB[]): RGB => {
         b = util.lerp(b,color.b,color.a);
     });
 
-    return new RGB(
-       r,g,b,a
-    );
+    return new RGB(r, g, b, a);
 };
 

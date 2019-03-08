@@ -1,3 +1,3 @@
 
-export { default as Canopy } from './Canopy';
+export { default as Grid } from './Grid';
 export * from './constants';

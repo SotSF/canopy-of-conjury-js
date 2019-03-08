@@ -2,19 +2,17 @@
 import * as React from 'react';
 import * as _ from 'lodash';
 
-import Canopy from '../../canopy/Canopy';
+import { Grid, NUM_COLS, NUM_ROWS } from '../../grid';
 import { combine } from '../../colors';
-import { CanopyInterface, PatternInstance } from '../../types';
+import { GridInterface, PatternInstance } from '../../types';
 import * as util from '../../util';
 
 
 // Rendering constants
 const LED_RADIUS = 2;
 const LED_GAP = 3;
-const NUM_STRIPS = 96;
-const NUM_LEDS_PER_STRIP = 75;
 
-const Strip = ({ leds, length, rotation }) => {
+const Strip = ({ leds, length, rowNum }) => {
     const interval = LED_RADIUS * 2 + LED_GAP;
 
     // We render as many LEDs from the array as we can, respecting the spacing rules
@@ -23,8 +21,7 @@ const Strip = ({ leds, length, rotation }) => {
     // The strip is rotated a specified amount, then translated along its radial path as though
     // there was an invisible LED at the center of the canopy
     const transform = `
-        rotate(${rotation})
-        translate(${interval} 0)
+        translate(0 ${rowNum * interval} 0)
     `;
 
     return (
@@ -46,19 +43,19 @@ const Strip = ({ leds, length, rotation }) => {
     );
 };
 
-interface CanopySvgProps {
+interface GridSvgProps {
     mini?: boolean,
     width?: number,
     pattern: PatternInstance,
     patternProps: object
 }
 
-interface CanopySvgState {
-    canopy: CanopyInterface,
+interface GridSvgState {
+    grid: GridInterface,
     width: number
 }
 
-export default class CanopySvg extends React.Component<CanopySvgProps, CanopySvgState> {
+export default class GridSvg extends React.Component<GridSvgProps, GridSvgState> {
     patternInterval = null;
 
     static defaultProps = {
@@ -72,7 +69,7 @@ export default class CanopySvg extends React.Component<CanopySvgProps, CanopySvg
         const { mini, width } = props;
         this.state = {
             width: mini ? 200 : width,
-            canopy: this.makeCanopy()
+            grid: this.makeGrid()
         };
     }
 
@@ -84,8 +81,8 @@ export default class CanopySvg extends React.Component<CanopySvgProps, CanopySvg
         clearInterval(this.patternInterval);
     }
 
-    makeCanopy () {
-        return new Canopy(NUM_STRIPS, NUM_LEDS_PER_STRIP);
+    makeGrid () {
+        return new Grid(NUM_ROWS, NUM_COLS);
     }
 
     updatePattern = () => {
@@ -95,25 +92,23 @@ export default class CanopySvg extends React.Component<CanopySvgProps, CanopySvg
         // then do not attempt to update or render
         if (!pattern) return;
 
-        const canopy = this.makeCanopy();
+        const grid = this.makeGrid();
         pattern.progress();
-        pattern.render(canopy);
+        pattern.render(grid);
 
-        this.setState({ canopy });
+        this.setState({ grid });
     };
 
     render () {
-        const { canopy, width } = this.state;
-        const rotationAmount = -360 / canopy.strips.length;
+        const { grid, width } = this.state;
 
         const halfWidth = width / 2;
         const viewBox = `-${halfWidth} -${halfWidth} ${width} ${width}`;
 
         return (
             <svg viewBox={viewBox} width={width} height={width}>
-                {canopy.strips.map((strip, i) => {
-                    const rotation = rotationAmount * i;
-                    return <Strip key={i} leds={strip.leds} length={halfWidth} rotation={rotation} />;
+                {grid.strips.map((strip, i) => {
+                    return <Strip key={i} leds={strip.leds} length={halfWidth} rowNum={i} />;
                 })}
             </svg>
         );

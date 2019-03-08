@@ -1,6 +1,6 @@
 
 import * as _ from 'lodash';
-import { NUM_STRIPS } from '../canopy';
+import { NUM_COLS } from '../grid';
 import { MaybeOscillator, pattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
@@ -96,7 +96,7 @@ export class Kaleidoscope extends BasePattern {
         // add a new wave
         if (Math.random() > 0.6 && this.waves.length < 3) {
             this.frequency = this.frequencies[Math.floor(Math.random() * this.frequencies.length)];
-            const bassAmp = Math.floor(Math.random() * NUM_STRIPS / 2 + 5);
+            const bassAmp = Math.floor(Math.random() * NUM_COLS / 2 + 5);
             this.waves.push(new Wave(bassAmp));
         }
 
@@ -112,7 +112,7 @@ export class Kaleidoscope extends BasePattern {
     }
 
     render (canopy) {
-        const mirror = Math.floor(NUM_STRIPS / this.frequency);
+        const mirror = Math.floor(NUM_COLS / this.frequency);
         const memoizedMap = this.memoizer.createMap(this.dimension, canopy);
         this.waves.forEach(wave => {
             const waveColor = (new HSV(wave.hue / 360, 1, wave.opacity)).toRgb();
@@ -127,7 +127,7 @@ export class Kaleidoscope extends BasePattern {
 
                 for (let s = 0; s < this.frequency; s++) {
                     for (let i = 0; i < wave.width; i++) {
-                        let strip = Math.floor((this.iteration / 3 * this.values.rotate) + co.strip + i + mirror * s) % NUM_STRIPS;
+                        let strip = Math.floor((this.iteration / 3 * this.values.rotate) + co.strip + i + mirror * s) % NUM_COLS;
                         canopy.strips[strip].updateColor(co.led, color);
                     }
                 }

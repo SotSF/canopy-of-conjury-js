@@ -32,13 +32,13 @@ class Strip implements StripInterface {
 
 export default class Grid implements GridInterface {
     strips = null;
+    numRows = null;
+    numCols = null;
 
     constructor (numRows, numCols) {
         this.strips = _.range(numCols).map(() => new Strip(numRows));
-    }
-
-    get size () {
-        return this.strips.length;
+        this.numRows = numRows;
+        this.numCols = numCols;
     }
 
     clear () {

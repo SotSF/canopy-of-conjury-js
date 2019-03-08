@@ -1,2 +1,2 @@
-export { default as CanopySvg } from './CanopySvg';
-export { default as CanopyThreeJs } from './CanopyThreeJs';
+export { default as GridSvg } from './GridSvg';
+export { default as GridThreeJs } from './GridThreeJs';
