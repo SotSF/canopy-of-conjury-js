@@ -21,8 +21,8 @@ const controls = new THREE.OrbitControls(camera, renderer.domElement);
 const canopy = new GridThreeJs;
 canopy.initialize(scene);
 
+const FPS = 10;
 animate();
-
 function animate() {
     setTimeout( function() {
         requestAnimationFrame( animate );
@@ -36,7 +36,7 @@ function animate() {
         });
 
         renderer.render(scene, camera);
-    }, 1000 / 30 );
+    }, 1000 / FPS );
   
 }
 

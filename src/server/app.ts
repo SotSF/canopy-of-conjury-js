@@ -85,6 +85,7 @@ app.use(function(err, req, res, next) {
 });
 
 /** Initializes the web socket connection and rendering loop */
+const FPS = 10;
 (async () => {
     /** Create a connection to the API */
     await connect({ host: config.host, port: config.port });
@@ -101,7 +102,7 @@ app.use(function(err, req, res, next) {
             render(grid);
         //})
         //.on('error', (err) => {});
-    }, 1000 / 30);
+    }, 1000 / FPS);
 })();
 
 export {

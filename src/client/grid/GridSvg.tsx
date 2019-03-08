@@ -68,7 +68,9 @@ class GridSvg extends React.Component<GridSvgProps, GridSvgState> {
     }
 
     componentDidMount () {
-        this.patternInterval = setInterval(this.updatePattern, 50);
+        // The SVG has twice the FPS as the grid itself. I find that more pleasing.
+        const FPS = 20;
+        this.patternInterval = setInterval(this.updatePattern, 1000 / FPS);
     }
 
     componentWillUnmount () {
