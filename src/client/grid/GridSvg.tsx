@@ -29,7 +29,7 @@ const Strip = ({ leds, numRows, colNum }) => {
                       key={i}
                       r={LED_RADIUS}
                       cx={0}
-                      cy={i}
+                      cy={numRows - i - 1}
                     />
                 );
             })}
