@@ -18,7 +18,7 @@ import AddIcon from '@material-ui/icons/Add';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import { allPatterns } from '../../patterns';
-import { GridSvg } from '../canopy';
+import { GridSvg } from '../grid';
 import PatternProps from './PatternProps';
 
 

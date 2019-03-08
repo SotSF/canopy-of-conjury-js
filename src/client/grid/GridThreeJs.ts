@@ -39,7 +39,7 @@ export default class GridThreeJs implements GridInterface {
     _initializeStrips () {
         const strips = [];
 
-        for (let i = 0; i < NUM_ROWS; i++) {
+        for (let i = 0; i < NUM_COLS; i++) {
             const s = new LedStrip(i);
             this.ledHitBoxes.push(s.particleSystem);
             strips.push(s);
@@ -73,8 +73,8 @@ class LedStrip implements StripInterface {
         this.updatePositions();
 
         const particleSystemGeometry = new THREE.BufferGeometry();
-        const positions = new Float32Array( NUM_COLS * 3 );
-        const colors = new Float32Array( NUM_COLS * 3 );
+        const positions = new Float32Array( NUM_ROWS * 3 );
+        const colors = new Float32Array( NUM_ROWS * 3 );
 
         this.leds.forEach((led, i) => {
             const indexStart = i * 3;
@@ -106,7 +106,7 @@ class LedStrip implements StripInterface {
         group.add(this.particleSystem);
 
         // Rotate the group according to the offset
-        group.translateY(rowNum);
+        group.translateX(rowNum);
         this.group = group;
     }
 
@@ -115,12 +115,12 @@ class LedStrip implements StripInterface {
     }
 
     _initializeLeds () {
-        this.leds = _.range(NUM_COLS).map(() => new THREE.Vector3(0, 0, 0));
-        this.colors = _.range(NUM_COLS).map(() => []);
+        this.leds = _.range(NUM_ROWS).map(() => new THREE.Vector3(0, 0, 0));
+        this.colors = _.range(NUM_ROWS).map(() => []);
     }
 
     clear () {
-        this.colors = _.range(NUM_COLS).map(() => []);
+        this.colors = _.range(NUM_ROWS).map(() => []);
         _.range(this.leds.length).forEach(i => this.renderPixel(i));
     }
 
@@ -138,7 +138,7 @@ class LedStrip implements StripInterface {
     updatePositions () {
         for (let i = 0; i < this.leds.length; i++) {
             const led = this.leds[i];
-            led.x = i;
+            led.y = i;
             led.z = 0;
         }
     }

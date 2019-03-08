@@ -1,6 +1,6 @@
 
 import * as THREE from 'three';
-import { GridThreeJs } from './canopy';
+import { GridThreeJs } from './grid';
 import * as Menu from './menu';
 import { patterns } from './state';
 

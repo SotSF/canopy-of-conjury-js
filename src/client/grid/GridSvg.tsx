@@ -20,9 +20,7 @@ const Strip = ({ leds, length, rowNum }) => {
 
     // The strip is rotated a specified amount, then translated along its radial path as though
     // there was an invisible LED at the center of the canopy
-    const transform = `
-        translate(0 ${rowNum * interval} 0)
-    `;
+    const transform = `translate(0 ${rowNum * interval})`;
 
     return (
         <g transform={transform}>
