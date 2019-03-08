@@ -1,11 +1,10 @@
 
 import * as _ from 'lodash';
-import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
+import { NUM_ROWS, NUM_COLS } from '../grid';
 import { RGB, Color } from '../colors';
 import { MaybeOscillator, pattern } from '../types';
 import * as util from '../util';
 import BasePattern from './BasePattern';
-import Memoizer from './memoizer';
 import { PatternPropTypes } from './utils';
 
 
@@ -25,7 +24,6 @@ interface FireFliesPropTypes {
     color: Color,
     opacity: number,
     quantity: number,
-    rotation: number,
     velocity: MaybeOscillator<number>
 }
 
@@ -36,7 +34,6 @@ export class Fireflies extends BasePattern {
         color   : new PatternPropTypes.Color(),
         opacity : new PatternPropTypes.Range(0, 1, 0.01),
         quantity: new PatternPropTypes.Range(10, 100),
-        rotation: new PatternPropTypes.Range(-10, 10),
         velocity: new PatternPropTypes.Range(0, 10).enableOscillation()
     };
 
@@ -45,7 +42,6 @@ export class Fireflies extends BasePattern {
             color: new RGB(255, 255, 0),
             quantity: 50,
             velocity: 0,
-            rotation: 0,
             opacity: 1
         };
     }
@@ -53,7 +49,6 @@ export class Fireflies extends BasePattern {
     fireflies: IFirefly[] = [];
     dimension = 200;
     lifespan = 75;
-    memoizer = new Memoizer();
 
     constructor (props) {
         super(props);
@@ -75,17 +70,16 @@ export class Fireflies extends BasePattern {
         }
     }
 
-    render (canopy) {
-        const memoizedMap = this.memoizer.createMap(this.dimension, canopy);
+    render (grid) {
         this.fireflies.forEach(firefly =>
-            this.renderFirefly(firefly, canopy, memoizedMap)
+            this.renderFirefly(firefly, grid)
         );
     }
 
     addFirefly () {
         const size = Math.floor(Math.random() * 3) + 1;
-        const x = Math.random() * this.dimension;
-        const y = Math.random() * this.dimension;
+        const x = Math.random() * NUM_COLS;
+        const y = Math.random() * NUM_ROWS;
         const offset = Math.random() * 20;
         const brightness = Math.random() * 10;
 
@@ -102,7 +96,7 @@ export class Fireflies extends BasePattern {
         });
     }
 
-    renderFirefly (firefly, canopy, memoMap) {
+    renderFirefly (firefly, grid) {
         const color = new RGB(
             this.values.color.r + firefly.offset,
             this.values.color.g + firefly.offset,
@@ -112,27 +106,27 @@ export class Fireflies extends BasePattern {
 
         const x = firefly.radius * Math.cos(firefly.theta);
         const y = firefly.radius * Math.sin(firefly.theta);
-        const x2 = Math.floor(x + (firefly.x + this.dimension / 2));
-        const y2 = Math.floor(y + (firefly.y + this.dimension / 2));
-        const co = memoMap.mapCoords(x2 % this.dimension,y2 % this.dimension);
-       
-        const rotation = this.iteration * this.values.rotation;
-        const strip = util.clampModular(co.strip + rotation, 0, NUM_STRIPS);
+        const x2 = Math.floor(x + firefly.x);
+        const y2 = Math.floor(y + firefly.y);
 
-        // If the coordinate is beyond the canopy, don't do anything
-        if (!_.inRange(co.led, 0, canopy.strips[0].length)) return;
-        canopy.strips[strip].updateColor(co.led, color);
+        // If the firefly is off-grid, don't render it
+        if (x2 > NUM_COLS || y2 > NUM_ROWS) return;
+
+        // Render the firefly
+        grid.strips[x2].updateColor(y2, color);
 
         if (firefly.size > 1) {
-            const l = (co.led + 1);
-            if (l >= 0 && l < NUM_LEDS_PER_STRIP) {
-                canopy.strips[strip].updateColor(l, color);
+            const oneOver = x2 + 1;
+            if (oneOver < NUM_COLS) {
+                grid.strips[oneOver].updateColor(y2, color);
             }
         }
 
         if (firefly.size > 2) {
-            const s = (strip + 1) % NUM_STRIPS;
-            canopy.strips[s].updateColor(co.led, color);
+            const oneUp = y2 + 1;
+            if (oneUp < NUM_ROWS) {
+                grid.strips[x2].updateColor(oneUp, color);
+            }
         }
     }
 
