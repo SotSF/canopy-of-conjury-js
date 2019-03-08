@@ -9,7 +9,6 @@ import { RainbowLines } from './RainbowLines';
 import { ShootingStars } from './ShootingStars';
 import { Snake } from './Snake';
 import { TestLEDs } from './Test';
-import { Venn } from './Venn';
 
 export const allPatterns = [
     BackgroundColor,
@@ -20,7 +19,6 @@ export const allPatterns = [
     RainbowLines,
     ShootingStars,
     Snake,
-    Venn
 ];
 
 export {
@@ -32,7 +30,6 @@ export {
     RainbowLines,
     ShootingStars,
     Snake,
-    Venn,
 
     // Test patterns
     TestLEDs,
