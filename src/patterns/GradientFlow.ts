@@ -1,7 +1,7 @@
 
 import * as _ from 'lodash';
 import * as util from '../util';
-import { NUM_LEDS_PER_STRIP } from '../canopy';
+import { NUM_ROWS } from '../grid';
 import { RGB, Color, HSV } from '../colors';
 import { MaybeOscillator, pattern } from '../types';
 import BasePattern from './BasePattern';
@@ -54,7 +54,7 @@ export class GradientFlow extends BasePattern {
         };
     }
 
-    private ringColors: Color[] = new Array(NUM_LEDS_PER_STRIP);
+    private ringColors: Color[] = new Array(NUM_ROWS);
     private curPolarity: GradientPolarity = GradientPolarity.forwards;
     private curPosition: number = 0;
     private interpolation: Color[] = null;
@@ -80,12 +80,12 @@ export class GradientFlow extends BasePattern {
         const interpolatedColors: Color[] = [];
         const { color1, color2 } = this.props;
 
-        // iterate over the length of the LED strips and derive the interpolated value
-        for (let i = 0; i < NUM_LEDS_PER_STRIP; i++) {
+        // iterate over the rows and derive the interpolated value
+        for (let i = 0; i < NUM_ROWS; i++) {
             interpolatedColors[i] = new RGB(
-                util.lerp(color1.r, color2.r, i / NUM_LEDS_PER_STRIP),
-                util.lerp(color1.g, color2.g, i / NUM_LEDS_PER_STRIP),
-                util.lerp(color1.b, color2.b, i / NUM_LEDS_PER_STRIP)
+                util.lerp(color1.r, color2.r, i / NUM_ROWS),
+                util.lerp(color1.g, color2.g, i / NUM_ROWS),
+                util.lerp(color1.b, color2.b, i / NUM_ROWS)
             );
         }
 
@@ -107,7 +107,7 @@ export class GradientFlow extends BasePattern {
         if (this.curPolarity == GradientPolarity.forwards) {
           return this.interpolation[this.curPosition];
         } else {
-          return this.interpolation[NUM_LEDS_PER_STRIP - this.curPosition - 1];
+          return this.interpolation[NUM_ROWS - this.curPosition - 1];
         }
     }
 
@@ -120,11 +120,11 @@ export class GradientFlow extends BasePattern {
 
         // move the colors along
         if (direction == GradientTravelDirection.outwards) {
-            for (let v = NUM_LEDS_PER_STRIP - 1; v >= speed; v--) {
+            for (let v = NUM_ROWS - 1; v >= speed; v--) {
                 ringColors[v] = ringColors[v - speed];
             }
         } else {
-            for (let v = 0; v <= NUM_LEDS_PER_STRIP - 1 - speed; v++) {
+            for (let v = 0; v <= NUM_ROWS - 1 - speed; v++) {
                 ringColors[v] = ringColors[v + speed];
             }
         }
@@ -132,25 +132,25 @@ export class GradientFlow extends BasePattern {
         // add new colors, flipping the gradient polarity if appropriate
         for (let i = 0; i < speed; i++) {
             this.curPosition++;
-            if (this.curPosition == NUM_LEDS_PER_STRIP) {
+            if (this.curPosition == NUM_ROWS) {
                 this.curPosition = 0;
                 this.togglePolarity();
             }
 
             const ledToUpdate = direction == GradientTravelDirection.outwards
                 ? i
-                : NUM_LEDS_PER_STRIP - 1 - i;
+                : NUM_ROWS - 1 - i;
 
             ringColors[ledToUpdate] = this.getColor();
         }
     }
 
-    render (canopy) {
+    render (grid) {
         this.ringColors.forEach((ringColor, i) => {
             if (!ringColor) return;
 
             const color = ringColor.withAlpha(this.values.opacity);
-            canopy.strips.forEach(strip => strip.updateColor(i, color));
+            grid.strips.forEach(strip => strip.updateColor(i, color));
         });
     }
 
