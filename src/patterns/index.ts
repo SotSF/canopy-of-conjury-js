@@ -5,7 +5,6 @@ import { CircleBurst } from './CircleBurst';
 import { Fade } from './Fade';
 import { Fireflies } from './Fireflies';
 import { GradientFlow } from './GradientFlow';
-import { GradientPulse } from './GradientPulse';
 import { Kaleidoscope } from './Kaleidoscope';
 import { RainbowLines } from './RainbowLines';
 import { ShootingStars } from './ShootingStars';
@@ -19,7 +18,6 @@ export const allPatterns = [
     Fade,
     Fireflies,
     GradientFlow,
-    GradientPulse,
     Kaleidoscope,
     RainbowLines,
     ShootingStars,
@@ -33,7 +31,6 @@ export {
     Fade,
     Fireflies,
     GradientFlow,
-    GradientPulse,
     Kaleidoscope,
     RainbowLines,
     ShootingStars,
