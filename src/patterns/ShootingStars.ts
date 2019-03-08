@@ -1,6 +1,6 @@
 
 import * as _ from 'lodash';
-import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
+import { NUM_COLS, NUM_ROWS } from '../grid';
 import { RGB, Color } from '../colors';
 import { MaybeOscillator, pattern } from '../types';
 import BasePattern from './BasePattern';
@@ -46,8 +46,8 @@ export class ShootingStars extends BasePattern {
 
         for (let i = 0; i < 3; i++) {
             this.stars.push({
-                strip: Math.floor(Math.random() * NUM_STRIPS),
-                led: props.fromApex ? 0 : NUM_LEDS_PER_STRIP - 1
+                strip: Math.floor(Math.random() * NUM_COLS),
+                led: props.fromApex ? 0 : NUM_ROWS - 1
             });
         }
     }
@@ -57,8 +57,8 @@ export class ShootingStars extends BasePattern {
 
         for (let i = Math.floor(Math.random() * 10); i >= 0; i--) {
             this.stars.push({
-                strip: Math.floor(Math.random() * NUM_STRIPS),
-                led: this.values.fromApex ? 0 : NUM_LEDS_PER_STRIP - 1
+                strip: Math.floor(Math.random() * NUM_COLS),
+                led: this.values.fromApex ? 0 : NUM_ROWS - 1
             });
         }
 
@@ -66,24 +66,23 @@ export class ShootingStars extends BasePattern {
         this.stars.forEach((star) => {
             const directionalMultiplier = this.values.fromApex ? 1 : -1;
             star.led += Math.floor(velocity * directionalMultiplier);
-            star.strip = Math.floor(star.strip + this.values.vortex) % NUM_STRIPS;
+            star.strip = Math.floor(star.strip + this.values.vortex) % NUM_COLS;
 
             // Wrap the star if necessary
             if (star.strip < 0) {
-                star.strip += NUM_STRIPS;
-            } else if (star.strip >= NUM_STRIPS) {
-                star.strip -= NUM_STRIPS;
+                star.strip += NUM_COLS;
+            } else if (star.strip >= NUM_COLS) {
+                star.strip -= NUM_COLS;
             }
 
-            // Remove it when it has traversed the canopy
-            if (star.led >= NUM_LEDS_PER_STRIP || star.led < 0) {
+            // Remove it when it has traversed the grid
+            if (star.led >= NUM_ROWS || star.led < 0) {
                 this.stars = _.without(this.stars, star);
             }
         });
     }
 
-    render (canopy) {
-        
+    render (grid) {
         this.stars.forEach((star) => {
             for (let l = 0; l <= this.values.trail; l++) {
                 let coord = {
@@ -91,13 +90,12 @@ export class ShootingStars extends BasePattern {
                     led: this.values.fromApex ? star.led - l : star.led + l
                 }
                 if (coord.led < 0) coord.led = 0;
-                if (coord.led >= canopy.stripLength) coord.led = canopy.stripLength - 1;
-                const converted = ShootingStars.convertCoordinate(coord, canopy);
-                const strip = Math.round(converted.strip) % NUM_STRIPS;
+                if (coord.led >= grid.numRows) coord.led = grid.numRows - 1;
+                const converted = ShootingStars.convertCoordinate(coord, grid);
+                const row = Math.round(converted.row) % NUM_ROWS;
                 const color = this.values.color.withAlpha(this.values.opacity * ((this.values.trail - l) / this.values.trail));
-                canopy.strips[strip].updateColor(converted.led, color);
+                grid.strips[row].updateColor(converted.col, color);
             }
-          
         });
     }
 
