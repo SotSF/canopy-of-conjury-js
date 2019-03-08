@@ -22,17 +22,18 @@ export interface StripInterface {
     updateColors: (color: Color) => void
 }
 
-export interface CanopyInterface {
+export interface GridInterface {
     clear: () => void
     strips: StripInterface[]
-    stripLength: number
+    numRows: number
+    numCols: number
 }
 
 export interface PatternInstance {
     props: any
     progress: () => void
     updateProps: (o: object) => void
-    render: (canopy: CanopyInterface) => void
+    render: (grid: GridInterface) => void
     serialize: () => IPatternState
     serializeExtra?: () => object
     deserialize: (state: IPatternState) => void

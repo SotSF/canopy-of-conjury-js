@@ -1,7 +1,7 @@
 
 import * as _ from 'lodash';
 import { RGB } from '../colors';
-import { CanopyInterface, StripInterface } from '../types';
+import { GridInterface, StripInterface } from '../types';
 
 
 class Strip implements StripInterface {
@@ -30,15 +30,15 @@ class Strip implements StripInterface {
     }
 }
 
-export default class Canopy implements CanopyInterface {
+export default class Grid implements GridInterface {
     strips = null;
 
-    constructor (numStrips, numLedsPerStrip) {
-        this.strips = _.range(numStrips).map(() => new Strip(numLedsPerStrip));
+    constructor (numRows, numCols) {
+        this.strips = _.range(numCols).map(() => new Strip(numRows));
     }
 
-    get stripLength () {
-        return this.strips[0].length;
+    get size () {
+        return this.strips.length;
     }
 
     clear () {
