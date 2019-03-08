@@ -1,12 +1,15 @@
 
 import * as _ from 'lodash';
-import { NUM_COLS } from '../grid';
+import { NUM_COLS, NUM_ROWS } from '../grid';
 import { MaybeOscillator, pattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 import { HSV } from '../colors';
 import Memoizer from './memoizer';
+import { scale } from '../util';
 
+
+const OLD_STRIP_COUNT = 96;
 
 class Wave {
     amp: number;
@@ -95,8 +98,8 @@ export class Kaleidoscope extends BasePattern {
 
         // add a new wave
         if (Math.random() > 0.6 && this.waves.length < 3) {
-            this.frequency = this.frequencies[Math.floor(Math.random() * this.frequencies.length)];
-            const bassAmp = Math.floor(Math.random() * NUM_COLS / 2 + 5);
+            this.frequency = _.sample(this.frequencies);
+            const bassAmp = Math.floor(Math.random() * OLD_STRIP_COUNT / 2 + 5);
             this.waves.push(new Wave(bassAmp));
         }
 
@@ -112,7 +115,7 @@ export class Kaleidoscope extends BasePattern {
     }
 
     render (canopy) {
-        const mirror = Math.floor(NUM_COLS / this.frequency);
+        const mirror = Math.floor(OLD_STRIP_COUNT / this.frequency);
         const memoizedMap = this.memoizer.createMap(this.dimension, canopy);
         this.waves.forEach(wave => {
             const waveColor = (new HSV(wave.hue / 360, 1, wave.opacity)).toRgb();
@@ -123,12 +126,19 @@ export class Kaleidoscope extends BasePattern {
                 const co = memoizedMap.mapCoords(x % this.dimension, y % this.dimension);
 
                 // If the coordinate is beyond the canopy, don't do anything
-                if (!_.inRange(co.led, 0, canopy.stripLength)) continue
+                if (!_.inRange(co.led, 0, 75)) continue
 
                 for (let s = 0; s < this.frequency; s++) {
                     for (let i = 0; i < wave.width; i++) {
-                        let strip = Math.floor((this.iteration / 3 * this.values.rotate) + co.strip + i + mirror * s) % NUM_COLS;
-                        canopy.strips[strip].updateColor(co.led, color);
+                        let strip = Math.floor((this.iteration / 3 * this.values.rotate) + co.strip + i + mirror * s) % OLD_STRIP_COUNT;
+
+                        // `strip` ranges from 0 to 95, and `co.led` from 0 to 74, representing radial coordinates on the
+                        // original canopy. Convert them back now
+                        const theta = scale(strip, 0, 96, 0, 2 * Math.PI);
+                        const r = scale(co.led, 0, 74, 0, NUM_COLS / 2);
+                        const x = Math.floor(NUM_COLS / 2 + r * Math.cos(theta));
+                        const y = Math.floor(NUM_ROWS / 2 + r * Math.sin(theta));
+                        canopy.strips[x].updateColor(y, color);
                     }
                 }
 
