@@ -2,10 +2,10 @@
 import * as _ from 'lodash';
 import { NUM_COLS, NUM_ROWS } from '../grid';
 import { RGB, Color } from '../colors';
-import { MaybeOscillator, pattern } from '../types';
+import { MaybeOscillator, pattern, Coordinateinterface } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
-
+import { scale } from '../util';
 
 interface ShootingStarsProps {
     color: MaybeOscillator<Color>
@@ -21,11 +21,11 @@ export class ShootingStars extends BasePattern {
     static displayName = 'Shooting Stars';
     static propTypes = {
         color: new PatternPropTypes.Color().enableOscillation(),
+        trail: new PatternPropTypes.Range(1, 15),
         velocity: new PatternPropTypes.Range(0, 5).enableOscillation(),
         vortex: new PatternPropTypes.Range(-2, 2, 0.1).enableOscillation(),
         opacity: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation(),
         fromApex: new PatternPropTypes.Boolean(),
-        trail: new PatternPropTypes.Range(1,30)
     };
 
     static defaultProps () : ShootingStarsProps {
@@ -35,66 +35,66 @@ export class ShootingStars extends BasePattern {
             vortex: 0,
             opacity: 1,
             fromApex: true,
-            trail: 1
+            trail: 3
         };
     }
 
-    stars = [];
+    stars: Coordinateinterface[];
 
-    constructor (props) {
+    constructor (props: ShootingStarsProps) {
         super(props);
 
-        for (let i = 0; i < 3; i++) {
-            this.stars.push({
-                strip: Math.floor(Math.random() * NUM_COLS),
-                led: props.fromApex ? 0 : NUM_ROWS - 1
-            });
-        }
+        this.stars = _.range(3).map(() => ({
+            col: Math.floor(Math.random() * NUM_COLS),
+            row: props.fromApex ? 0 : NUM_ROWS - 1
+        }));
     }
 
     progress () {
         super.progress();
 
-        for (let i = Math.floor(Math.random() * 10); i >= 0; i--) {
-            this.stars.push({
-                strip: Math.floor(Math.random() * NUM_COLS),
-                led: this.values.fromApex ? 0 : NUM_ROWS - 1
-            });
-        }
-
+        // Update existing stars...
         const velocity = this.values.velocity;
         this.stars.forEach((star) => {
             const directionalMultiplier = this.values.fromApex ? 1 : -1;
-            star.led += Math.floor(velocity * directionalMultiplier);
-            star.strip = Math.floor(star.strip + this.values.vortex) % NUM_COLS;
-
-            // Wrap the star if necessary
-            if (star.strip < 0) {
-                star.strip += NUM_COLS;
-            } else if (star.strip >= NUM_COLS) {
-                star.strip -= NUM_COLS;
-            }
+            star.row += Math.floor(velocity * directionalMultiplier);
+            star.col = Math.floor(star.col + this.values.vortex) % NUM_COLS;
 
             // Remove it when it has traversed the grid
-            if (star.led >= NUM_ROWS || star.led < 0) {
+            const badColumn = star.col < 0 || star.col >= NUM_COLS;
+            const badRow = star.row >= NUM_ROWS || star.row < 0;
+            if (badColumn || badRow) {
                 this.stars = _.without(this.stars, star);
             }
         });
+
+        // ...and make some new ones
+        for (let i = Math.floor(Math.random() * 3); i >= 0; i--) {
+            this.stars.push({
+                col: Math.floor(Math.random() * NUM_COLS),
+                row: this.values.fromApex ? 0 : NUM_ROWS - 1
+            });
+        }
     }
 
     render (grid) {
         this.stars.forEach((star) => {
             for (let l = 0; l <= this.values.trail; l++) {
-                let coord = {
-                    strip: star.strip,
-                    led: this.values.fromApex ? star.led - l : star.led + l
+                const coord = {
+                    col: star.col,
+                    row: this.values.fromApex ? star.row - l : star.row + l
                 }
-                if (coord.led < 0) coord.led = 0;
-                if (coord.led >= grid.numRows) coord.led = grid.numRows - 1;
-                const converted = ShootingStars.convertCoordinate(coord, grid);
-                const row = Math.round(converted.row) % NUM_ROWS;
-                const color = this.values.color.withAlpha(this.values.opacity * ((this.values.trail - l) / this.values.trail));
-                grid.strips[row].updateColor(converted.col, color);
+
+                // If the star's head or trail is off-grid, skip it
+                if (coord.row < 0 || coord.row >= grid.numRows) continue;
+
+                // The trail dims further from the star
+                const dimmingFactor = this.values.trail > 0
+                    ? scale(l, 0, this.values.trail, 1, 0.1)
+                    : 1;
+
+                const color = this.values.color.withAlpha(this.values.opacity * dimmingFactor);
+                grid.strips[coord.col].updateColor(coord.row, color);
             }
         });
     }
