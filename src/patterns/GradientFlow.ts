@@ -62,7 +62,7 @@ export class GradientFlow extends BasePattern {
     constructor (props) {
         super(props);
         this.interpolation = this.interpolateColors();
-        this.ringColors = this.interpolation;
+        this.ringColors = [...this.interpolation];
     }
 
     updateProps (props) {
