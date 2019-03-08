@@ -21,7 +21,6 @@ export const allPatterns = [
     GradientFlow,
     GradientPulse,
     Kaleidoscope,
-    Map,
     RainbowLines,
     ShootingStars,
     Snake,
