@@ -7,7 +7,7 @@ import { Fireflies } from './Fireflies';
 import { GradientFlow } from './GradientFlow';
 import { GradientPulse } from './GradientPulse';
 import { Kaleidoscope } from './Kaleidoscope';
-import { RainbowSpiral } from './RainbowSpiral';
+import { RainbowLines } from './RainbowLines';
 import { ShootingStars } from './ShootingStars';
 import { Snake } from './Snake';
 import { TestLEDs } from './Test';
@@ -22,7 +22,7 @@ export const allPatterns = [
     GradientPulse,
     Kaleidoscope,
     Map,
-    RainbowSpiral,
+    RainbowLines,
     ShootingStars,
     Snake,
     Venn
@@ -36,7 +36,7 @@ export {
     GradientFlow,
     GradientPulse,
     Kaleidoscope,
-    RainbowSpiral,
+    RainbowLines,
     ShootingStars,
     Snake,
     Venn,
