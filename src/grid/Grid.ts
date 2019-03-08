@@ -1,6 +1,5 @@
 
 import * as _ from 'lodash';
-import { RGB } from '../colors';
 import { GridInterface, StripInterface } from '../types';
 
 
