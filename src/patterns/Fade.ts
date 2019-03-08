@@ -14,9 +14,6 @@ interface FadeProps {
     opacity: MaybeOscillator<number>
 }
 
-/**
- * Emits pulse rings from center - each ring is a different color, following a gradient color scheme
- */
 @pattern()
 export class Fade extends BasePattern {
     static displayName = 'Fade';
@@ -88,7 +85,7 @@ export class Fade extends BasePattern {
         }
     }
 
-    render (canopy) {
+    render (grid) {
         // If there's no color, there's nothing to do
         if (!this.currentColor) return;
 
@@ -96,9 +93,7 @@ export class Fade extends BasePattern {
         const opacity = this.values.opacity;
         const color = this.currentColor.withAlpha(amplitude * opacity);
 
-        canopy.strips.forEach((strip) => {
-            strip.updateColors(color);
-        });
+        grid.strips.forEach((strip) => strip.updateColors(color));
     }
 
     serializeExtra () {
