@@ -1,9 +1,7 @@
 
 import * as _ from 'lodash';
-import { NUM_COLS, NUM_ROWS } from '../grid';
 import { RGB, isColor } from '../colors';
 import { GridInterface, PatternInstance, PatternInterface } from '../types';
-import * as util from '../util';
 import { isOscillatorWrapper, Oscillator, OscillatorWrapper, PatternPropTypes } from './utils';
 
 
@@ -11,23 +9,6 @@ export default abstract class BasePattern implements PatternInstance {
     props = null;
     values = null;
     iteration = 0;
-
-    // Patterns are typically produced assuming they will be run on a grid with 25 rows
-    // of 20 LEDs each. Sometimes this isn't true, however. This function will scale the
-    // coordinate from the standard-sized grid to whatever is given.
-    static convertCoordinate (coordinate, grid: GridInterface) {
-        const { row, col } = coordinate;
-
-        const convertedRow = Math.round(
-            util.scale(row, 0, NUM_ROWS - 1, 0, grid.numRows - 1)
-        );
-
-        const convertedCol = Math.round(
-            util.scale(col, 0, NUM_COLS - 1, 0, grid.numCols - 1)
-        );
-
-        return { row: convertedRow, col: convertedCol };
-    }
 
     serialize () {
         const serializeProp = (value) => {

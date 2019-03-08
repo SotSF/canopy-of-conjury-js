@@ -94,17 +94,15 @@ export class Snake extends BasePattern {
         const tHSV = new HSV(this.iteration % 360 / 360, 1, 1);
         const tRGB = tHSV.toRgb().withAlpha(opacity);
 
-        const target = Snake.convertCoordinate(this.target, grid);
-        grid.strips[target.col].updateColor(target.row, tRGB);
+        grid.strips[this.target.col].updateColor(this.target.row, tRGB);
 
         for (let i = 0; i < this.snake.length; i++) {
-            const point = Snake.convertCoordinate(this.snake[i], grid);
-
+            const snakePoint = this.snake[i];
             const h = i / this.values.maxLength + this.iteration;
             const hsv = new HSV(h % 1, 1, 1);
             const color = hsv.toRgb().withAlpha(opacity);
 
-            grid.strips[point.col].updateColor(point.row, color);
+            grid.strips[snakePoint.col].updateColor(snakePoint.row, color);
         }
     }
 
