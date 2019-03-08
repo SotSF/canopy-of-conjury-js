@@ -61,7 +61,7 @@ export class Fireflies extends BasePattern {
     progress () {
         super.progress();
 
-        this.fireflies.map(this.updateFirefly);
+        this.fireflies.forEach(this.updateFirefly);
 
         if (this.fireflies.length < this.values.quantity) {
             this.addFirefly();
@@ -70,30 +70,51 @@ export class Fireflies extends BasePattern {
         }
     }
 
-    render (grid) {
-        this.fireflies.forEach(firefly =>
-            this.renderFirefly(firefly, grid)
-        );
-    }
-
     addFirefly () {
-        const size = Math.floor(Math.random() * 3) + 1;
-        const x = Math.random() * NUM_COLS;
-        const y = Math.random() * NUM_ROWS;
-        const offset = Math.random() * 20;
-        const brightness = Math.random() * 10;
-
         this.fireflies.push({
-            brightness,
-            offset,
-            size,
-            x,
-            y,
+            brightness: Math.random() * 10,
+            offset: Math.random() * 20,
+            size: Math.floor(Math.random() * 3) + 1,
+            x: Math.random() * NUM_COLS,
+            y: Math.random() * NUM_ROWS,
             dir: [1, 1, 1],
             age: 0,
             radius: 0,
             theta: 0
         });
+    }
+
+    updateFirefly = (firefly: IFirefly) => {
+        firefly.brightness += 10 * firefly.dir[0];
+        if (firefly.brightness >= 255 || firefly.brightness <= 0) {
+            firefly.dir[0] *= -1;
+        }
+
+        // If the firefly has lived a full life, kill it off the next time it's dim
+        firefly.age++;
+        if (firefly.age >= this.lifespan && firefly.brightness <= 0) {
+            this.fireflies = _.without(this.fireflies, firefly);
+        }
+
+        const velocity = this.values.velocity;
+        if (velocity > 0) {
+            const v = velocity / 2;
+            firefly.radius += 0.1 * v * firefly.dir[1];
+            if (firefly.radius > 20 || Math.random() > 0.99) {
+                firefly.dir[1] *= -1;
+            }
+
+            firefly.theta += 0.1 * v * firefly.dir[2];
+            if (Math.random() > 0.99) {
+                firefly.dir[2] *= -1;
+            }
+        }
+    };
+
+    render (grid) {
+        this.fireflies.forEach(firefly =>
+            this.renderFirefly(firefly, grid)
+        );
     }
 
     renderFirefly (firefly, grid) {
@@ -129,32 +150,6 @@ export class Fireflies extends BasePattern {
             }
         }
     }
-
-    updateFirefly = (firefly) => {
-        firefly.brightness += 10 * firefly.dir[0];
-        if (firefly.brightness >= 255 || firefly.brightness <= 0) {
-            firefly.dir[0] *= -1;
-        }
-
-        firefly.age++;
-        if (firefly.age >= this.lifespan) {
-            this.fireflies = _.without(this.fireflies, firefly);
-        }
-
-        const velocity = this.values.velocity;
-        if (velocity > 0) {
-            const v = velocity / 2;
-            firefly.radius += 0.1 * v * firefly.dir[1];
-            if (firefly.radius > 20 || Math.random() > 0.99) {
-                firefly.dir[1] *= -1;
-            }
-
-            firefly.theta += 0.1 * v * firefly.dir[2];
-            if (Math.random() > 0.99) {
-                firefly.dir[2] *= -1;
-            }
-        }
-    };
 
     serializeExtra () {
         return {
