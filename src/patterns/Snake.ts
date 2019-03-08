@@ -1,7 +1,7 @@
 
 import { HSV } from '../colors';
 import { NUM_COLS, NUM_ROWS } from '../grid';
-import { MaybeOscillator } from '../types';
+import { MaybeOscillator, Coordinateinterface } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 
@@ -41,9 +41,9 @@ export class Snake extends BasePattern {
         return 0;
     }
 
-    private target = Snake.getPoint();
-    private snake = [Snake.getPoint()];
-    private tail = [];
+    private target: Coordinateinterface = Snake.getPoint();
+    private snake: Coordinateinterface[] = [Snake.getPoint()];
+    private tail: Coordinateinterface[] = [];
 
     progress () {
         super.progress();
