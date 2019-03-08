@@ -1,8 +1,8 @@
 
 import * as _ from 'lodash';
-import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
+import { NUM_COLS, NUM_ROWS } from '../grid';
 import { RGB, isColor } from '../colors';
-import { CanopyInterface, PatternInstance, PatternInterface } from '../types';
+import { GridInterface, PatternInstance, PatternInterface } from '../types';
 import * as util from '../util';
 import { isOscillatorWrapper, Oscillator, OscillatorWrapper, PatternPropTypes } from './utils';
 
@@ -12,21 +12,21 @@ export default abstract class BasePattern implements PatternInstance {
     values = null;
     iteration = 0;
 
-    // Patterns are typically produced assuming they will be run on a canopy with 96 strips
-    // of 75 LEDs each. Sometimes this isn't true, however. This function will scale the point from
-    // the standard-sized canopy to whatever is given.
-    static convertCoordinate (point, canopy) {
-        const { strip, led } = point;
+    // Patterns are typically produced assuming they will be run on a grid with 25 rows
+    // of 20 LEDs each. Sometimes this isn't true, however. This function will scale the
+    // coordinate from the standard-sized grid to whatever is given.
+    static convertCoordinate (coordinate, grid: GridInterface) {
+        const { row, col } = coordinate;
 
-        const canopyStrip = Math.round(
-            util.scale(strip, 0, NUM_STRIPS - 1, 0, canopy.strips.length - 1)
+        const convertedRow = Math.round(
+            util.scale(row, 0, NUM_ROWS - 1, 0, grid.numRows - 1)
         );
 
-        const canopyLed = Math.round(
-            util.scale(led, 0, NUM_LEDS_PER_STRIP - 1, 0, canopy.stripLength - 1)
+        const convertedCol = Math.round(
+            util.scale(col, 0, NUM_COLS - 1, 0, grid.numCols - 1)
         );
 
-        return { strip: canopyStrip, led: canopyLed };
+        return { row: convertedRow, col: convertedCol };
     }
 
     serialize () {
@@ -95,7 +95,7 @@ export default abstract class BasePattern implements PatternInstance {
     }
 
     // These must each be implemented in inheriting classes
-    abstract render (canopy: CanopyInterface);
+    abstract render (grid: GridInterface);
 
     constructor (props) {
         // If no props are provided, use the default props
@@ -112,7 +112,7 @@ export default abstract class BasePattern implements PatternInstance {
             if (isOscillatorWrapper(value)) {
                 this.values[name] = value.value();
             } else {
-                this. values[name] = value;
+                this.values[name] = value;
             }
         });
     }

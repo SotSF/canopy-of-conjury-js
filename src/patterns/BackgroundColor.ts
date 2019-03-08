@@ -29,8 +29,8 @@ export class BackgroundColor extends BasePattern {
         };
     }
 
-    render (canopy) {
-        canopy.strips.forEach(strip =>
+    render (grid) {
+        grid.strips.forEach(strip =>
             strip.updateColors(this.values.color.withAlpha(this.values.opacity))
         );
     }

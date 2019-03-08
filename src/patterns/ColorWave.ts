@@ -1,6 +1,6 @@
 
 import * as _ from 'lodash';
-import { NUM_LEDS_PER_STRIP, NUM_STRIPS } from '../canopy';
+import { NUM_LEDS_PER_STRIP, NUM_STRIPS } from '../grid';
 import { Color, RGB } from '../colors';
 import {IOscillator, MaybeOscillator, pattern, WaveType} from '../types';
 import * as util from '../util';
@@ -55,10 +55,10 @@ export class ColorWave extends BasePattern {
     }
 
     serializeExtra () {
-        return {
-        };
+        return {};
     }
 
     deserializeExtra (obj) {
+        // Nothing to do
     }
 }

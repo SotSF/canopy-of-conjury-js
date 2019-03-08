@@ -3,7 +3,7 @@ import { Color, RGB, HSV } from '../colors';
 import { MaybeOscillator, pattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
-import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
+import { NUM_ROWS, NUM_COLS } from '../grid';
 
 interface ICircle {
     points: number[],
@@ -39,7 +39,7 @@ export class CircleBurst extends BasePattern {
 
     threshold = 10;
     circles = [];
-    freshPoints = Array.apply(null, Array(NUM_STRIPS)).map(Number.prototype.valueOf, 0);
+    freshPoints = _.range(NUM_ROWS).map(() => 0);
     currHue = 0;
 
     progress() {
@@ -55,7 +55,7 @@ export class CircleBurst extends BasePattern {
 
         this.circles.forEach(circle => {
             circle.points.forEach((point,i) => {
-                if (point >= NUM_LEDS_PER_STRIP) return;
+                if (point >= NUM_COLS) return;
                 if (point < this.threshold) { circle.points[i] += 1; }
                 else {
                     if (Math.random() < this.values.decay) {
