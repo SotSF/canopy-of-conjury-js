@@ -32,12 +32,12 @@ export class Snake extends BasePattern {
         };
     }
 
-    static getDirection(s, t, comparer) {
-        const d = t-s;
-        if (d > 0 && Math.abs(d) < comparer / 2) return  1;
-        if (d > 0 && Math.abs(d) > comparer / 2) return -1;
-        if (d < 0 && Math.abs(d) < comparer / 2) return -1;
-        if (d < 0 && Math.abs(d) > comparer / 2) return  1;
+    static getDirection(snake, target, comparer) {
+        const delta = target - snake;
+        if (delta > 0 && Math.abs(delta) <  comparer / 2) return  1;
+        if (delta > 0 && Math.abs(delta) >= comparer / 2) return -1;
+        if (delta < 0 && Math.abs(delta) <  comparer / 2) return -1;
+        if (delta < 0 && Math.abs(delta) >= comparer / 2) return  1;
         return 0;
     }
 
@@ -94,8 +94,8 @@ export class Snake extends BasePattern {
         const tHSV = new HSV(this.iteration % 360 / 360, 1, 1);
         const tRGB = tHSV.toRgb().withAlpha(opacity);
 
-        const target = Snake.convertCoordinate({ strip: this.target.row, led: this.target.col }, grid);
-        grid.strips[target.row].updateColor(target.col, tRGB);
+        const target = Snake.convertCoordinate(this.target, grid);
+        grid.strips[target.col].updateColor(target.row, tRGB);
 
         for (let i = 0; i < this.snake.length; i++) {
             const point = Snake.convertCoordinate(this.snake[i], grid);
@@ -104,7 +104,7 @@ export class Snake extends BasePattern {
             const hsv = new HSV(h % 1, 1, 1);
             const color = hsv.toRgb().withAlpha(opacity);
 
-            grid.strips[point.row].updateColor(point.col, color);
+            grid.strips[point.col].updateColor(point.row, color);
         }
     }
 
