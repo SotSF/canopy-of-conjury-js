@@ -1,3 +1,4 @@
+export * from './directions';
 export { PatternPropTypes } from './pattern_prop_types';
 export {
     ColorOscillator,
