@@ -67,7 +67,7 @@ export class Streaks extends BasePattern {
                 col: isVertical(direction) ? _.sample(_.range(NUM_COLS)) : null,
                 position: 0,
                 color: RGB.random(),
-                length: Math.floor(sampleGaussian() * 100)
+                length: Math.floor(sampleGaussian() * 40)
             })
         }
     }
