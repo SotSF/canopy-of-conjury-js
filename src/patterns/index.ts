@@ -8,6 +8,7 @@ import { Kaleidoscope } from './Kaleidoscope';
 import { RainbowLines } from './RainbowLines';
 import { ShootingStars } from './ShootingStars';
 import { Snake } from './Snake';
+import { Streaks } from './Streaks';
 import { TestLEDs } from './Test';
 
 export const allPatterns = [
@@ -19,6 +20,7 @@ export const allPatterns = [
     RainbowLines,
     ShootingStars,
     Snake,
+    Streaks,
 ];
 
 export {
@@ -30,6 +32,7 @@ export {
     RainbowLines,
     ShootingStars,
     Snake,
+    Streaks,
 
     // Test patterns
     TestLEDs,
