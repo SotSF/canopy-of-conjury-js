@@ -6,3 +6,4 @@ export {
     Oscillator,
     OscillatorWrapper,
 } from './oscillator';
+export * from './sample_gaussian';
