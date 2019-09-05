@@ -28,7 +28,7 @@ export class TestLEDs extends BasePattern {
         var c = 0;
         for (let s = 0; s < NUM_STRIPS; s++) {
             canopy.strips[s].updateColors(this.colors[c]);
-            if ((s + 1) % 8 == 0) c++;
+            if ((s + 1) % this.colors.length == 0) c++;
             if (c >= this.colors.length) { c = 0; }
         }
     }

@@ -124,8 +124,8 @@ class LedStrip implements StripInterface {
         this.updatePositions();
 
         const particleSystemGeometry = new THREE.BufferGeometry();
-        const positions = new Float32Array( NUM_LEDS_PER_STRIP * 3 );
-        const colors = new Float32Array( NUM_LEDS_PER_STRIP * 3 );
+        const positions = new Float32Array(NUM_LEDS_PER_STRIP * 3);
+        const colors = new Float32Array(NUM_LEDS_PER_STRIP * 3);
 
         this.leds.forEach((led, i) => {
             const indexStart = i * 3;
@@ -199,7 +199,7 @@ class LedStrip implements StripInterface {
         for (let i = 0; i < this.leds.length; i++) {
             const led = this.leds[i];
             const [x, z] = this.catenary.coordinates[i];
-            [led.x, led.z] = [x,-z];
+            [led.x, led.z] = [x, -z];
         }
 
         // String

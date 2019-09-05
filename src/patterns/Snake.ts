@@ -58,21 +58,22 @@ export class Snake extends BasePattern {
             this.tail = this.tail.slice(1);
         }
 
-        const ds = Snake.getDirection(this.snake[0].strip, this.target.strip, NUM_STRIPS);
-        const dl = Snake.getDirection(this.snake[0].led, this.target.led, NUM_LEDS_PER_STRIP);
+        const snakeHead = this.snake[0];
+        const ds = Snake.getDirection(snakeHead.strip, this.target.strip, NUM_STRIPS);
+        const dl = Snake.getDirection(snakeHead.led, this.target.led, NUM_LEDS_PER_STRIP);
 
-        this.snake[0].strip += ds;
-        if (this.snake[0].strip >= NUM_STRIPS) {
-            this.snake[0].strip %= NUM_STRIPS;
-        } else if (this.snake[0].strip < 0) {
-            this.snake[0].strip += NUM_STRIPS;
+        snakeHead.strip += ds;
+        if (snakeHead.strip >= NUM_STRIPS) {
+            snakeHead.strip %= NUM_STRIPS;
+        } else if (snakeHead.strip < 0) {
+            snakeHead.strip += NUM_STRIPS;
         }
 
-        this.snake[0].led += dl;
-        if (this.snake[0].led >= NUM_LEDS_PER_STRIP) {
-            this.snake[0].led %= NUM_LEDS_PER_STRIP;
-        } else if (this.snake[0].led < 0) {
-            this.snake[0].led += NUM_LEDS_PER_STRIP;
+        snakeHead.led += dl;
+        if (snakeHead.led >= NUM_LEDS_PER_STRIP) {
+            snakeHead.led %= NUM_LEDS_PER_STRIP;
+        } else if (snakeHead.led < 0) {
+            snakeHead.led += NUM_LEDS_PER_STRIP;
         }
 
         for (let i = 1; i < this.snake.length ; i++) {
@@ -81,7 +82,7 @@ export class Snake extends BasePattern {
             lastPoint = { strip, led };
         }
 
-        if (this.snake[0].strip === this.target.strip && this.snake[0].led === this.target.led) {
+        if (snakeHead.strip === this.target.strip && snakeHead.led === this.target.led) {
             this.target = Snake.getPoint();
             this.tail.push({ ...lastPoint });
         }
