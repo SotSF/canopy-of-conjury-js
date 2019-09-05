@@ -1,22 +1,23 @@
 import { combine } from '../colors';
 import * as request from 'request';
+import { AppConfig } from './types';
 import * as btoa from 'btoa';
 
 
 /** Transmits data to the canopy API */
 export default class Transmitter {
-    host: string = null;
+    uriBase: string = null;
 
-    constructor (host) {
-        this.host = host;
+    constructor (config: AppConfig) {
+        this.uriBase = `http://${config.host}:${config.port}`;
     }
 
     private _get (uri) {
-        return request.get([this.host, 'api', uri].join('/'));
+        return request.get([this.uriBase, 'api', uri].join('/'));
     }
 
     private _post (uri, data) {
-        return request.post([this.host, 'api', uri].join('/'), {body: data});
+        return request.post([this.uriBase, 'api', uri].join('/'), {body: data});
     }
 
     /** Canopy API method wrappers */

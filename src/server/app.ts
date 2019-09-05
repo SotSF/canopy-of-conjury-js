@@ -11,6 +11,7 @@ import * as path from 'path';
 import { Canopy } from '../canopy';
 import state, { patterns } from './state';
 import Transmitter from './transmitter';
+import { AppConfig } from './types'
 
 
 /** Set up the app object */
@@ -40,18 +41,13 @@ app.get('/', function(req, res) {
     res.sendFile(path.join(serverDirectory, '../static/index.html'));
 });
 
-
-/** Config reader */
-interface AppConfig {
-    api_host: string
-}
-
 const config: AppConfig = (() => {
     try {
         return JSON.parse(fs.readFileSync('./config.json', 'utf8'));
     } catch (e) {
         return {
-            api_host: null
+            host: 'localhost',
+            port: 8080
         };
     }
 })();
