@@ -77,7 +77,8 @@ export default class CanopySvg extends React.Component<CanopySvgProps, CanopySvg
     }
 
     componentDidMount () {
-        this.patternInterval = setInterval(this.updatePattern, 50);
+        const FPS = 20;
+        this.patternInterval = setInterval(this.updatePattern, 1000 / FPS);
     }
 
     componentWillUnmount () {

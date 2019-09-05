@@ -80,6 +80,7 @@ app.use(function(err, req, res, next) {
 });
 
 /** Create a connection to the API and initialize the rendering loop */
+const FPS = 30;
 (async () => {
     const transmitter = new Transmitter(config);
 
@@ -100,7 +101,7 @@ app.use(function(err, req, res, next) {
         });
 
         transmitter.render(canopy);
-    }, 1000 / 30);
+    }, 1000 / FPS);
 })();
 
 export {

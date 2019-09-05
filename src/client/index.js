@@ -21,6 +21,7 @@ const controls = new THREE.OrbitControls(camera, renderer.domElement);
 const canopy = new CanopyThreeJs;
 canopy.initialize(scene);
 
+const FPS = 30;
 animate();
 
 function animate() {
@@ -36,7 +37,7 @@ function animate() {
         });
 
         renderer.render(scene, camera);
-    }, 1000 / 30 );
+    }, 1000 / FPS);
   
 }
 
