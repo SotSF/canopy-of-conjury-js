@@ -45,39 +45,13 @@ const config: AppConfig = (() => {
     try {
         return JSON.parse(fs.readFileSync('./config.json', 'utf8'));
     } catch (e) {
+        console.log('Using default connection config');
         return {
             host: 'localhost',
             port: 8080
         };
     }
 })();
-
-/** Create a connection to the API */
-const transmitter = new Transmitter(config.api_host);
-
-transmitter.ping().on('response', () => {
-    console.log('Connected to canopy API');
-})
-.on('error', function(err) {
-    console.log('Unable to connect to canopy API');
-});
-
-setInterval(() => {
-    transmitter.ping().on('response', () => {
-        const canopy = new Canopy(96, 75);
-        
-            //setInterval(() => {
-                canopy.clear();
-                patterns.forEach((pattern) => {
-                    pattern.instance.progress();
-                    pattern.instance.render(canopy);
-                });
-                transmitter.render(canopy);
-            //}, 1000); // TODO: set this to a different interval; this will set the framerate
-        })
-        .on('error', (err) => {});
-}, 1000 / 30);
-
 
 /** Create HTTP server. */
 const server = http.createServer(app);
@@ -104,6 +78,30 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
+
+/** Create a connection to the API and initialize the rendering loop */
+(async () => {
+    const transmitter = new Transmitter(config);
+
+    try {
+        await transmitter.ping();
+        console.log('Connected to canopy API');
+    } catch (err) {
+        console.log(`Unable to connect to canopy API: ${err}`);
+        return;
+    }
+
+    const canopy = new Canopy(96, 75);
+    setInterval(() => {
+        canopy.clear();
+        patterns.forEach((pattern) => {
+            pattern.instance.progress();
+            pattern.instance.render(canopy);
+        });
+
+        transmitter.render(canopy);
+    }, 1000 / 30);
+})();
 
 export {
     app,

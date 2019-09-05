@@ -1,6 +1,6 @@
 import { combine } from '../colors';
-import * as request from 'request';
 import { AppConfig } from './types';
+import * as request from 'request-promise-native';
 import * as btoa from 'btoa';
 
 
