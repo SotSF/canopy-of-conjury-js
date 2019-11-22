@@ -8,7 +8,7 @@ import * as http from 'http';
 import * as logger from 'morgan';
 import * as path from 'path';
 
-import { Canopy } from '../canopy';
+import { Canopy, NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
 import state, { patterns } from './state';
 import Transmitter from './transmitter';
 import { AppConfig } from './types'
@@ -92,14 +92,21 @@ const FPS = 30;
         return;
     }
 
-    const canopy = new Canopy(96, 75);
+    // Create the canopy object
+    const canopy = new Canopy(NUM_STRIPS, NUM_LEDS_PER_STRIP);
+
+    // With every frame...
     setInterval(() => {
+        // ...clean the slate...
         canopy.clear();
+
+        // ...update the patterns and render them to the canopy object...
         patterns.forEach((pattern) => {
             pattern.instance.progress();
             pattern.instance.render(canopy);
         });
 
+        // ...and transmit to the API.
         transmitter.render(canopy);
     }, 1000 / FPS);
 })();
