@@ -22,9 +22,7 @@ interface ConcentricCirclesProps {
     trail: number
 }
 
-/**
- * Emits pulse rings from center - each ring is a different color, following a gradient color scheme
- */
+/** Emits pulse rings from center */
 @pattern()
 export class ConcentricCircles extends BasePattern {
     static displayName = 'Concentric Circles';
@@ -59,12 +57,11 @@ export class ConcentricCircles extends BasePattern {
             });
         }
 
-        // go through every position in beatList, and light up the corresponding LED in all strips
         this.circles.forEach((circle) => {
-            // increment the position of each beat for the next go-around
+            // Increment the position of each circle
             circle.pos++;
 
-            // remove if the position is too big
+            // Remove if the circle has already reached the edge of the canopy
             const circleEdge = circle.pos - (circle.width + circle.trail);
             if (circleEdge >= NUM_LEDS_PER_STRIP) {
                 this.circles = _.without(this.circles, circle);
