@@ -10,7 +10,6 @@ import { createStyles, withStyles, Theme, WithStyles } from '@material-ui/core/s
 import { IOscillator, WaveType } from '../../../types';
 import Popover from '../../util/Popover';
 import Slider from '../components/Slider';
-import { Oscillator }  from '../../../patterns/utils';
 
 
 interface WaveImageProps {
