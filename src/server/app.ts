@@ -15,7 +15,7 @@ import { AppConfig } from './types'
 
 
 /** Set up the app object */
-const app = express();
+const app = expressWs(express()).app;
 
 // A reference to the directory that the `app.ts` source file is found in. When the server code is
 // compiled, the executable code is moved into the `dist` directory and `app.ts` is located under
@@ -53,11 +53,7 @@ const config: AppConfig = (() => {
     }
 })();
 
-/** Create HTTP server. */
-const server = http.createServer(app);
-
 /** Add web sockets to the express app */
-expressWs(app, server);
 app.ws('/state', state);
 
 /** Error handling */
@@ -111,7 +107,4 @@ const FPS = 30;
     }, 1000 / FPS);
 })();
 
-export {
-    app,
-    server
-};
+export { app };
