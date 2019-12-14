@@ -114,10 +114,21 @@ const fetchState = () => {
     send(message);
 };
 
+/** Sends a request to save the current pattern set */
+const savePatternSet = (name: string) => {
+    const message: ClientMessage.SavePatternSet = {
+        type: MESSAGE_TYPE.savePatternSet,
+        name: name
+    };
+
+    send(message);
+};
+
 export default {
     addPattern,
     removePattern,
     clearPatterns,
     updateProps,
-    fetchState
+    fetchState,
+    savePatternSet
 };

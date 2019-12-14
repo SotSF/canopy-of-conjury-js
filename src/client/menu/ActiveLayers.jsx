@@ -3,6 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -155,6 +156,7 @@ class Pattern extends React.Component {
 class SaveButton extends React.Component {
     state = {
         anchorEl: null,
+        patternSetName: ''
     };
 
     handleClick = event => {
@@ -165,12 +167,25 @@ class SaveButton extends React.Component {
         this.setState({ anchorEl: null });
     };
 
+    savePatternSet = () => {
+        messenger.savePatternSet(this.state.patternSetName);
+    };
+    
+    updateName = (event) => {
+        this.setState({ patternSetName: event.target.value });
+    };
+
     render () {
         const { classes } = this.props;
+
+        // Can't save the pattern set if no name is entered
+        const disabled = this.state.patternSetName === '';
+
         return [
             <Button
               className={classes.root}
               color="primary"
+              key="button"
               onClick={this.handleClick}
               size="small"
               variant="contained"
@@ -179,13 +194,22 @@ class SaveButton extends React.Component {
             </Button>,
             <MenuPopover
               anchorEl={this.state.anchorEl}
+              key="popover"
               onClose={this.handleClose}
             >
                 <Card className={classes.card}>
-                    <TextField id="pattern-set-name" label="Name" />
+                    <TextField
+                      id="pattern-set-name"
+                      label="Name"
+                      onChange={this.updateName}
+                      value={this.state.patternSetName}
+                    />
+
                     <Button
                       className={classes.saveButton}
                       color="primary"
+                      disabled={disabled}
+                      onClick={this.savePatternSet}
                       size="small"
                       variant="contained"
                     >

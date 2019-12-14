@@ -9,6 +9,7 @@ export const enum MESSAGE_TYPE {
     removePattern,
     updateProps,
     syncState,
+    savePatternSet
 }
 
 
@@ -36,6 +37,10 @@ export namespace ClientMessage {
     export interface UpdateProps extends IMessage {
         patternId: string
         props: any // TODO: make this type more precise...
+    }
+
+    export interface SavePatternSet extends IMessage {
+        name: string
     }
 }
 
