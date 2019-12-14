@@ -55,6 +55,35 @@ const PatternStyles = {
     }
 };
 
+const MenuPopoverStyles = theme => ({
+    root: {
+        marginLeft: theme.spacing.unit
+    }
+});
+
+const MenuPopover = withStyles(MenuPopoverStyles)(
+    props => (
+        <Popover
+            open={!!props.anchorEl}
+            anchorEl={props.anchorEl}
+            onClose={props.onClose}
+            anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+            }}
+            transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+            }}
+            PaperProps={{
+                classes: props.classes
+            }}
+        >
+            {props.children}
+        </Popover>
+    )
+);
+
 @withStyles(PatternStyles)
 class Pattern extends React.Component {
     static propTypes = {
@@ -85,32 +114,6 @@ class Pattern extends React.Component {
         this.forceUpdate();
     };
 
-    renderPopover() {
-        const { pattern } = this.props;
-        const { anchorEl } = this.state;
-        return (
-            <Popover
-              open={!!anchorEl}
-              anchorEl={anchorEl}
-              onClose={this.handleClose}
-              anchorOrigin={{
-                  vertical: 'center',
-                  horizontal: 'right',
-              }}
-              transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'left',
-              }}
-            >
-                <PatternProps
-                  propTypes={pattern.instance.constructor.propTypes}
-                  values={pattern.instance.props}
-                  onChange={this.updateProps}
-                />
-            </Popover>
-        );
-    }
-
     render () {
         const { pattern } = this.props;
         return (
@@ -119,7 +122,17 @@ class Pattern extends React.Component {
                 <ListItemSecondaryAction>
                     <DeleteIcon onClick={() => this.props.removePattern(pattern.id)} />
                 </ListItemSecondaryAction>
-                {this.renderPopover()}
+                
+                <MenuPopover
+                  anchorEl={this.state.anchorEl}
+                  onClose={this.handleClose}
+                >
+                    <PatternProps
+                      propTypes={pattern.instance.constructor.propTypes}
+                      values={pattern.instance.props}
+                      onChange={this.updateProps}
+                    />
+                </MenuPopover>
             </ListItem>
         );
     }
