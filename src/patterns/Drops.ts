@@ -111,11 +111,17 @@ export class Drops extends BasePattern {
 
     serializeExtra () {
         return {
-            drops: this.drops
+            drops: this.drops.map(drop => ({
+                ...drop,
+                color: drop.color.serialize()
+            }))
         };
     }
 
     deserializeExtra (obj) {
-        this.drops = obj.drops;
+        this.drops = obj.drops.map(drop => ({
+            ...drop,
+            color: RGB.fromObject(drop.color)
+        }));
     }
 }
