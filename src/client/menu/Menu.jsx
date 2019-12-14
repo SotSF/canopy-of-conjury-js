@@ -17,7 +17,7 @@ import { MuiThemeProvider, withStyles } from '@material-ui/core/styles';
 
 import * as patterns from '../../patterns';
 import events from '../events';
-import * as messenger from '../messenger';
+import messenger from '../messenger';
 import { updatePatterns } from '../state';
 import theme from '../theme';
 
@@ -72,7 +72,7 @@ class Menu extends React.Component {
         this.props.canopy.clear();
         this.setState({ patterns: [] });
         updatePatterns([]);
-        messenger.state.clearPatterns();
+        messenger.clearPatterns();
     };
 
     addPattern = (pattern, params) => {
@@ -89,7 +89,7 @@ class Menu extends React.Component {
             order,
         }, ...this.state.patterns];
 
-        messenger.state.addPattern(id, instance, params, order);
+        messenger.addPattern(id, instance, params, order);
 
         this.setState({ patterns: newPatterns }, () => updatePatterns(newPatterns));
     };
@@ -98,7 +98,7 @@ class Menu extends React.Component {
         const patternToRemove = _.find(this.state.patterns, { id: patternId });
         const newPatterns = _.without(this.state.patterns, patternToRemove);
 
-        messenger.state.removePattern(patternId);
+        messenger.removePattern(patternId);
         this.setState({ patterns: newPatterns }, () => updatePatterns(newPatterns));
     };
 

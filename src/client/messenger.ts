@@ -16,64 +16,12 @@ import {
 const stateSocket = W3CWebSocket('ws://localhost:3000/state');
 
 // When the socket has opened, synchronize the state with the server's
-stateSocket.onopen = () => {
-    state.syncState();
-};
+stateSocket.onopen = () => fetchState();
 
 
-/** Message sending */
-const send = message => stateSocket.send(JSON.stringify(message));
-export const state = {
-    addPattern: (id, pattern: PatternInstance, props, order) => {
-        const message: ClientMessage.AddPattern = {
-            type: MESSAGE_TYPE.addPattern,
-            state: pattern.serialize(),
-            id,
-            order
-        };
-
-        send(message);
-    },
-
-    clearPatterns: () => {
-        const message: ClientMessage.ClearPatterns = {
-            type: MESSAGE_TYPE.clearPatterns,
-        };
-
-        send(message);
-    },
-
-    removePattern: (patternId: string) => {
-        const message: ClientMessage.RemovePattern = {
-            type: MESSAGE_TYPE.removePattern,
-            patternId
-        };
-
-        send(message);
-    },
-
-    updateProps: (patternId: string, props: any) => {
-        const message: ClientMessage.UpdateProps = {
-            type: MESSAGE_TYPE.updateProps,
-            patternId,
-            props
-        };
-
-        send(message);
-    },
-
-    /** Sends a request to synchronize state with the server */
-    syncState: () => {
-        const message: ClientMessage.SyncState = {
-            type: MESSAGE_TYPE.syncState
-        };
-
-        send(message);
-    }
-};
-
-
-/** Message receiving */
+/*********************
+ * Message receiving *
+ *********************/
 const syncState = (message: ServerMessage.SyncState) => {
     const patterns = message.patterns.map((pattern) => {
         const PatternClass = getPatternByName(pattern.name);
@@ -107,4 +55,69 @@ stateSocket.onmessage = (event) => {
             syncState(message);
             break;
     }
+};
+
+
+/*******************
+ * Message sending *
+ *******************/
+const send = message => stateSocket.send(JSON.stringify(message));
+
+/** Adds a pattern to the list of active patterns */
+const addPattern = (id, pattern: PatternInstance, props, order) => {
+    const message: ClientMessage.AddPattern = {
+        type: MESSAGE_TYPE.addPattern,
+        state: pattern.serialize(),
+        id,
+        order
+    };
+
+    send(message);
+};
+
+/** Clears all active patterns */
+const clearPatterns = () => {
+    const message: ClientMessage.ClearPatterns = {
+        type: MESSAGE_TYPE.clearPatterns,
+    };
+
+    send(message);
+};
+
+/** Removes a single pattern from the active patterns list */
+const removePattern = (patternId: string) => {
+    const message: ClientMessage.RemovePattern = {
+        type: MESSAGE_TYPE.removePattern,
+        patternId
+    };
+
+    send(message);
+};
+
+/** Updates an active pattern's props */
+const updateProps = (patternId: string, props: any) => {
+    const message: ClientMessage.UpdateProps = {
+        type: MESSAGE_TYPE.updateProps,
+        patternId,
+        props
+    };
+
+    send(message);
+};
+
+/** Sends a request to synchronize state with the server */
+const fetchState = () => {
+    const message: ClientMessage.SyncState = {
+        type: MESSAGE_TYPE.syncState
+    };
+
+    send(message);
+};
+
+export default {
+    addPattern,
+    removePattern,
+    clearPatterns,
+    updateProps,
+    fetchState
 };
