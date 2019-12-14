@@ -2,6 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Button from '@material-ui/core/Button';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -28,6 +29,10 @@ const styles = theme => ({
     },
     panelDetails: {
         padding: 0,
+        display: 'block'
+    },
+    saveButtion: {
+        margin: `${theme.spacing.unit}px 0 ${theme.spacing.unit}px 24px`
     },
     secondaryHeading: {
         fontSize: theme.typography.pxToRem(15),
@@ -126,6 +131,23 @@ export default class ActivePatterns extends React.Component {
         patterns: PropTypes.array
     };
 
+    renderSaveButton () {
+        const { classes, patterns } = this.props;
+
+        if (patterns.length === 0) return null;
+
+        return (
+            <Button
+                color="primary"
+                size="small"
+                className={classes.saveButtion}
+                variant="contained"
+            >
+                Save Pattern Set
+            </Button>
+        );
+    }
+
     render () {
         const { classes, patterns } = this.props;
 
@@ -153,6 +175,8 @@ export default class ActivePatterns extends React.Component {
                             />
                         )}
                     </List>
+
+                    {this.renderSaveButton()}
                 </ExpansionPanelDetails>
             </ExpansionPanel>
         );
