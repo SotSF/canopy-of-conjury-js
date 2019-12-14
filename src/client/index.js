@@ -25,9 +25,9 @@ const FPS = 30;
 animate();
 
 function animate() {
-    setTimeout( function() {
-        requestAnimationFrame( animate );
-        controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
+    setTimeout(function() {
+        requestAnimationFrame(animate);
+        controls.update();
         canopy.clear();
 
         // Reverse the patterns so that the bottom one is rendered first
@@ -38,7 +38,6 @@ function animate() {
 
         renderer.render(scene, camera);
     }, 1000 / FPS);
-  
 }
 
 window.onkeydown = e => {
