@@ -11,6 +11,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import Popover from '@material-ui/core/Popover';
+import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -30,9 +31,6 @@ const styles = theme => ({
     panelDetails: {
         padding: 0,
         display: 'block'
-    },
-    saveButtion: {
-        margin: `${theme.spacing.unit}px 0 ${theme.spacing.unit}px 24px`
     },
     secondaryHeading: {
         fontSize: theme.typography.pxToRem(15),
@@ -54,6 +52,21 @@ const PatternStyles = {
         display: "inline-block"
     }
 };
+
+const SaveButtonStyles = theme => ({
+    root: {
+        margin: `${theme.spacing.unit}px 0 ${theme.spacing.unit}px 24px`
+    },
+    card: {
+        backgroundColor: '#626262',
+        padding: '1rem',
+        display: 'flex',
+        alignItems: 'baseline'
+    },
+    saveButton: {
+        marginLeft: theme.spacing.unit
+    }
+});
 
 const MenuPopoverStyles = theme => ({
     root: {
@@ -138,6 +151,52 @@ class Pattern extends React.Component {
     }
 }
 
+@withStyles(SaveButtonStyles)
+class SaveButton extends React.Component {
+    state = {
+        anchorEl: null,
+    };
+
+    handleClick = event => {
+        this.setState({ anchorEl: event.currentTarget });
+    };
+
+    handleClose = () => {
+        this.setState({ anchorEl: null });
+    };
+
+    render () {
+        const { classes } = this.props;
+        return [
+            <Button
+              className={classes.root}
+              color="primary"
+              onClick={this.handleClick}
+              size="small"
+              variant="contained"
+            >
+                Save Pattern Set
+            </Button>,
+            <MenuPopover
+              anchorEl={this.state.anchorEl}
+              onClose={this.handleClose}
+            >
+                <Card className={classes.card}>
+                    <TextField id="pattern-set-name" label="Name" />
+                    <Button
+                      className={classes.saveButton}
+                      color="primary"
+                      size="small"
+                      variant="contained"
+                    >
+                        Save
+                    </Button>
+                </Card>
+            </MenuPopover>
+        ];
+    }
+}
+
 @withStyles(styles)
 export default class ActivePatterns extends React.Component {
     static propTypes = {
@@ -145,20 +204,11 @@ export default class ActivePatterns extends React.Component {
     };
 
     renderSaveButton () {
-        const { classes, patterns } = this.props;
+        const { patterns } = this.props;
 
         if (patterns.length === 0) return null;
 
-        return (
-            <Button
-                color="primary"
-                size="small"
-                className={classes.saveButtion}
-                variant="contained"
-            >
-                Save Pattern Set
-            </Button>
-        );
+        return <SaveButton />;
     }
 
     render () {
