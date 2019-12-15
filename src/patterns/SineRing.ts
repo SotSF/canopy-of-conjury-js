@@ -87,14 +87,14 @@ export class SineRing extends BasePattern {
         }
     }
 
-    serializeExtra () {
+    serializeState () {
         return {
             amp: this.amp,
             dir: this.dir
         };
     }
 
-    deserializeExtra (object) {
+    deserializeState (object) {
         this.amp = object.amp;
         this.dir = object.dir;
     }

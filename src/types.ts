@@ -34,9 +34,9 @@ export interface PatternInstance {
     updateProps: (o: object) => void
     render: (canopy: CanopyInterface) => void
     serialize: () => SerializedActivePattern
-    serializeExtra?: () => object
+    serializeState?: () => object
     deserialize: (state: SerializedActivePattern) => void
-    deserializeExtra?: (o: object) => void
+    deserializeState?: (o: object) => void
     deserializeProps: (o: object) => object
 }
 

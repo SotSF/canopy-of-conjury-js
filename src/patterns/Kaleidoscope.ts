@@ -136,14 +136,14 @@ export class Kaleidoscope extends BasePattern {
         });
     }
 
-    serializeExtra () {
+    serializeState () {
         return {
             frequency: this.frequency,
             waves: this.waves.map(wave => wave.serialize())
         };
     }
 
-    deserializeExtra (object) {
+    deserializeState (object) {
         this.frequency = object.frequency;
         this.waves = object.waves.map(waveProps => Wave.fromObject(waveProps));
     }

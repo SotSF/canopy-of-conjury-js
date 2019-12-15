@@ -143,7 +143,7 @@ export class Swarm extends BasePattern {
         });
     }
 
-    serializeExtra() {
+    serializeState() {
         return {
             swarm: this.swarm,
             swarmTime: this.swarmTime,
@@ -151,7 +151,7 @@ export class Swarm extends BasePattern {
         }
     }
 
-    deserializeExtra(obj) {
+    deserializeState(obj) {
         this.swarm = obj.swarm;
         this.swarmTime = obj.swarmTime;
         this.swarmClock = obj.swarmClock;

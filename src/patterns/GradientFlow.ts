@@ -154,7 +154,7 @@ export class GradientFlow extends BasePattern {
         });
     }
 
-    serializeExtra () {
+    serializeState () {
         return {
             ringColors: this.ringColors.map(color => color.serialize()),
             curPolarity: this.curPolarity,
@@ -162,7 +162,7 @@ export class GradientFlow extends BasePattern {
         }
     }
 
-    deserializeExtra (object) {
+    deserializeState (object) {
         this.ringColors = object.ringColors.map(color => RGB.fromObject(color));
         this.curPolarity = object.curPolarity;
         this.curPosition = object.curPosition;

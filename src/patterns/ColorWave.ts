@@ -54,11 +54,11 @@ export class ColorWave extends BasePattern {
         });
     }
 
-    serializeExtra () {
+    serializeState () {
         return {
         };
     }
 
-    deserializeExtra (obj) {
+    deserializeState (obj) {
     }
 }

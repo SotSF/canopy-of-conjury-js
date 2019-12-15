@@ -51,15 +51,15 @@ export default abstract class BasePattern implements PatternInstance {
             // @ts-ignore
             type: this.constructor.displayName,
             props,
-            extra: this.serializeExtra(),
+            extra: this.serializeState(),
             iteration: this.iteration
         };
     }
 
     // Should be overridden in inheriting classes if they have any additional parameters that must
     // be serialized
-    serializeExtra () { return {}; }
-    deserializeExtra (extra) {}
+    serializeState () { return {}; }
+    deserializeState (extra) {}
 
     deserializeProps (props) {
         const parseProp = (propType, value) => {
@@ -90,7 +90,7 @@ export default abstract class BasePattern implements PatternInstance {
 
     deserialize (state) {
         this.updateProps(this.deserializeProps(state.props));
-        this.deserializeExtra(state.extra);
+        this.deserializeState(state.extra);
         this.iteration = state.iteration;
     }
 

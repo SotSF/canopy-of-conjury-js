@@ -109,7 +109,7 @@ export class Drops extends BasePattern {
         });
     }
 
-    serializeExtra () {
+    serializeState () {
         return {
             drops: this.drops.map(drop => ({
                 ...drop,
@@ -118,7 +118,7 @@ export class Drops extends BasePattern {
         };
     }
 
-    deserializeExtra (obj) {
+    deserializeState (obj) {
         this.drops = obj.drops.map(drop => ({
             ...drop,
             color: RGB.fromObject(drop.color)

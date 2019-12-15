@@ -100,7 +100,7 @@ export class CircleBurst extends BasePattern {
         }
     }
 
-    serializeExtra() {
+    serializeState() {
         return {
             circles: this.circles.map((circle) => ({
             ...circle,
@@ -109,7 +109,7 @@ export class CircleBurst extends BasePattern {
         })) }
     }
 
-    deserializeExtra(obj) {
+    deserializeState(obj) {
         this.circles = obj.circles.map((circle) => ({
             ...circle,
             color: RGB.fromObject(circle.color)

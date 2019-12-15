@@ -67,13 +67,13 @@ export class Venn extends BasePattern {
         });
     }
 
-    serializeExtra() {
+    serializeState() {
         return {
             circles: this.circles
         }
     }
 
-    deserializeExtra(obj) {
+    deserializeState(obj) {
         this.circles = obj.circles;
     }
 

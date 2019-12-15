@@ -65,13 +65,13 @@ export class Radar extends BasePattern {
         }
     }
 
-    serializeExtra () {
+    serializeState () {
         return {
             head: this.head
         };
     }
 
-    deserializeExtra (object) {
+    deserializeState (object) {
         this.head = object.head;
     }
 }

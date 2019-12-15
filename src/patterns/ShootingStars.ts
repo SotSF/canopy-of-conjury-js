@@ -101,13 +101,13 @@ export class ShootingStars extends BasePattern {
         });
     }
 
-    serializeExtra () {
+    serializeState () {
         return {
             stars: this.stars
         };
     }
 
-    deserializeExtra (object) {
+    deserializeState (object) {
         this.stars = object.stars;
     }
 }

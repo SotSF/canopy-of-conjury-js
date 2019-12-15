@@ -113,14 +113,14 @@ export class Heartbeat extends BasePattern {
         }
     }
 
-    serializeExtra () {
+    serializeState () {
         return {
             pulse: this.pulse,
             grow: this.grow
         };
     }
 
-    deserializeExtra (object) {
+    deserializeState (object) {
         this.pulse = object.pulse;
         this.grow = object.grow;
     }

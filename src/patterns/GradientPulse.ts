@@ -91,7 +91,7 @@ export class GradientPulse extends BasePattern {
         });
     }
 
-    serializeExtra () {
+    serializeState () {
         return {
             offset: this.offset,
             dir: this.dir,
@@ -102,7 +102,7 @@ export class GradientPulse extends BasePattern {
         };
     }
 
-    deserializeExtra (object) {
+    deserializeState (object) {
         this.dir = object.dir;
         this.offset = object.offset;
         this.beatList = object.beatList.map(beat => ({

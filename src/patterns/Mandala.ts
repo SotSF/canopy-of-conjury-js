@@ -125,14 +125,14 @@ export class Mandala extends BasePattern {
         });
     }
 
-    serializeExtra() {
+    serializeState() {
         return this.shapes.map(shape => ({
             ...shape,
             color: shape.color.serialize()
         }))
     }
 
-    deserializeExtra(obj) {
+    deserializeState(obj) {
         obj.map((shape) =>
         this.shapes.push({
             ...shape,

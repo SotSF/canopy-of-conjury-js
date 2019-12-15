@@ -162,13 +162,13 @@ export class Fireflies extends BasePattern {
         }
     };
 
-    serializeExtra () {
+    serializeState () {
         return {
             fireflies: this.fireflies
         };
     }
 
-    deserializeExtra (object) {
+    deserializeState (object) {
         this.fireflies = object.fireflies;
     }
 }

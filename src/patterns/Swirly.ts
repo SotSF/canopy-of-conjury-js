@@ -138,7 +138,7 @@ export class Swirly extends BasePattern {
         });
     }
 
-    serializeExtra () {
+    serializeState () {
         return {
             f: this.f,
             color: this.color.serialize(),
@@ -150,7 +150,7 @@ export class Swirly extends BasePattern {
         };
     }
 
-    deserializeExtra (object) {
+    deserializeState (object) {
         this.f = object.f;
         this.color = RGB.fromObject(object.color);
         this.colorDir = object.colorDir;

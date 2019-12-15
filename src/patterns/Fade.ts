@@ -101,7 +101,7 @@ export class Fade extends BasePattern {
         });
     }
 
-    serializeExtra () {
+    serializeState () {
         return {
             colorIndex: this.colorIndex,
             currentColor: this.currentColor.serialize(),
@@ -109,7 +109,7 @@ export class Fade extends BasePattern {
         };
     }
 
-    deserializeExtra (obj) {
+    deserializeState (obj) {
         this.colorIndex = obj.colorIndex;
         this.currentColor = RGB.fromObject(obj.currentColor);
         this.lifecycle = obj.lifecycle;

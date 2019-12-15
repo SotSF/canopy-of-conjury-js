@@ -53,9 +53,9 @@ export class Time extends BasePattern {
 
    
 
-    serializeExtra () {
+    serializeState () {
         return {};
     }
 
-    deserializeExtra (obj) {}
+    deserializeState (obj) {}
 }

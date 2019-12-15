@@ -108,14 +108,14 @@ export class Snake extends BasePattern {
         }
     }
 
-    serializeExtra () {
+    serializeState () {
         return {
             snake: this.snake,
             tail: this.tail
         };
     }
 
-    deserializeExtra (object) {
+    deserializeState (object) {
         this.snake = object.snake;
         this.tail = object.tail;
     }

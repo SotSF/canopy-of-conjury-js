@@ -92,7 +92,7 @@ export class ConcentricCircles extends BasePattern {
         });
     }
 
-    serializeExtra () {
+    serializeState () {
         return {
             circles: this.circles.map((circle) => ({
                 ...circle,
@@ -101,7 +101,7 @@ export class ConcentricCircles extends BasePattern {
         };
     }
 
-    deserializeExtra (obj) {
+    deserializeState (obj) {
         const { circles } = obj;
         this.circles = circles.map((circle) => ({
             ...circle,

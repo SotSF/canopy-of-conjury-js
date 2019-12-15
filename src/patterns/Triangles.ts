@@ -93,14 +93,14 @@ export class Triangles extends BasePattern {
         }
     }
 
-    serializeExtra () {
+    serializeState () {
         return {
             currentHue: this.currentHue,
             indexOfBrightest: this.indexOfBrightest
         };
     }
 
-    deserializeExtra (object) {
+    deserializeState (object) {
         this.currentHue = object.currentHue;
         this.indexOfBrightest = object.indexOfBrightest;
     }

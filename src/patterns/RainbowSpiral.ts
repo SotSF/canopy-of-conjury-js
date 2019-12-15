@@ -73,7 +73,7 @@ export class RainbowSpiral extends BasePattern {
         });
     }
 
-    serializeExtra () {
+    serializeState () {
         return {
             adder: this.adder,
             colorOffset: this.colorOffset,
@@ -81,7 +81,7 @@ export class RainbowSpiral extends BasePattern {
         };
     }
 
-    deserializeExtra (object) {
+    deserializeState (object) {
         this.adder = object.adder;
         this.colorOffset = object.colorOffset;
         this.lines = object.lines;
