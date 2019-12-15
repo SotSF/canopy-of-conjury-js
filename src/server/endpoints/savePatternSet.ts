@@ -13,41 +13,41 @@ const PATTERN_SET_DIR = './pattern_sets';
  * Saves the current set of patterns to the local pattern set directory
  */
 export default async (msg: ClientMessage.SavePatternSet, ws: WebSocket) => {
-    // Check if there's already a pattern set with the given name. If there is
-    // then the user is required to confirm the override.
-    const preExisting: boolean = await patternSetExists(msg.name);
-    if (preExisting && !msg.confirmOverride) {
-        const response: ServerMessage.SavePatternSet = {
-            type: MESSAGE_TYPE.savePatternSet,
-            success: false,
-            needsConfirmation: true
-        };
-
-        ws.send(JSON.stringify(response));
-        return;
-    }
-
-    // No name conflict (or user has confirmed the override). Save the file
-    try {
-        writePatternSet(msg.name);
-    } catch (e) {
-        const response: ServerMessage.SavePatternSet = {
-            type: MESSAGE_TYPE.savePatternSet,
-            success: false,
-            error: e.toString()
-        };
-
-        ws.send(JSON.stringify(response));
-        return;
-    }
-  
-    // Success
+  // Check if there's already a pattern set with the given name. If there is
+  // then the user is required to confirm the override.
+  const preExisting: boolean = await patternSetExists(msg.name);
+  if (preExisting && !msg.confirmOverride) {
     const response: ServerMessage.SavePatternSet = {
-        type: MESSAGE_TYPE.savePatternSet,
-        success: true
+      type: MESSAGE_TYPE.savePatternSet,
+      success: false,
+      needsConfirmation: true
     };
 
     ws.send(JSON.stringify(response));
+    return;
+  }
+
+  // No name conflict (or user has confirmed the override). Save the file
+  try {
+    await writePatternSet(msg.name);
+  } catch (e) {
+    const response: ServerMessage.SavePatternSet = {
+      type: MESSAGE_TYPE.savePatternSet,
+      success: false,
+      error: e.toString()
+    };
+
+    ws.send(JSON.stringify(response));
+    return;
+  }
+
+  // Success
+  const response: ServerMessage.SavePatternSet = {
+    type: MESSAGE_TYPE.savePatternSet,
+    success: true
+  };
+
+  ws.send(JSON.stringify(response));
 };
 
 
@@ -83,18 +83,26 @@ const patternSetExists = (name: string): Promise<boolean> =>
     });
   });
 
-const writePatternSet = (name: string) => {
+const writePatternSet = (name: string): Promise<void> => 
+  new Promise<void>((resolve, reject) => {
     const serialized = state.serializePatterns();
     
     // Strip the `iteration` parameter
     serialized.forEach((serializedPattern) => {
-        const activePatternState = serializedPattern.state;
-        const unactivePatternState = {
-            ...activePatternState
-        };
-
-        delete unactivePatternState.iteration;
+      delete serializedPattern.state.iteration;
     });
 
-    console.log(serialized);
-};
+    const json = {
+      name,
+      patterns: serialized
+    };
+
+    const sanitized = sanitizeFilename(name);
+    const fullPath = [PATTERN_SET_DIR, sanitized].join('/');
+    const data = JSON.stringify(json, null, 2);
+
+    fs.writeFile(fullPath, data, (err) => {
+      if (err) reject(err);
+      else resolve();
+    });
+  });
