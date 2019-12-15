@@ -13,7 +13,7 @@ import {
 } from '../util/messaging';
 
 
-const stateSocket = W3CWebSocket('ws://localhost:3000/state');
+const stateSocket = W3CWebSocket('ws://localhost:3000/');
 
 // When the socket has opened, synchronize the state with the server's
 stateSocket.onopen = () => fetchState();

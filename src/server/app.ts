@@ -4,12 +4,12 @@ import * as cookieParser  from 'cookie-parser';
 import * as express from 'express';
 import * as expressWs from 'express-ws';
 import * as fs from 'fs';
-import * as http from 'http';
 import * as logger from 'morgan';
 import * as path from 'path';
 
 import { Canopy, NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
-import state, { patterns } from './state';
+import handleRequest from './endpoints';
+import state from './state';
 import Transmitter from './transmitter';
 import { AppConfig } from './types'
 
@@ -54,7 +54,7 @@ const config: AppConfig = (() => {
 })();
 
 /** Add web sockets to the express app */
-app.ws('/state', state);
+app.ws('/', handleRequest);
 
 /** Error handling */
 // catch 404 and forward to error handler
@@ -97,7 +97,7 @@ const FPS = 30;
         canopy.clear();
 
         // ...update the patterns and render them to the canopy object...
-        patterns.forEach((pattern) => {
+        state.patterns.forEach((pattern) => {
             pattern.instance.progress();
             pattern.instance.render(canopy);
         });
