@@ -51,7 +51,7 @@ export interface IPatternActive {
 export interface SerializedPattern {
     type: string
     props: object
-    extra: object
+    state: object
 }
 
 export interface SerializedActivePattern extends SerializedPattern {

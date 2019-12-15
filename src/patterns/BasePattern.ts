@@ -2,7 +2,7 @@
 import * as _ from 'lodash';
 import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
 import { RGB, isColor } from '../colors';
-import { CanopyInterface, PatternInstance, PatternInterface } from '../types';
+import { CanopyInterface, PatternInstance, PatternInterface, SerializedActivePattern } from '../types';
 import * as util from '../util';
 import { isOscillatorWrapper, Oscillator, OscillatorWrapper, PatternPropTypes } from './utils';
 
@@ -51,7 +51,7 @@ export default abstract class BasePattern implements PatternInstance {
             // @ts-ignore
             type: this.constructor.displayName,
             props,
-            extra: this.serializeState(),
+            state: this.serializeState(),
             iteration: this.iteration
         };
     }
@@ -59,7 +59,7 @@ export default abstract class BasePattern implements PatternInstance {
     // Should be overridden in inheriting classes if they have any additional parameters that must
     // be serialized
     serializeState () { return {}; }
-    deserializeState (extra) {}
+    deserializeState (state) {}
 
     deserializeProps (props) {
         const parseProp = (propType, value) => {
@@ -88,10 +88,10 @@ export default abstract class BasePattern implements PatternInstance {
         return deserialized;
     }
 
-    deserialize (state) {
-        this.updateProps(this.deserializeProps(state.props));
-        this.deserializeState(state.extra);
-        this.iteration = state.iteration;
+    deserialize (pattern: SerializedActivePattern) {
+        this.updateProps(this.deserializeProps(pattern.props));
+        this.deserializeState(pattern.state);
+        this.iteration = pattern.iteration;
     }
 
     // These must each be implemented in inheriting classes
