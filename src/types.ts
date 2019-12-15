@@ -33,9 +33,9 @@ export interface PatternInstance {
     progress: () => void
     updateProps: (o: object) => void
     render: (canopy: CanopyInterface) => void
-    serialize: () => IPatternState
+    serialize: () => SerializedActivePattern
     serializeExtra?: () => object
-    deserialize: (state: IPatternState) => void
+    deserialize: (state: SerializedActivePattern) => void
     deserializeExtra?: (o: object) => void
     deserializeProps: (o: object) => object
 }
@@ -48,10 +48,13 @@ export interface IPatternActive {
 }
 
 // The serialized version of a pattern
-export interface IPatternState {
+export interface SerializedPattern {
     type: string
     props: object
     extra: object
+}
+
+export interface SerializedActivePattern extends SerializedPattern {
     iteration: number
 }
 

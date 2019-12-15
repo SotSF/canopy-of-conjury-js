@@ -1,5 +1,5 @@
 
-import { IPatternState } from '../types';
+import { SerializedActivePattern } from '../types';
 
 
 /** Constants */
@@ -27,7 +27,7 @@ export namespace ClientMessage {
     export interface AddPattern extends IMessage {
         id: string
         order: number
-        state: IPatternState
+        state: SerializedActivePattern
     }
 
     export interface RemovePattern extends IMessage {
@@ -52,7 +52,7 @@ export namespace ServerMessage {
     interface IPatternWrapper {
         id: string
         order: number
-        state: IPatternState
+        state: SerializedActivePattern
         name: string
     }
 
