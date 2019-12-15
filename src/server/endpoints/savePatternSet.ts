@@ -103,6 +103,9 @@ const writePatternSet = (name: string): Promise<void> =>
 
     fs.writeFile(fullPath, data, (err) => {
       if (err) reject(err);
-      else resolve();
+      else {
+        console.info(`New pattern set "${name}" saved.`);
+        resolve();
+      }
     });
   });
