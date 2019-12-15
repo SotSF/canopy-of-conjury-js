@@ -11,6 +11,7 @@ import { PatternInterface } from '../../types';
 import { ClientMessage, ServerMessage, MESSAGE_TYPE } from '../../util/messaging';
 import state from '../state';
 
+import savePatternSet from './savePatternSet';
 
 
 /** Adds a pattern to the set of active patterns */
@@ -84,6 +85,9 @@ export default (ws: WebSocket, req) => {
                 break;
             case MESSAGE_TYPE.updateProps:
                 updateProps(<ClientMessage.UpdateProps>msg);
+                break;
+            case MESSAGE_TYPE.savePatternSet:
+                savePatternSet(<ClientMessage.SavePatternSet>msg, ws);
                 break;
         }
 
