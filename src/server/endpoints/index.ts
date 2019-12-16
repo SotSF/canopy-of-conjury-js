@@ -6,7 +6,7 @@
 import * as _ from 'lodash';
 import * as WebSocket from 'ws';
 
-import { getPatternByName } from '../../patterns';
+import { getPatternByType } from '../../patterns';
 import { PatternInterface } from '../../types';
 import { ClientMessage, ServerMessage, MESSAGE_TYPE } from '../../util/messaging';
 import state from '../state';
@@ -16,24 +16,16 @@ import savePatternSet from './savePatternSet';
 
 /** Adds a pattern to the set of active patterns */
 const addPattern = (msg: ClientMessage.AddPattern) => {
-    const name = msg.state.type;
-    const PatternType: PatternInterface = getPatternByName(name);
+    const type = msg.pattern.type;
+    const PatternType: PatternInterface = getPatternByType(type);
     if (!PatternType) {
-        console.error(`Unable to render pattern with invalid type: "${name}"`);
+        console.error(`Unable to render pattern with invalid type: "${type}"`);
         return null;
     }
 
-    const instance = new PatternType(Object.assign({}, msg.state.props));
-    instance.deserialize(msg.state);
-
-    const newPattern = {
-        id: msg.id,
-        instance,
-        order: msg.order,
-        name
-    };
-
-    state.addPattern(newPattern);
+    const instance = new PatternType();
+    instance.initialize(msg.pattern);
+    state.addPattern(instance);
 };
 
 /** Removes a pattern from the set of active patterns */

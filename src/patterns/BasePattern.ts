@@ -7,10 +7,28 @@ import * as util from '../util';
 import { isOscillatorWrapper, Oscillator, OscillatorWrapper, PatternPropTypes } from './utils';
 
 
+// Creates a unique ID for a pattern instance
+const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+const makeId = () => _.range(20).map(() => _.sample(characters)).join('');
+
 export default abstract class BasePattern implements PatternInstance {
+    id = null;
     props = null;
     values = null;
     iteration = 0;
+
+    initialize (pattern: Partial<SerializedActivePattern> = {}) {
+        this.id = pattern.id || makeId();
+
+        // If no props are provided, use the default props
+        this.props = pattern.props
+            ? this.deserializeProps(pattern.props)
+            // @ts-ignore: I don't know how to teach typescript that class will have the static property
+            : this.constructor.defaultProps();
+
+        if (pattern.iteration) this.iteration = pattern.iteration;
+        if (pattern.state) this.deserializeState(pattern.state);
+    }
 
     // Patterns are typically produced assuming they will be run on a canopy with 96 strips
     // of 75 LEDs each. Sometimes this isn't true, however. This function will scale the point from
@@ -50,6 +68,7 @@ export default abstract class BasePattern implements PatternInstance {
         return {
             // @ts-ignore
             type: this.constructor.displayName,
+            id: this.id,
             props,
             state: this.serializeState(),
             iteration: this.iteration
@@ -95,13 +114,7 @@ export default abstract class BasePattern implements PatternInstance {
     }
 
     // These must each be implemented in inheriting classes
-    abstract render (canopy: CanopyInterface);
-
-    constructor (props) {
-        // If no props are provided, use the default props
-        // @ts-ignore: I don't know how to teach typescript that class will have the static property
-        this.props = props || this.constructor.defaultProps();
-    }
+    abstract render (canopy: CanopyInterface): void;
 
     progress () {
         this.iteration++;

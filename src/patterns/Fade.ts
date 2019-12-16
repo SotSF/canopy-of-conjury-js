@@ -1,7 +1,7 @@
 
 import * as _ from 'lodash';
 import { Color, RGB } from '../colors';
-import { MaybeOscillator, pattern } from '../types';
+import { MaybeOscillator, pattern, PatternInterface, SerializedActivePattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 
@@ -46,9 +46,10 @@ export class Fade extends BasePattern {
     // is the end.
     lifecycle: number = 0;
 
-    constructor (props) {
-        super(props);
+    initialize (pattern: Partial<SerializedActivePattern>) {
+        super.initialize(pattern);
 
+        const props = <FadeProps>pattern.props;
         if (props.colors.length) {
             this.colorIndex = 0;
             this.currentColor = props.colors[0];

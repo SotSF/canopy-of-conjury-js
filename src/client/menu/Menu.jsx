@@ -75,21 +75,12 @@ class Menu extends React.Component {
         messenger.clearPatterns();
     };
 
-    addPattern = (pattern, params) => {
-        // Create a unique ID for the pattern instance
-        const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        const id = _.range(20).map(() => _.sample(characters)).join('');
-        const order = this.state.patterns.length;
+    addPattern = (pattern, props) => {
+        const instance = new pattern();
+        instance.initialize({ props });
+        const newPatterns = [instance, ...this.state.patterns];
 
-        const instance = new pattern(Object.assign({}, params));
-        const newPatterns = [{
-            id,
-            instance,
-            name: pattern.displayName,
-            order,
-        }, ...this.state.patterns];
-
-        messenger.addPattern(id, instance, params, order);
+        messenger.addPattern(instance);
 
         this.setState({ patterns: newPatterns }, () => updatePatterns(newPatterns));
     };

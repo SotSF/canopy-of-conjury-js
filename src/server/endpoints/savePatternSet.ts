@@ -89,7 +89,7 @@ const writePatternSet = (name: string): Promise<void> =>
     
     // Strip the `iteration` parameter
     serialized.forEach((serializedPattern) => {
-      delete serializedPattern.state.iteration;
+      delete serializedPattern.iteration;
     });
 
     const json = {

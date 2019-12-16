@@ -9,6 +9,7 @@ import Card from '@material-ui/core/Card';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import Fab from '@material-ui/core/Fab';
 import Grid from '@material-ui/core/Grid';
 import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
@@ -66,9 +67,12 @@ class PatternOption extends React.Component {
 
     handleClick = event => {
         const patternProps = this.props.pattern.defaultProps();
+        const patternInstance = new this.props.pattern(patternProps);
+        patternInstance.initialize();
+
         this.setState({
             anchorEl: event.currentTarget,
-            patternInstance: new this.props.pattern(patternProps),
+            patternInstance,
             patternProps
         });
     };
@@ -109,15 +113,13 @@ class PatternOption extends React.Component {
                     <CanopySvg mini pattern={patternInstance} patternProps={patternProps} />
                 </Card>
 
-                <Button
+                <Fab
                   className={classes.fab}
                   color="primary"
-                  mini
                   onClick={this.addPattern}
-                  variant="fab"
                 >
                     <AddIcon />
-                </Button>
+                </Fab>
             </div>
         );
     }

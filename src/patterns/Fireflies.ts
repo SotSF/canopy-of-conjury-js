@@ -2,7 +2,7 @@
 import * as _ from 'lodash';
 import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
 import { RGB, Color } from '../colors';
-import { MaybeOscillator, pattern } from '../types';
+import { MaybeOscillator, pattern, SerializedActivePattern } from '../types';
 import * as util from '../util';
 import BasePattern from './BasePattern';
 import Memoizer from './memoizer';
@@ -55,11 +55,13 @@ export class Fireflies extends BasePattern {
     lifespan = 75;
     memoizer = new Memoizer();
 
-    constructor (props) {
-        super(props);
+    initialize (pattern: Partial<SerializedActivePattern>) {
+        super.initialize(pattern);
 
-        for (let i = 0; i <= 10; i++) {
-            this.addFirefly()
+        if (!pattern.state) {
+            for (let i = 0; i <= 10; i++) {
+                this.addFirefly()
+            }
         }
     }
 

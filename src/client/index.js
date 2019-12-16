@@ -32,8 +32,8 @@ function animate() {
 
         // Reverse the patterns so that the bottom one is rendered first
         patterns.slice().reverse().forEach((pattern) => {
-            pattern.instance.progress();
-            pattern.instance.render(canopy);
+            pattern.progress();
+            pattern.render(canopy);
         });
 
         renderer.render(scene, camera);

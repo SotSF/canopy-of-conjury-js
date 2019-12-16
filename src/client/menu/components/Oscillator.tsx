@@ -85,7 +85,7 @@ class WaveImage extends React.Component<WaveImageProps, WaveImageState> {
 
 const wavePropsStyles = ({ spacing }: Theme) => createStyles({
     frequency: {
-        marginTop: spacing.unit,
+        marginTop: spacing(),
     },
 });
 
@@ -150,7 +150,7 @@ const WavePropsStyled = withStyles(wavePropsStyles)(WaveProps);
 
 const styles = ({ spacing }: Theme) => createStyles({
     spacer: {
-        marginLeft: spacing.unit,
+        marginLeft: spacing(),
     },
     wrapper: {
         display: 'flex',

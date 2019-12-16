@@ -1,9 +1,10 @@
 
 import * as _ from 'lodash';
+
 import * as util from '../util';
 import { NUM_LEDS_PER_STRIP } from '../canopy';
 import { RGB, Color, HSV } from '../colors';
-import { MaybeOscillator, pattern } from '../types';
+import { MaybeOscillator, pattern, SerializedActivePattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 
@@ -59,8 +60,8 @@ export class GradientFlow extends BasePattern {
     private curPosition: number = 0;
     private interpolation: Color[] = null;
 
-    constructor (props) {
-        super(props);
+    initialize (pattern: Partial<SerializedActivePattern>) {
+        super.initialize(pattern);
         this.interpolation = this.interpolateColors();
         this.ringColors = this.interpolation;
     }

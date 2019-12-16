@@ -87,9 +87,9 @@ export {
 }
 
 /** Takes the display name of a pattern and returns the pattern class */
-export const getPatternByName = (name: string): PatternInterface => {
+export const getPatternByType = (type: string): PatternInterface => {
     for (let i = 0; i < allPatterns.length; i++) {
-        if (allPatterns[i].displayName === name) {
+        if (allPatterns[i].displayName === type) {
             return allPatterns[i];
         }
     }

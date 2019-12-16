@@ -3,7 +3,7 @@
  */
 
 import { w3cwebsocket as W3CWebSocket }  from 'websocket';
-import { getPatternByName } from '../patterns';
+import { getPatternByType } from '../patterns';
 import { updatePatterns } from './state';
 import { PatternInstance } from '../types';
 import {
@@ -24,18 +24,12 @@ stateSocket.onopen = () => fetchState();
  *********************/
 const syncState = (message: ServerMessage.SyncState) => {
     const patterns = message.patterns.map((pattern) => {
-        const PatternClass = getPatternByName(pattern.name);
+        const PatternClass = getPatternByType(pattern.type);
 
         // Instantiate the pattern with the provided props
-        const instance = new PatternClass(pattern.state.props);
-        instance.deserialize(pattern.state);
-
-        return {
-            id: pattern.id,
-            name: pattern.name,
-            order: pattern.order,
-            instance,
-        };
+        const instance = new PatternClass();
+        instance.initialize(pattern);
+        return instance;
     });
 
     updatePatterns(patterns);
@@ -64,12 +58,10 @@ stateSocket.onmessage = (event) => {
 const send = message => stateSocket.send(JSON.stringify(message));
 
 /** Adds a pattern to the list of active patterns */
-const addPattern = (id, pattern: PatternInstance, props, order) => {
+const addPattern = (pattern: PatternInstance) => {
     const message: ClientMessage.AddPattern = {
         type: MESSAGE_TYPE.addPattern,
-        state: pattern.serialize(),
-        id,
-        order
+        pattern: pattern.serialize()
     };
 
     send(message);
@@ -115,10 +107,11 @@ const fetchState = () => {
 };
 
 /** Sends a request to save the current pattern set */
-const savePatternSet = (name: string) => {
+const savePatternSet = (name: string, confirmOverride: boolean = false) => {
     const message: ClientMessage.SavePatternSet = {
         type: MESSAGE_TYPE.savePatternSet,
-        name: name
+        name,
+        confirmOverride
     };
 
     send(message);

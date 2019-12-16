@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import Card from '@material-ui/core/Card';
 import { createStyles, withStyles, Theme, WithStyles } from '@material-ui/core/styles';
-import MaterialSlider from '@material-ui/lab/Slider';
+import MaterialSlider from '@material-ui/core/Slider';
 
 import { MaybeOscillator, IWaveParams } from '../../../types';
 import { NumericOscillator, isOscillatorWrapper, Oscillator } from '../../../patterns/utils';
@@ -17,7 +17,7 @@ const styles = ({ spacing }: Theme) => createStyles({
         height: '200px'
     },
     spacer: {
-        marginLeft: spacing.unit,
+        marginLeft: spacing(),
     },
     popover: {
         display: 'flex',
@@ -122,7 +122,7 @@ class Slider extends React.Component<SliderProps, SliderState> {
                       max={min}
                       step={-step}
                       value={actual}
-                      vertical
+                      orientation="vertical"
                     />
                 </Card>
 

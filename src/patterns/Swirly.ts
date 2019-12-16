@@ -2,7 +2,7 @@
 import * as _ from 'lodash';
 import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
 import { RGB, Color } from '../colors';
-import { MaybeOscillator, pattern } from '../types';
+import { MaybeOscillator, pattern, SerializedActivePattern } from '../types';
 import * as util from '../util';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
@@ -47,13 +47,16 @@ export class Swirly extends BasePattern {
     private colorDir = 1;
     private swirls = [];
 
-    constructor (props: SwirlyProps) {
-        super(props);
+    initialize (pattern: Partial<SerializedActivePattern>) {
+        super.initialize(pattern);
 
-        // Initialize swirls
-        this.color = props.color1;
-        for (let i = 0; i <= props.quantity; i++) {
-            this.makeSwirl();
+        if (!pattern.state) {
+            const props = <SwirlyProps>pattern.props;
+
+            this.color = props.color1;
+            for (let i = 0; i <= props.quantity; i++) {
+                this.makeSwirl();
+            }
         }
     }
 

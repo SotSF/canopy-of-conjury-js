@@ -12,11 +12,11 @@ import OscillatorWidget from './Oscillator';
 
 const styles = ({ spacing }: Theme) => createStyles({
     card: {
-        paddingLeft: spacing.unit,
+        paddingLeft: spacing(),
         width: '200px',
     },
     spacer: {
-        marginTop: spacing.unit,
+        marginTop: spacing(),
     },
 });
 

@@ -98,8 +98,8 @@ const FPS = 30;
 
         // ...update the patterns and render them to the canopy object...
         state.patterns.forEach((pattern) => {
-            pattern.instance.progress();
-            pattern.instance.render(canopy);
+            pattern.progress();
+            pattern.render(canopy);
         });
 
         // ...and transmit to the API.

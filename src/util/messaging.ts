@@ -25,9 +25,7 @@ export namespace ClientMessage {
     export type ClearPatterns = IMessage;
 
     export interface AddPattern extends IMessage {
-        id: string
-        order: number
-        state: SerializedActivePattern
+        pattern: SerializedActivePattern
     }
 
     export interface RemovePattern extends IMessage {
@@ -41,6 +39,7 @@ export namespace ClientMessage {
 
     export interface SavePatternSet extends IMessage {
         name: string
+        confirmOverride: boolean
     }
 }
 
@@ -57,6 +56,12 @@ export namespace ServerMessage {
     }
 
     export interface SyncState extends IMessage {
-        patterns: IPatternWrapper[]
+        patterns: SerializedActivePattern[]
+    }
+
+    export interface SavePatternSet extends IMessage {
+        success: boolean
+        needsConfirmation?: boolean
+        error?: string
     }
 }

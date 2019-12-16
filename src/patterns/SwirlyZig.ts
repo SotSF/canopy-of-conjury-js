@@ -1,7 +1,7 @@
 
 import * as _ from 'lodash';
 import { Color } from '../colors';
-import { MaybeOscillator, pattern, PatternInstance } from '../types';
+import { MaybeOscillator, pattern, PatternInstance, SerializedActivePattern } from '../types';
 import BasePattern from './BasePattern';
 import { Swirly } from './Swirly';
 import { PatternPropTypes } from './utils';
@@ -38,13 +38,18 @@ export class SwirlyZig extends BasePattern {
 
     swirly: PatternInstance = null;
 
-    constructor(props) {
-        super(props);
+    initialize (pattern: Partial<SerializedActivePattern>) {
+        super.initialize(pattern);
 
-        this.swirly = new Swirly({
-            ...props,
-            clockwise: true
-        });
+        if (!pattern.state) {
+            this.swirly = new Swirly();
+            this.swirly.initialize({
+                props: {
+                    ...pattern.props,
+                    clockwise: true
+                }
+            });
+        }
     }
 
     /** The props need to be passed along to the `swirly` pattern */

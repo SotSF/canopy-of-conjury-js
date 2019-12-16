@@ -29,22 +29,17 @@ export interface CanopyInterface {
 }
 
 export interface PatternInstance {
+    id: string
     props: any
+    initialize: (pattern: Partial<SerializedActivePattern>) => void
     progress: () => void
     updateProps: (o: object) => void
     render: (canopy: CanopyInterface) => void
     serialize: () => SerializedActivePattern
     serializeState?: () => object
-    deserialize: (state: SerializedActivePattern) => void
+    deserialize: (pattern: SerializedActivePattern) => void
     deserializeState?: (o: object) => void
     deserializeProps: (o: object) => object
-}
-
-export interface IPatternActive {
-    id: string
-    order: number
-    instance: PatternInstance
-    name: string
 }
 
 // The serialized version of a pattern
@@ -56,6 +51,7 @@ export interface SerializedPattern {
 
 export interface SerializedActivePattern extends SerializedPattern {
     iteration: number
+    id: string
 }
 
 /** Crazy trickery... see https://stackoverflow.com/questions/13955157/how-to-define-static-property-in-typescript-interface */

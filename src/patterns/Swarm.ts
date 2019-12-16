@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import { Color, RGB } from '../colors';
-import { MaybeOscillator, pattern } from '../types';
+import { MaybeOscillator, pattern, SerializedActivePattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 import Memoizer from "./memoizer/index";
@@ -47,23 +47,29 @@ export class Swarm extends BasePattern {
     swarmSize = 200;
     swarmTime = 50;
     swarmClock = 0;
-    target : ICoord = { x: 0, y: 0};
-    constructor(props) {
-        super(props);
-        for (let i = 0; i < this.swarmSize; i++) {
-            const center = {
-                x: this.swarm.center.x + Math.floor((Math.random() * (this.maxSwarmRadius + this.maxSwarmRadius + 1)) - this.maxSwarmRadius),
-                y: this.swarm.center.y + Math.floor((Math.random() * (this.maxSwarmRadius + this.maxSwarmRadius + 1)) - this.maxSwarmRadius),
+    target : ICoord = { x: 0, y: 0 };
+
+    initialize (pattern: Partial<SerializedActivePattern>) {
+        super.initialize(pattern);
+
+        if (!pattern.state) {
+            for (let i = 0; i < this.swarmSize; i++) {
+                const center = {
+                    x: this.swarm.center.x + Math.floor((Math.random() * (this.maxSwarmRadius + this.maxSwarmRadius + 1)) - this.maxSwarmRadius),
+                    y: this.swarm.center.y + Math.floor((Math.random() * (this.maxSwarmRadius + this.maxSwarmRadius + 1)) - this.maxSwarmRadius),
+                };
+
+                this.swarm.bugs.push({
+                    center,
+                    radius: 1,
+                    theta: 0,
+                    velocity: Math.floor(Math.random() * 5 + 2),
+                    jitter: [1,1]
+                });
             }
-            this.swarm.bugs.push({
-               center,
-               radius: 1,
-               theta: 0,
-               velocity: Math.floor(Math.random() * 5 + 2),
-               jitter: [1,1]
-            });
         }
     }
+    
     progress() {
         super.progress();
         this.updateSwarm();

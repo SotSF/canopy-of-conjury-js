@@ -2,7 +2,7 @@
 import * as _ from 'lodash';
 import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
 import { RGB, Color } from '../colors';
-import { MaybeOscillator, pattern } from '../types';
+import { MaybeOscillator, pattern, SerializedActivePattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 
@@ -41,14 +41,17 @@ export class ShootingStars extends BasePattern {
 
     stars = [];
 
-    constructor (props) {
-        super(props);
+    initialize (pattern: Partial<SerializedActivePattern>) {
+        super.initialize(pattern);
 
-        for (let i = 0; i < 3; i++) {
-            this.stars.push({
-                strip: Math.floor(Math.random() * NUM_STRIPS),
-                led: props.fromApex ? 0 : NUM_LEDS_PER_STRIP - 1
-            });
+        if (!pattern.state) {
+            const props = <ShootingStarsProps>pattern.props;
+            for (let i = 0; i < 3; i++) {
+                this.stars.push({
+                    strip: Math.floor(Math.random() * NUM_STRIPS),
+                    led: props.fromApex ? 0 : NUM_LEDS_PER_STRIP - 1
+                });
+            }
         }
     }
 
