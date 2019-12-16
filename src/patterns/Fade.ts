@@ -46,13 +46,10 @@ export class Fade extends BasePattern {
     // is the end.
     lifecycle: number = 0;
 
-    initialize (pattern: Partial<SerializedActivePattern>) {
-        super.initialize(pattern);
-
-        const props = <FadeProps>pattern.props;
-        if (props.colors.length) {
+    initializeState () {
+        if (this.props.colors.length) {
             this.colorIndex = 0;
-            this.currentColor = props.colors[0];
+            this.currentColor = this.props.colors[0];
         }
     }
 

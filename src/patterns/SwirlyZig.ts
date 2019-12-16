@@ -38,18 +38,14 @@ export class SwirlyZig extends BasePattern {
 
     swirly: PatternInstance = null;
 
-    initialize (pattern: Partial<SerializedActivePattern>) {
-        super.initialize(pattern);
-
-        if (!pattern.state) {
-            this.swirly = new Swirly();
-            this.swirly.initialize({
-                props: {
-                    ...pattern.props,
-                    clockwise: true
-                }
-            });
-        }
+    initializeState () {
+        this.swirly = new Swirly();
+        this.swirly.initialize({
+            props: {
+                ...this.props,
+                clockwise: true
+            }
+        });
     }
 
     /** The props need to be passed along to the `swirly` pattern */

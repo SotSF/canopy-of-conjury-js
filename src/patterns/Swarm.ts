@@ -49,24 +49,20 @@ export class Swarm extends BasePattern {
     swarmClock = 0;
     target : ICoord = { x: 0, y: 0 };
 
-    initialize (pattern: Partial<SerializedActivePattern>) {
-        super.initialize(pattern);
+    initializeState () {
+        for (let i = 0; i < this.swarmSize; i++) {
+            const center = {
+                x: this.swarm.center.x + Math.floor((Math.random() * (this.maxSwarmRadius + this.maxSwarmRadius + 1)) - this.maxSwarmRadius),
+                y: this.swarm.center.y + Math.floor((Math.random() * (this.maxSwarmRadius + this.maxSwarmRadius + 1)) - this.maxSwarmRadius),
+            };
 
-        if (!pattern.state) {
-            for (let i = 0; i < this.swarmSize; i++) {
-                const center = {
-                    x: this.swarm.center.x + Math.floor((Math.random() * (this.maxSwarmRadius + this.maxSwarmRadius + 1)) - this.maxSwarmRadius),
-                    y: this.swarm.center.y + Math.floor((Math.random() * (this.maxSwarmRadius + this.maxSwarmRadius + 1)) - this.maxSwarmRadius),
-                };
-
-                this.swarm.bugs.push({
-                    center,
-                    radius: 1,
-                    theta: 0,
-                    velocity: Math.floor(Math.random() * 5 + 2),
-                    jitter: [1,1]
-                });
-            }
+            this.swarm.bugs.push({
+                center,
+                radius: 1,
+                theta: 0,
+                velocity: Math.floor(Math.random() * 5 + 2),
+                jitter: [1,1]
+            });
         }
     }
     

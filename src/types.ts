@@ -32,6 +32,7 @@ export interface PatternInstance {
     id: string
     props: any
     initialize: (pattern: Partial<SerializedActivePattern>) => void
+    initializeState?: () => void
     progress: () => void
     updateProps: (o: object) => void
     render: (canopy: CanopyInterface) => void

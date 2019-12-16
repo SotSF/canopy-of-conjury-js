@@ -47,16 +47,10 @@ export class Swirly extends BasePattern {
     private colorDir = 1;
     private swirls = [];
 
-    initialize (pattern: Partial<SerializedActivePattern>) {
-        super.initialize(pattern);
-
-        if (!pattern.state) {
-            const props = <SwirlyProps>pattern.props;
-
-            this.color = props.color1;
-            for (let i = 0; i <= props.quantity; i++) {
-                this.makeSwirl();
-            }
+    initializeState () {
+        this.color = this.props.color1;
+        for (let i = 0; i <= this.props.quantity; i++) {
+            this.makeSwirl();
         }
     }
 

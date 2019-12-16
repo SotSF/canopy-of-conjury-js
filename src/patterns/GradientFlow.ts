@@ -60,8 +60,7 @@ export class GradientFlow extends BasePattern {
     private curPosition: number = 0;
     private interpolation: Color[] = null;
 
-    initialize (pattern: Partial<SerializedActivePattern>) {
-        super.initialize(pattern);
+    initializeState () {
         this.interpolation = this.interpolateColors();
         this.ringColors = this.interpolation;
     }

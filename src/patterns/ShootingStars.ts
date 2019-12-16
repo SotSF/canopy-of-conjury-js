@@ -41,17 +41,12 @@ export class ShootingStars extends BasePattern {
 
     stars = [];
 
-    initialize (pattern: Partial<SerializedActivePattern>) {
-        super.initialize(pattern);
-
-        if (!pattern.state) {
-            const props = <ShootingStarsProps>pattern.props;
-            for (let i = 0; i < 3; i++) {
-                this.stars.push({
-                    strip: Math.floor(Math.random() * NUM_STRIPS),
-                    led: props.fromApex ? 0 : NUM_LEDS_PER_STRIP - 1
-                });
-            }
+    initializeState () {
+        for (let i = 0; i < 3; i++) {
+            this.stars.push({
+                strip: Math.floor(Math.random() * NUM_STRIPS),
+                led: this.props.fromApex ? 0 : NUM_LEDS_PER_STRIP - 1
+            });
         }
     }
 

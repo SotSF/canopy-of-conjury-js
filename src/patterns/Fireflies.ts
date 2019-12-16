@@ -55,13 +55,9 @@ export class Fireflies extends BasePattern {
     lifespan = 75;
     memoizer = new Memoizer();
 
-    initialize (pattern: Partial<SerializedActivePattern>) {
-        super.initialize(pattern);
-
-        if (!pattern.state) {
-            for (let i = 0; i <= 10; i++) {
-                this.addFirefly()
-            }
+    initializeState () {
+        for (let i = 0; i <= 10; i++) {
+            this.addFirefly()
         }
     }
 

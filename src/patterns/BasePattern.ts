@@ -27,7 +27,13 @@ export default abstract class BasePattern implements PatternInstance {
             : this.constructor.defaultProps();
 
         if (pattern.iteration) this.iteration = pattern.iteration;
-        if (pattern.state) this.deserializeState(pattern.state);
+        if (pattern.state) {
+            this.deserializeState(pattern.state);
+        } else {
+            this.initializeState();
+        }
+
+        return this;
     }
 
     // Patterns are typically produced assuming they will be run on a canopy with 96 strips
@@ -75,10 +81,10 @@ export default abstract class BasePattern implements PatternInstance {
         };
     }
 
-    // Should be overridden in inheriting classes if they have any additional parameters that must
-    // be serialized
+    // Should be overridden in inheriting classes if needed
     serializeState () { return {}; }
     deserializeState (state) {}
+    initializeState () {}
 
     deserializeProps (props) {
         const parseProp = (propType, value) => {
