@@ -5,6 +5,7 @@ import sanitizeFilename = require('sanitize-filename');
 
 import { ClientMessage, ServerMessage, MESSAGE_TYPE } from '../../util/messaging';
 import state from '../state';
+import { SerializedPattern } from '../../types';
 
 
 const PATTERN_SET_DIR = './pattern_sets';
@@ -51,6 +52,12 @@ export default async (msg: ClientMessage.SavePatternSet, ws: WebSocket) => {
 };
 
 
+type PatternJson = Pick<SerializedPattern, 'props' | 'type'>;
+type PatternSetJson = {
+  name: string
+  patterns: PatternJson[]
+};
+
 /**
  * Checks if a pattern set with the given name already exists
  */
@@ -85,19 +92,17 @@ const patternSetExists = (name: string): Promise<boolean> =>
 
 const writePatternSet = (name: string): Promise<void> => 
   new Promise<void>((resolve, reject) => {
-    const serialized = state.serializePatterns();
-    
-    // Strip the `iteration` parameter
-    serialized.forEach((serializedPattern) => {
-      delete serializedPattern.iteration;
-    });
+    // Only take the `props` and `type`-- other attributes describe pattern state
+    // and identity and are not necessary to save
+    const serialized = state.serializePatterns()
+      .map(({ props, type }) => ({ props, type }));
 
-    const json = {
+    const json: PatternSetJson = {
       name,
       patterns: serialized
     };
 
-    const sanitized = sanitizeFilename(name);
+    const sanitized = `${sanitizeFilename(name)}.json`;
     const fullPath = [PATTERN_SET_DIR, sanitized].join('/');
     const data = JSON.stringify(json, null, 2);
 
