@@ -6,8 +6,8 @@ import Card from '@material-ui/core/Card';
 import { createStyles, withStyles, Theme, WithStyles } from '@material-ui/core/styles';
 import MaterialSlider from '@material-ui/core/Slider';
 
-import { MaybeOscillator, IWaveParams } from '../../../types';
-import { NumericOscillator, isOscillatorWrapper, Oscillator } from '../../../patterns/utils';
+import { WaveState, MaybeOscillator } from '../../../patterns/utils/oscillators/types';
+import { isOscillatorWrapper, Oscillator, NumericOscillator } from '../../../patterns/utils';
 import Popover from '../../util/Popover';
 import OscillatorWidget from './Oscillator';
 
@@ -25,7 +25,7 @@ const styles = ({ spacing }: Theme) => createStyles({
 });
 
 interface SliderProps extends WithStyles<typeof styles> {
-    defaults: Partial<IWaveParams>
+    defaults: Partial<WaveState>
     label: string,
     value: MaybeOscillator<number>,
     min?: number,
@@ -81,7 +81,16 @@ class Slider extends React.Component<SliderProps, SliderState> {
 
         const createFn = () => {
             const oscillator = new Oscillator(defaults);
-            this.updateValue(new NumericOscillator(oscillator, min, max));
+
+            this.updateValue(
+                new NumericOscillator({
+                    oscillatorState: defaults,
+                    oscillatorType: 'numeric',
+                    min,
+                    max
+                })
+            );
+
             return oscillator;
         };
 

@@ -97,15 +97,3 @@ export const getPatternByType = (type: string): PatternInterface => {
     // Didn't find a pattern with the given name
     return null;
 };
-
-/** Takes an instance of a pattern and returns class that created it */
-export const getPatternClassFromInstance = (pattern: PatternInstance): PatternInterface => {
-    for (let i = 0; i < allPatterns.length; i++) {
-        if (pattern instanceof allPatterns[i]) {
-            return allPatterns[i];
-        }
-    }
-
-    // Didn't find a pattern class that matched the given pattern
-    return null;
-};

@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import { NUM_LEDS_PER_STRIP } from '../canopy';
 import { Color, RGB } from '../colors';
-import { MaybeOscillator, pattern } from '../types';
+import { pattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 import Memoizer from "./memoizer/index";
@@ -22,8 +22,8 @@ interface IDrop {
     color: Color
 }
 
-interface Props {
-    color: MaybeOscillator<Color>
+interface DropsProps {
+    color: Color
     frequency: number
 }
 
@@ -33,16 +33,17 @@ export class Drops extends BasePattern {
 
     static propTypes = {
         color: new PatternPropTypes.Color().enableOscillation(),
-        frequency: new PatternPropTypes.Range(1,10)
+        frequency: new PatternPropTypes.Range(1, 10)
     };
 
-    static defaultProps (): Props {
+    static defaultProps (): DropsProps {
         return {
             color: RGB.random(),
             frequency: 5
         };
     }
 
+    props: DropsProps;
     drops : IDrop[] = [];
 
     memoizer = new Memoizer();

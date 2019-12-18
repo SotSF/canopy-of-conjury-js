@@ -2,14 +2,15 @@
 import * as _ from 'lodash';
 import { NUM_LEDS_PER_STRIP, NUM_STRIPS } from '../canopy';
 import { Color, RGB } from '../colors';
-import {IOscillator, MaybeOscillator, pattern, WaveType} from '../types';
+import { pattern } from '../types';
+import { IOscillator, WaveType } from './utils/oscillators/types';
 import * as util from '../util';
 import BasePattern from './BasePattern';
 import { Oscillator, PatternPropTypes } from './utils';
 
 
 interface ColorWaveProps {
-    color: MaybeOscillator<Color>
+    color: Color
     midPoint: number
     oscillator: IOscillator
 }
@@ -42,6 +43,8 @@ export class ColorWave extends BasePattern {
             oscillator: new Oscillator(this.propTypes.oscillator.defaults)
         };
     }
+
+    props: ColorWaveProps;
 
     render (canopy) {
         // Sample the wave once for each LED in a strip

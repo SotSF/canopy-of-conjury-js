@@ -2,7 +2,7 @@
 import * as _ from 'lodash';
 import { NUM_LEDS_PER_STRIP } from '../canopy';
 import { Color, RGB } from '../colors';
-import { MaybeOscillator, pattern } from '../types';
+import { pattern } from '../types';
 import * as util from '../util';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
@@ -16,8 +16,8 @@ interface ICircle {
 }
 
 interface ConcentricCirclesProps {
-    color: MaybeOscillator<Color>
-    width: MaybeOscillator<number>
+    color: Color
+    width: number
     frequency: number
     trail: number
 }
@@ -43,6 +43,7 @@ export class ConcentricCircles extends BasePattern {
         };
     }
 
+    props: ConcentricCirclesProps;
     circles: ICircle[] = [];
 
     progress () {

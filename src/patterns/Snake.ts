@@ -1,14 +1,13 @@
 
 import { HSV } from '../colors';
 import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
-import { MaybeOscillator } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 
 
 interface SnakeProps {
     maxLength: number
-    opacity: MaybeOscillator<number>
+    opacity: number
 }
 
 export class Snake extends BasePattern {
@@ -41,6 +40,7 @@ export class Snake extends BasePattern {
         return 0;
     }
 
+    props: SnakeProps;
     private target = Snake.getPoint();
     private snake = [Snake.getPoint()];
     private tail = [];

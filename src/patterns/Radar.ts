@@ -2,7 +2,7 @@
 import * as _ from 'lodash';
 import { NUM_STRIPS } from '../canopy';
 import { RGB, Color } from '../colors';
-import { MaybeOscillator, pattern } from '../types';
+import { pattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 
@@ -10,8 +10,8 @@ import { PatternPropTypes } from './utils';
 interface RadarProps {
     color: Color
     velocity: number
-    opacity: MaybeOscillator<number>
-    tailLength: MaybeOscillator<number>
+    opacity: number
+    tailLength: number
     clockwise: boolean
 }
 
@@ -36,6 +36,7 @@ export class Radar extends BasePattern {
         };
     }
 
+    props: RadarProps;
     head = 0;
 
     progress () {

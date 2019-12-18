@@ -128,8 +128,8 @@ class PatternOption extends React.Component {
         const { anchorEl } = this.state;
 
         return (
-            <Grid item sm={6} key={name} >
-                <ButtonBase onClick={this.handleClick} className={ classes.button }>
+            <Grid item sm={6} key={name}>
+                <ButtonBase onClick={this.handleClick} className={classes.button}>
                 <p>{pattern.displayName}</p>
                 </ButtonBase>
                 <Popover

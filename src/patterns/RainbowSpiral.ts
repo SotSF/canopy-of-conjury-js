@@ -11,6 +11,13 @@ enum SpiralDirection {
     outwards
 }
 
+interface RainbowSpiralProps {
+    length: number,
+    gap: number,
+    direction: SpiralDirection,
+    opacity: number
+}
+
 @pattern()
 export class RainbowSpiral extends BasePattern {
     static displayName = 'Rainbow Spiral';
@@ -21,10 +28,6 @@ export class RainbowSpiral extends BasePattern {
         opacity: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation()
     };
 
-    lines = [];
-    adder = 0;
-    colorOffset = 0;
-
     static defaultProps () {
         return {
             length: 10,
@@ -33,6 +36,11 @@ export class RainbowSpiral extends BasePattern {
             direction: SpiralDirection.inwards
         };
     }
+
+    props: RainbowSpiralProps;
+    lines = [];
+    adder = 0;
+    colorOffset = 0;
 
     progress() {
         super.progress();

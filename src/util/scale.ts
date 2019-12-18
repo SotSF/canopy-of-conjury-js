@@ -10,6 +10,12 @@
  *
  * @returns {float}
  */
-export default (value, istart, istop, ostart, ostop) => {
+export default (
+    value : number,
+    istart: number,
+    istop : number,
+    ostart: number,
+    ostop : number
+): number => {
     return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
 };

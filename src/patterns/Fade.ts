@@ -1,9 +1,9 @@
 
 import * as _ from 'lodash';
 import { Color, RGB } from '../colors';
-import { MaybeOscillator, pattern, PatternInterface, SerializedActivePattern } from '../types';
+import { pattern } from '../types';
 import BasePattern from './BasePattern';
-import { PatternPropTypes } from './utils';
+import { MaybeOscillator, PatternPropTypes } from './utils';
 
 
 const LIFECYCLE_END = 500;
@@ -14,9 +14,6 @@ interface FadeProps {
     opacity: MaybeOscillator<number>
 }
 
-/**
- * Emits pulse rings from center - each ring is a different color, following a gradient color scheme
- */
 @pattern()
 export class Fade extends BasePattern {
     static displayName = 'Fade';
@@ -25,7 +22,6 @@ export class Fade extends BasePattern {
         colors: new PatternPropTypes.Array(PatternPropTypes.Color),
         speed: new PatternPropTypes.Range(1, 10).enableOscillation(),
         opacity: new PatternPropTypes.Range(0, 1, 0.01).enableOscillation(),
-
     };
 
     static defaultProps (): FadeProps {
@@ -35,6 +31,8 @@ export class Fade extends BasePattern {
             opacity: 1
         };
     }
+
+    props: FadeProps;
 
     // Keep `colorIndex` so we know which color to proceed to next (in case the same color appears
     // twice); keep `currentColor` in case the current active color is removed while it is being

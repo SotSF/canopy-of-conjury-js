@@ -19,7 +19,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import messenger from '../messenger';
 import PatternProps from './PatternProps';
 import { PatternInstance } from '../../types';
-import { getPatternClassFromInstance } from '../../patterns';
 
 
 const styles = (theme: Theme) => createStyles({
@@ -128,20 +127,19 @@ const ActivePattern = withStyles(PatternStyles)(
 
         render () {
             const { pattern } = this.props;
-            const patternClass = getPatternClassFromInstance(pattern);
             return (
                 <ListItem button className="layer">
-                    <ListItemText onClick={this.handleClick} primary={patternClass.displayName} />
+                    <ListItemText onClick={this.handleClick} primary={pattern.getClass().displayName} />
                     <ListItemSecondaryAction>
                         <DeleteIcon onClick={() => this.props.removePattern(pattern.id)} />
                     </ListItemSecondaryAction>
-                    
+
                     <MenuPopover
                         anchorEl={this.state.anchorEl}
                         onClose={this.handleClose}
                     >
                         <PatternProps
-                            propTypes={patternClass.propTypes}
+                            propTypes={pattern.getClass().propTypes}
                             values={pattern.props}
                             onChange={this.updateProps}
                         />

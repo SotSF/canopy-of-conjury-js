@@ -51,6 +51,7 @@ export class Map extends BasePattern {
         return Math.round((l + 1) * blockSize);
     }
 
+    props: MapProps;
     colors = {
         halfHour: new RGB(200, 150, 0, 0.4),
         home: new RGB(255, 0, 0),

@@ -2,7 +2,7 @@
 import * as _ from 'lodash';
 import { NUM_LEDS_PER_STRIP, NUM_STRIPS } from '../canopy';
 import { Color, RGB, HSV } from '../colors';
-import { MaybeOscillator, pattern } from '../types';
+import { pattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 
@@ -10,9 +10,9 @@ import { PatternPropTypes } from './utils';
 interface TrianglesProps {
     color: Color
     quantity: number
-    radius: MaybeOscillator<number>
-    size: MaybeOscillator<number>
-    opacity: MaybeOscillator<number>
+    radius: number
+    size: number
+    opacity: number
     rainbow: boolean
     inverted: boolean
 }
@@ -42,6 +42,7 @@ export class Triangles extends BasePattern {
         };
     }
 
+    props: TrianglesProps;
     private currentHue = 0;
     private indexOfBrightest = 0;
 

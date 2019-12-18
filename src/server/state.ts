@@ -1,8 +1,7 @@
 
 import * as _ from 'lodash';
-
-import { getPatternClassFromInstance } from '../patterns';
 import { PatternInstance, SerializedActivePattern } from '../types';
+import BasePattern from '../patterns/BasePattern';
 
 
 /**
@@ -13,7 +12,7 @@ class State {
 
     addPattern (newPattern: PatternInstance) {
         this.patterns.push(newPattern);
-        const type = getPatternClassFromInstance(newPattern).displayName;
+        const type = newPattern.getClass().displayName;
         console.info(`New "${type}" pattern created with id "${newPattern.id}"`);
     }
 
@@ -21,9 +20,7 @@ class State {
     removePattern = (patternId: string) => {
         const patternToRemove = _.find(this.patterns, { id: patternId });
         this.patterns = _.without(this.patterns, patternToRemove);
-    
-        const patternInterface = getPatternClassFromInstance(patternToRemove);
-        console.info(`Pattern "${patternInterface.displayName}" (id "${patternId}") removed`);
+        console.info(`Pattern "${patternToRemove.getClass().displayName}" (id "${patternId}") removed`);
     };
 
     /** Clears all active patterns */
@@ -34,12 +31,9 @@ class State {
 
     /** Updates the property of an active pattern */
     updateProps = (patternId: string, newProps) => {
-      console.log(patternId);
       const pattern: PatternInstance = _.find(this.patterns, { id: patternId });
       pattern.updateProps(pattern.deserializeProps(newProps));
-  
-      const patternInterface = getPatternClassFromInstance(pattern);
-      console.info(`Pattern "${patternInterface.displayName}" (id "${patternId}") props updated`);
+      console.info(`Pattern "${pattern.getClass().displayName}" (id "${patternId}") props updated`);
   }
 
     /** Helper function for serializing the list of active patterns */

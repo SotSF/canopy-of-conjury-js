@@ -7,7 +7,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { createStyles, withStyles, Theme, WithStyles } from '@material-ui/core/styles';
 
-import { IOscillator, WaveType } from '../../../types';
+import { IOscillator, WaveType } from '../../../patterns/utils/oscillators/types';
 import Popover from '../../util/Popover';
 import Slider from '../components/Slider';
 
@@ -110,7 +110,7 @@ class WaveProps extends React.Component<WavePropsProps> {
         ];
 
         return (
-            <Popover buttonText={WaveType[oscillator.params.type]}>
+            <Popover buttonText={WaveType[oscillator.state.type]}>
                 <List dense disablePadding>
                     {waveTypes.map((type) =>
                         <ListItem button key={type}>
@@ -134,7 +134,7 @@ class WaveProps extends React.Component<WavePropsProps> {
                 <div className={classes.frequency}>
                     <Slider
                       label="Frequency"
-                      value={oscillator.params.frequency}
+                      value={oscillator.state.frequency}
                       min={0.1}
                       max={2}
                       step={0.1}

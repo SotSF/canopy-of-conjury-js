@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import { Color, RGB } from '../colors';
-import { MaybeOscillator, pattern, SerializedActivePattern } from '../types';
+import { pattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 import Memoizer from "./memoizer/index";
@@ -22,6 +22,10 @@ interface ISwarm {
     bugs: IBug[]   
 }
 
+interface SwarmProps {
+    color: Color
+}
+
 @pattern()
 export class Swarm extends BasePattern {
     static displayName = 'Swarm';
@@ -36,6 +40,7 @@ export class Swarm extends BasePattern {
         }
     }
    
+    props: SwarmProps;
     memoizer = new Memoizer();
     dimension = 200;
 

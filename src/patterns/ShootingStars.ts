@@ -2,16 +2,16 @@
 import * as _ from 'lodash';
 import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
 import { RGB, Color } from '../colors';
-import { MaybeOscillator, pattern, SerializedActivePattern } from '../types';
+import { pattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 
 
 interface ShootingStarsProps {
-    color: MaybeOscillator<Color>
-    velocity: MaybeOscillator<number>
-    vortex: MaybeOscillator<number>
-    opacity: MaybeOscillator<number>
+    color: Color
+    velocity: number
+    vortex: number
+    opacity: number
     fromApex: boolean,
     trail: number
 }
@@ -39,6 +39,7 @@ export class ShootingStars extends BasePattern {
         };
     }
 
+    props: ShootingStarsProps;
     stars = [];
 
     initializeState () {

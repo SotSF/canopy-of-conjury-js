@@ -28,25 +28,34 @@ export interface CanopyInterface {
     stripLength: number
 }
 
+export type PatternProps = {};
+
+export interface PatternStaticProperties {
+    propTypes: object
+    defaultProps: () => PatternProps
+    displayName: string
+}
+
 export interface PatternInstance {
     id: string
     props: any
+    getClass: () => PatternStaticProperties
     initialize: (pattern: Partial<SerializedActivePattern>) => void
     initializeState?: () => void
     progress: () => void
-    updateProps: (o: object) => void
+    updateProps: (props: PatternProps) => void
     render: (canopy: CanopyInterface) => void
     serialize: () => SerializedActivePattern
     serializeState?: () => object
     deserialize: (pattern: SerializedActivePattern) => void
     deserializeState?: (o: object) => void
-    deserializeProps: (o: object) => object
+    deserializeProps: (o: object) => PatternProps
 }
 
 // The serialized version of a pattern
 export interface SerializedPattern {
     type: string
-    props: object
+    props: PatternProps
     state: object
 }
 
@@ -63,53 +72,5 @@ export interface PatternInterface {
     displayName: string
 }
 
-export const pattern = () => (contsructor: PatternInterface) => {};
-
-/** Oscillators */
-export enum WaveType {
-    'Sine',
-    'Square',
-    'Triangle',
-    'Saw'
-}
-
-export interface IWaveParams {
-    amplitude: number
-    frequency: number
-    type: WaveType
-}
-
-export interface ISerializedOscillator extends IWaveParams {
-    theta: number
-}
-
-export interface IOscillator {
-    readonly params: IWaveParams
-    theta: number
-    updateWave: (params: { amplitude?: number, frequency?: number, type?: WaveType }) => void
-    sample: number
-    waveFunction: (x: number) => number
-    serialize: () => ISerializedOscillator
-}
-
-export interface IOscillatorWrapper {
-    type: string
-    oscillator: IOscillator
-    value: () => any
-    serialize: () => ISerializedOscillatorWrapper
-}
-
-export interface ISerializedOscillatorWrapper {
-    oscillator: ISerializedOscillator
-    type: string
-}
-
-export interface INumericOscillator extends IOscillatorWrapper {
-    value: () => number
-}
-
-export interface IColorOscillator extends IOscillatorWrapper {
-    value: () => Color
-}
-
-export type MaybeOscillator<T> = T | IOscillatorWrapper;
+export const pattern = () =>
+    <U extends PatternStaticProperties>(constructor: U) => {constructor};

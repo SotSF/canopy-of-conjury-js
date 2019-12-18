@@ -2,9 +2,9 @@
 import * as _ from 'lodash';
 import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
 import { RGB, isColor } from '../colors';
-import { CanopyInterface, PatternInstance, PatternInterface, SerializedActivePattern } from '../types';
+import { CanopyInterface, PatternInstance, PatternProps, PatternStaticProperties, SerializedActivePattern } from '../types';
 import * as util from '../util';
-import { isOscillatorWrapper, Oscillator, OscillatorWrapper, PatternPropTypes } from './utils';
+import { isOscillatorWrapper, Oscillator, PatternPropTypes, NumericOscillator, ColorOscillator } from './utils';
 
 
 // Creates a unique ID for a pattern instance
@@ -12,10 +12,11 @@ const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567
 const makeId = () => _.range(20).map(() => _.sample(characters)).join('');
 
 export default abstract class BasePattern implements PatternInstance {
-    id = null;
-    props = null;
-    values = null;
-    iteration = 0;
+    id: string = null;
+    iteration: number = 0;
+    props;
+
+    protected values;
 
     initialize (pattern: Partial<SerializedActivePattern> = {}) {
         this.id = pattern.id || makeId();
@@ -23,8 +24,7 @@ export default abstract class BasePattern implements PatternInstance {
         // If no props are provided, use the default props
         this.props = pattern.props
             ? this.deserializeProps(pattern.props)
-            // @ts-ignore: I don't know how to teach typescript that class will have the static property
-            : this.constructor.defaultProps();
+            : this.getClass().defaultProps();
 
         if (pattern.iteration) this.iteration = pattern.iteration;
         if (pattern.state) {
@@ -53,6 +53,21 @@ export default abstract class BasePattern implements PatternInstance {
         return { strip: canopyStrip, led: canopyLed };
     }
 
+    /**
+     * I really have no idea how to do this better. Given a pattern class instance, we
+     * will want to access its static class attributes. In vanilla JS, we do this via
+     * `this.constructor`, but TypeScript doesn't seem to provide a way to say "this
+     * interface's constructor is of this type", so accessing `this.constructor` directly
+     * throws a type error. Casting directly to `PatternStaticProperties` also throws a
+     * type error (ts2352) as TS doesn't think the `PatternStaticProperties` and the generic
+     * `Function` type (which is assigned to `this.constructor`) overlap sufficiently. So
+     * first we cast to `unknown` to tell the compiler to forget what it thinks it knows,
+     * then we cast to `PatternStaticProperties`.
+     */
+    getClass () {
+        return <PatternStaticProperties>(<unknown>this.constructor);
+    }
+
     serialize () {
         const serializeProp = (value) => {
             if (typeof value === 'object' && 'serialize' in value) {
@@ -72,8 +87,7 @@ export default abstract class BasePattern implements PatternInstance {
         });
 
         return {
-            // @ts-ignore
-            type: this.constructor.displayName,
+            type: this.getClass().displayName,
             id: this.id,
             props,
             state: this.serializeState(),
@@ -86,27 +100,29 @@ export default abstract class BasePattern implements PatternInstance {
     deserializeState (state) {}
     initializeState () {}
 
-    deserializeProps (props) {
+    deserializeProps (props: object) {
         const parseProp = (propType, value) => {
             if (propType instanceof PatternPropTypes.Color) {
                 if (isColor(value)) {
                     return RGB.fromObject(<RGB>value);
                 } else {
-                    return OscillatorWrapper.fromObject(value)
+                    return new ColorOscillator(value);
                 }
             } else if (propType instanceof PatternPropTypes.Array) {
                 return value.map(v => parseProp(propType.types, v));
             } else if (propType instanceof PatternPropTypes.Oscillator) {
                 return new Oscillator(value);
+            } else if (value.oscillator) {
+                return new NumericOscillator(value);
             } else {
-                return OscillatorWrapper.fromObject(value) || value;
+                return value;
             }
         };
 
         // Deserialize the props
         const deserialized = {};
         Object.entries(props).forEach(([name, value]) => {
-            const propType = (<PatternInterface>this.constructor).propTypes[name];
+            const propType = this.getClass().propTypes[name];
             deserialized[name] = parseProp(propType, value);
         });
 
@@ -126,17 +142,19 @@ export default abstract class BasePattern implements PatternInstance {
         this.iteration++;
 
         // If any of the props are oscillators
-        this.values = {};
+        const values = {};
         Object.entries(this.props).forEach(([name, value]) => {
             if (isOscillatorWrapper(value)) {
-                this.values[name] = value.value();
+                values[name] = value.value();
             } else {
-                this. values[name] = value;
+                values[name] = value;
             }
         });
+
+        this.values = values;
     }
 
-    updateProps (props) {
+    updateProps (props: PatternProps) {
         _.merge(this.props, props);
     }
 }

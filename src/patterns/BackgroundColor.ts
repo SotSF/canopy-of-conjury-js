@@ -1,12 +1,12 @@
 
 import { Color, RGB } from '../colors';
-import { MaybeOscillator, pattern } from '../types';
+import { pattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 
 
 interface BackgroundColorProps {
-    color: MaybeOscillator<Color>
+    color: Color
     opacity: number
 }
 
@@ -28,6 +28,8 @@ export class BackgroundColor extends BasePattern {
             opacity: 0.3
         };
     }
+
+    props: BackgroundColorProps;
 
     render (canopy) {
         canopy.strips.forEach(strip =>

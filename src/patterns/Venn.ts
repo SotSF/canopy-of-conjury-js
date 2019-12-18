@@ -1,9 +1,17 @@
+
 import * as _ from 'lodash';
 import { Color, RGB } from '../colors';
-import { MaybeOscillator, pattern } from '../types';
+import { pattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 import Memoizer from "./memoizer/index";
+
+
+interface VennProps {
+    color: Color
+    quantity: number
+    frequency: number
+}
 
 @pattern()
 export class Venn extends BasePattern {
@@ -23,9 +31,11 @@ export class Venn extends BasePattern {
         }
     }
 
+    props: VennProps;
     circles = [];
     dimension = 200;
     memoizer = new Memoizer();
+
     progress() {
         super.progress();
         if (this.iteration % this.values.frequency === 0) {
