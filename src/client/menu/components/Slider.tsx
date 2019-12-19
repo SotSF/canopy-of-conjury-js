@@ -14,7 +14,8 @@ import OscillatorWidget from './Oscillator';
 
 const styles = ({ spacing }: Theme) => createStyles({
     slider: {
-        height: '200px'
+        height: '200px',
+        padding: `${2 * spacing()}px ${spacing()}px`
     },
     spacer: {
         marginLeft: spacing(),
@@ -116,6 +117,11 @@ class Slider extends React.Component<SliderProps, SliderState> {
             ? value.value()
             : value;
 
+        const marks = [
+            { value: min, label: min },
+            { value: max, label: max }
+        ];
+
         return (
             <Popover
               buttonText={label}
@@ -127,11 +133,12 @@ class Slider extends React.Component<SliderProps, SliderState> {
                 <Card className={classes.slider}>
                     <MaterialSlider
                       onChange={this.manualUpdate}
-                      min={max}
-                      max={min}
+                      min={min}
+                      max={max}
                       step={-step}
                       value={actual}
                       orientation="vertical"
+                      marks={marks}
                     />
                 </Card>
 
