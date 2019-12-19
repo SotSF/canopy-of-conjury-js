@@ -30,7 +30,6 @@ const styles = theme => ({
         active: '33.33%',
     },
     drawerPaper: {
-        position: 'relative',
         width: 240
     },
     heading: {
