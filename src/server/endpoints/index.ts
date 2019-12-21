@@ -6,27 +6,15 @@
 import * as _ from 'lodash';
 import * as WebSocket from 'ws';
 
-import { getPatternByType } from '../../patterns';
-import { PatternInterface } from '../../types';
-import { ClientMessage, ServerMessage, MESSAGE_TYPE } from '../../util/messaging';
+import { ClientMessage, MESSAGE_TYPE, IMessage } from '../../util/messaging';
 import state from '../state';
 
+import addPattern from './addPattern';
+import applyPatternSet from './applyPatternSet';
 import savePatternSet from './savePatternSet';
+import syncPatternSets from './syncPatternSets';
+import syncState from './syncState';
 
-
-/** Adds a pattern to the set of active patterns */
-const addPattern = (msg: ClientMessage.AddPattern) => {
-    const type = msg.pattern.type;
-    const PatternType: PatternInterface = getPatternByType(type);
-    if (!PatternType) {
-        console.error(`Unable to render pattern with invalid type: "${type}"`);
-        return null;
-    }
-
-    const instance = new PatternType();
-    instance.initialize(msg.pattern);
-    state.addPattern(instance);
-};
 
 /** Removes a pattern from the set of active patterns */
 const removePattern = (msg: ClientMessage.RemovePattern) => {
@@ -42,19 +30,9 @@ const updateProps = (msg: ClientMessage.UpdateProps) => {
     // TODO: notify clients
 };
 
-/** A client is asking to sync their state with the server (happens at page load) */
-const syncState = (ws: WebSocket) => {
-    const message: ServerMessage.SyncState = {
-        type: MESSAGE_TYPE.syncState,
-        patterns: state.serializePatterns()
-    };
-
-    ws.send(JSON.stringify(message));
-};
-
 export default (ws: WebSocket, req) => {
     ws.on('message', (rawMsg: string) => {
-        let msg;
+        let msg: IMessage;
         try {
             msg = JSON.parse(rawMsg);
         } catch (e) {
@@ -64,7 +42,10 @@ export default (ws: WebSocket, req) => {
 
         switch (msg.type) {
             case MESSAGE_TYPE.addPattern:
-                addPattern(<ClientMessage.AddPattern>msg);
+                addPattern((<ClientMessage.AddPattern>msg).pattern);
+                break;
+            case MESSAGE_TYPE.applyPatternSet:
+                applyPatternSet(<ClientMessage.ApplyPatternSet>msg, ws);
                 break;
             case MESSAGE_TYPE.clearPatterns:
                 state.clearPatterns();
@@ -78,11 +59,12 @@ export default (ws: WebSocket, req) => {
             case MESSAGE_TYPE.updateProps:
                 updateProps(<ClientMessage.UpdateProps>msg);
                 break;
+            case MESSAGE_TYPE.syncPatternSets:
+                syncPatternSets(<ClientMessage.SyncPatternSets>msg, ws);
+                break;
             case MESSAGE_TYPE.savePatternSet:
                 savePatternSet(<ClientMessage.SavePatternSet>msg, ws);
                 break;
         }
-
-        // TODO: should clients be informed about the update?
     });
 };

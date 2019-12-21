@@ -1,14 +1,11 @@
 
 import * as WebSocket from 'ws';
 import * as fs from 'fs';
-import sanitizeFilename = require('sanitize-filename');
 
 import { ClientMessage, ServerMessage, MESSAGE_TYPE } from '../../util/messaging';
 import state from '../state';
-import { SerializedPattern } from '../../types';
+import { PATTERN_SET_DIR, PatternSetJson, sanitizeFilename } from './util';
 
-
-const PATTERN_SET_DIR = './pattern_sets';
 
 /**
  * Saves the current set of patterns to the local pattern set directory
@@ -49,13 +46,6 @@ export default async (msg: ClientMessage.SavePatternSet, ws: WebSocket) => {
   };
 
   ws.send(JSON.stringify(response));
-};
-
-
-type PatternJson = Pick<SerializedPattern, 'props' | 'type'>;
-type PatternSetJson = {
-  name: string
-  patterns: PatternJson[]
 };
 
 /**

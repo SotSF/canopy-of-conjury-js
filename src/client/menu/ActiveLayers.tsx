@@ -9,16 +9,16 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
-import Popover from '@material-ui/core/Popover';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
+import { PatternInstance } from '../../types';
 import messenger from '../messenger';
 import PatternProps from './PatternProps';
-import { PatternInstance } from '../../types';
+import { Popover } from './components';
 
 
 const styles = (theme: Theme) => createStyles({
@@ -55,7 +55,7 @@ const PatternStyles = createStyles({
 
 const SaveButtonStyles = (theme: Theme) => createStyles({
     root: {
-        margin: `${theme.spacing()}px 0 ${theme.spacing()}px 24px`
+        margin: `${theme.spacing()}px 0 ${theme.spacing()}px 16px`
     },
     card: {
         backgroundColor: '#626262',
@@ -68,34 +68,6 @@ const SaveButtonStyles = (theme: Theme) => createStyles({
     }
 });
 
-const MenuPopoverStyles = (theme: Theme) => createStyles({
-    root: {
-        marginLeft: theme.spacing()
-    }
-});
-
-const MenuPopover = withStyles(MenuPopoverStyles)(
-    (props) => (
-        <Popover
-            open={!!props.anchorEl}
-            anchorEl={props.anchorEl}
-            onClose={props.onClose}
-            anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
-            transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-            }}
-            PaperProps={{
-                classes: props.classes
-            }}
-        >
-            {props.children}
-        </Popover>
-    )
-);
 
 interface ActivePatternProps extends WithStyles<typeof PatternStyles> {
     pattern: PatternInstance
@@ -103,7 +75,7 @@ interface ActivePatternProps extends WithStyles<typeof PatternStyles> {
 }
 
 const ActivePattern = withStyles(PatternStyles)(
-    class extends React.Component<ActivePatternProps> {
+    class ActivePattern extends React.Component<ActivePatternProps> {
         state = {
             anchorEl: null,
         };
@@ -134,7 +106,7 @@ const ActivePattern = withStyles(PatternStyles)(
                         <DeleteIcon onClick={() => this.props.removePattern(pattern.id)} />
                     </ListItemSecondaryAction>
 
-                    <MenuPopover
+                    <Popover
                         anchorEl={this.state.anchorEl}
                         onClose={this.handleClose}
                     >
@@ -143,7 +115,7 @@ const ActivePattern = withStyles(PatternStyles)(
                             values={pattern.props}
                             onChange={this.updateProps}
                         />
-                    </MenuPopover>
+                    </Popover>
                 </ListItem>
             );
         }
@@ -190,7 +162,7 @@ const SaveButton = withStyles(SaveButtonStyles)(
                 >
                     Save Pattern Set
                 </Button>,
-                <MenuPopover
+                <Popover
                     anchorEl={this.state.anchorEl}
                     key="popover"
                     onClose={this.handleClose}
@@ -214,7 +186,7 @@ const SaveButton = withStyles(SaveButtonStyles)(
                             Save
                         </Button>
                     </Card>
-                </MenuPopover>
+                </Popover>
             ];
         }
     }

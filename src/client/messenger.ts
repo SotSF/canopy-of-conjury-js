@@ -3,14 +3,13 @@
  */
 
 import { w3cwebsocket as W3CWebSocket }  from 'websocket';
+import * as PubSub from 'pubsub-js';
+
 import { getPatternByType } from '../patterns';
-import { updatePatterns } from './state';
 import { PatternInstance } from '../types';
-import {
-    ClientMessage,
-    ServerMessage,
-    MESSAGE_TYPE,
-} from '../util/messaging';
+import { ClientMessage, ServerMessage, MESSAGE_TYPE, IMessage } from '../util/messaging';
+import events from './events';
+import { updatePatterns } from './state';
 
 
 const stateSocket = W3CWebSocket('ws://localhost:3000/');
@@ -35,8 +34,11 @@ const syncState = (message: ServerMessage.SyncState) => {
     updatePatterns(patterns);
 };
 
+const syncPatternSets = (message: ServerMessage.SyncPatternSets) =>
+    PubSub.publish(events.syncPatternSets, message.patternSets);
+
 stateSocket.onmessage = (event) => {
-    let message;
+    let message: IMessage;
     try {
         message = JSON.parse(event.data);
     } catch (e) {
@@ -46,8 +48,10 @@ stateSocket.onmessage = (event) => {
 
     switch (message.type) {
         case MESSAGE_TYPE.syncState:
-            syncState(message);
+            syncState(<ServerMessage.SyncState>message);
             break;
+        case MESSAGE_TYPE.syncPatternSets:
+            syncPatternSets(<ServerMessage.SyncPatternSets>message);
     }
 };
 
@@ -55,7 +59,14 @@ stateSocket.onmessage = (event) => {
 /*******************
  * Message sending *
  *******************/
-const send = message => stateSocket.send(JSON.stringify(message));
+const send = (message: IMessage) => {
+    // Wait for the socket to be in its OPEN state
+    if (stateSocket.readyState === 1) {
+        stateSocket.send(JSON.stringify(message));
+    } else {
+        setTimeout(() => send(message), 500);
+    }
+};
 
 /** Adds a pattern to the list of active patterns */
 const addPattern = (pattern: PatternInstance) => {
@@ -106,6 +117,14 @@ const fetchState = () => {
     send(message);
 };
 
+const fetchPatternSets = () => {
+  const message: ClientMessage.SyncPatternSets = {
+      type: MESSAGE_TYPE.syncPatternSets
+  };
+
+  send(message);
+};
+
 /** Sends a request to save the current pattern set */
 const savePatternSet = (name: string, confirmOverride: boolean = false) => {
     const message: ClientMessage.SavePatternSet = {
@@ -117,11 +136,22 @@ const savePatternSet = (name: string, confirmOverride: boolean = false) => {
     send(message);
 };
 
+const applyPatternSet = (name: string) => {
+    const message: ClientMessage.ApplyPatternSet = {
+        type: MESSAGE_TYPE.applyPatternSet,
+        name
+    };
+
+    send(message);
+};
+
 export default {
     addPattern,
+    applyPatternSet,
     removePattern,
     clearPatterns,
     updateProps,
     fetchState,
+    fetchPatternSets,
     savePatternSet
 };

@@ -23,6 +23,7 @@ import theme from '../theme';
 
 import ActivePatterns from './ActiveLayers';
 import Patterns from './Patterns';
+import PatternSets from './PatternSets';
 
 
 const styles = theme => ({
@@ -134,6 +135,10 @@ class Menu extends React.Component {
                     <ActivePatterns
                       patterns={this.state.patterns}
                       removePattern={this.removePattern}
+                    />
+
+                    <PatternSets
+                      patterns={this.state.patterns}
                     />
                 </Drawer>
             </MuiThemeProvider>
