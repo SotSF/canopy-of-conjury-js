@@ -25,8 +25,13 @@ interface SaveButtonProps extends WithStyles<typeof SaveButtonStyles> {
   disabled: boolean
 }
 
+interface SaveButtonState {
+  anchorEl: HTMLElement
+  patternSetName: string
+}
+
 export default withStyles(SaveButtonStyles)(
-  class SaveButton extends React.Component<SaveButtonProps> {
+  class SaveButton extends React.Component<SaveButtonProps, SaveButtonState> {
     state = {
       anchorEl: null,
       patternSetName: ''
