@@ -4,20 +4,21 @@ import classNames from 'classnames';
 
 import Card from '@material-ui/core/Card';
 import { createStyles, withStyles, Theme, WithStyles } from '@material-ui/core/styles';
-import MaterialSlider from '@material-ui/lab/Slider';
+import MaterialSlider from '@material-ui/core/Slider';
 
-import { MaybeOscillator, IWaveParams } from '../../../types';
-import { NumericOscillator, isOscillatorWrapper, Oscillator } from '../../../patterns/utils';
+import { WaveState, MaybeOscillator } from '../../../patterns/utils/oscillators/types';
+import { isOscillatorWrapper, Oscillator, NumericOscillator } from '../../../patterns/utils';
 import Popover from '../../util/Popover';
 import OscillatorWidget from './Oscillator';
 
 
 const styles = ({ spacing }: Theme) => createStyles({
     slider: {
-        height: '200px'
+        height: '200px',
+        padding: `${2 * spacing()}px ${spacing()}px`
     },
     spacer: {
-        marginLeft: spacing.unit,
+        marginLeft: spacing(),
     },
     popover: {
         display: 'flex',
@@ -25,14 +26,14 @@ const styles = ({ spacing }: Theme) => createStyles({
 });
 
 interface SliderProps extends WithStyles<typeof styles> {
-    defaults: Partial<IWaveParams>
+    defaults?: Partial<WaveState>
     label: string,
     value: MaybeOscillator<number>,
     min?: number,
     max?: number,
     step?: number,
     onChange (value: MaybeOscillator<number>): void,
-    oscillation: boolean
+    oscillation?: boolean
 }
 
 interface SliderState {
@@ -41,9 +42,11 @@ interface SliderState {
 
 class Slider extends React.Component<SliderProps, SliderState> {
     static defaultProps = {
+        defaults: {},
         min: 1,
         max: 10,
-        step: 1
+        step: 1,
+        oscillation: false
     };
 
     constructor (props) {
@@ -81,7 +84,16 @@ class Slider extends React.Component<SliderProps, SliderState> {
 
         const createFn = () => {
             const oscillator = new Oscillator(defaults);
-            this.updateValue(new NumericOscillator(oscillator, min, max));
+
+            this.updateValue(
+                new NumericOscillator({
+                    oscillatorState: defaults,
+                    oscillatorType: 'numeric',
+                    min,
+                    max
+                })
+            );
+
             return oscillator;
         };
 
@@ -107,6 +119,11 @@ class Slider extends React.Component<SliderProps, SliderState> {
             ? value.value()
             : value;
 
+        const marks = [
+            { value: min, label: min },
+            { value: max, label: max }
+        ];
+
         return (
             <Popover
               buttonText={label}
@@ -118,11 +135,12 @@ class Slider extends React.Component<SliderProps, SliderState> {
                 <Card className={classes.slider}>
                     <MaterialSlider
                       onChange={this.manualUpdate}
-                      min={max}
-                      max={min}
+                      min={min}
+                      max={max}
                       step={-step}
                       value={actual}
-                      vertical
+                      orientation="vertical"
+                      marks={marks}
                     />
                 </Card>
 

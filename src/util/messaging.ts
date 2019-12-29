@@ -1,19 +1,22 @@
 
-import { IPatternState } from '../types';
+import { SerializedActivePattern } from '../types';
 
 
 /** Constants */
 export const enum MESSAGE_TYPE {
     addPattern,
+    applyPatternSet,
     clearPatterns,
     removePattern,
     updateProps,
     syncState,
+    syncPatternSets,
+    savePatternSet
 }
 
 
 /** Basic message interface */
-interface IMessage {
+export interface IMessage {
     type: MESSAGE_TYPE
 }
 
@@ -22,11 +25,14 @@ interface IMessage {
 export namespace ClientMessage {
     export type SyncState = IMessage;
     export type ClearPatterns = IMessage;
+    export type SyncPatternSets = IMessage;
+
+    export interface ApplyPatternSet extends IMessage {
+        name: string
+    }
 
     export interface AddPattern extends IMessage {
-        id: string
-        order: number
-        state: IPatternState
+        pattern: SerializedActivePattern
     }
 
     export interface RemovePattern extends IMessage {
@@ -37,6 +43,11 @@ export namespace ClientMessage {
         patternId: string
         props: any // TODO: make this type more precise...
     }
+
+    export interface SavePatternSet extends IMessage {
+        name: string
+        confirmOverride: boolean
+    }
 }
 
 
@@ -44,14 +55,17 @@ export namespace ClientMessage {
 export type response = any;
 
 export namespace ServerMessage {
-    interface IPatternWrapper {
-        id: string
-        order: number
-        state: IPatternState
-        name: string
+    export interface SyncState extends IMessage {
+        patterns: SerializedActivePattern[]
     }
 
-    export interface SyncState extends IMessage {
-        patterns: IPatternWrapper[]
+    export interface SyncPatternSets extends IMessage {
+        patternSets: string[]
+    }
+
+    export interface SavePatternSet extends IMessage {
+        success: boolean
+        needsConfirmation?: boolean
+        error?: string
     }
 }

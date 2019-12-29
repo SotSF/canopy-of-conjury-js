@@ -1,7 +1,7 @@
 
 import * as _ from 'lodash';
 import { Color, RGB, HSV } from '../colors';
-import { MaybeOscillator, pattern } from '../types';
+import { pattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
@@ -36,6 +36,11 @@ interface Shape {
     direction: Direction
 }
 
+interface MandalaProps {
+    opacity: number,
+    colorScheme: ColorScheme
+}
+
 @pattern()
 export class Mandala extends BasePattern {
     static displayName = 'Mandala';
@@ -51,6 +56,8 @@ export class Mandala extends BasePattern {
             colorScheme: ColorScheme.random
         }
     }
+
+    props: MandalaProps;
     currHue = 0;
     shapes : Shape[] = [];
     progress() {
@@ -125,14 +132,14 @@ export class Mandala extends BasePattern {
         });
     }
 
-    serializeExtra() {
+    serializeState() {
         return this.shapes.map(shape => ({
             ...shape,
             color: shape.color.serialize()
         }))
     }
 
-    deserializeExtra(obj) {
+    deserializeState(obj) {
         obj.map((shape) =>
         this.shapes.push({
             ...shape,

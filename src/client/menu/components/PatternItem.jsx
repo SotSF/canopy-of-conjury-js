@@ -14,7 +14,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
-import Slider from '@material-ui/lab/Slider';
+import Slider from '@material-ui/core/Slider';
 
 import { Gif } from '../../../patterns';
 

@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import { Color, RGB } from '../colors';
-import { MaybeOscillator, pattern } from '../types';
+import { pattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 import Memoizer from "./memoizer/index";
@@ -22,6 +22,10 @@ interface ISwarm {
     bugs: IBug[]   
 }
 
+interface SwarmProps {
+    color: Color
+}
+
 @pattern()
 export class Swarm extends BasePattern {
     static displayName = 'Swarm';
@@ -36,6 +40,7 @@ export class Swarm extends BasePattern {
         }
     }
    
+    props: SwarmProps;
     memoizer = new Memoizer();
     dimension = 200;
 
@@ -47,23 +52,25 @@ export class Swarm extends BasePattern {
     swarmSize = 200;
     swarmTime = 50;
     swarmClock = 0;
-    target : ICoord = { x: 0, y: 0};
-    constructor(props) {
-        super(props);
+    target : ICoord = { x: 0, y: 0 };
+
+    initializeState () {
         for (let i = 0; i < this.swarmSize; i++) {
             const center = {
                 x: this.swarm.center.x + Math.floor((Math.random() * (this.maxSwarmRadius + this.maxSwarmRadius + 1)) - this.maxSwarmRadius),
                 y: this.swarm.center.y + Math.floor((Math.random() * (this.maxSwarmRadius + this.maxSwarmRadius + 1)) - this.maxSwarmRadius),
-            }
+            };
+
             this.swarm.bugs.push({
-               center,
-               radius: 1,
-               theta: 0,
-               velocity: Math.floor(Math.random() * 5 + 2),
-               jitter: [1,1]
+                center,
+                radius: 1,
+                theta: 0,
+                velocity: Math.floor(Math.random() * 5 + 2),
+                jitter: [1,1]
             });
         }
     }
+    
     progress() {
         super.progress();
         this.updateSwarm();
@@ -143,7 +150,7 @@ export class Swarm extends BasePattern {
         });
     }
 
-    serializeExtra() {
+    serializeState() {
         return {
             swarm: this.swarm,
             swarmTime: this.swarmTime,
@@ -151,7 +158,7 @@ export class Swarm extends BasePattern {
         }
     }
 
-    deserializeExtra(obj) {
+    deserializeState(obj) {
         this.swarm = obj.swarm;
         this.swarmTime = obj.swarmTime;
         this.swarmClock = obj.swarmClock;

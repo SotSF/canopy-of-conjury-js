@@ -1,9 +1,9 @@
 
 import * as _ from 'lodash';
-import * as util from '../util';
+
 import { NUM_LEDS_PER_STRIP } from '../canopy';
-import { RGB, Color, HSV } from '../colors';
-import { MaybeOscillator, pattern } from '../types';
+import { RGB, Color } from '../colors';
+import { pattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 
@@ -25,8 +25,8 @@ enum GradientPolarity {
 interface GradientFlowProps {
     color1: Color
     color2: Color
-    opacity: MaybeOscillator<number>
-    speed: MaybeOscillator<number>
+    opacity: number
+    speed: number
     direction: GradientTravelDirection
 }
 
@@ -54,13 +54,13 @@ export class GradientFlow extends BasePattern {
         };
     }
 
+    props: GradientFlowProps;
     private ringColors: Color[] = new Array(NUM_LEDS_PER_STRIP);
     private curPolarity: GradientPolarity = GradientPolarity.forwards;
     private curPosition: number = 0;
     private interpolation: Color[] = null;
 
-    constructor (props) {
-        super(props);
+    initializeState () {
         this.interpolation = this.interpolateColors();
         this.ringColors = this.interpolation;
     }
@@ -82,11 +82,7 @@ export class GradientFlow extends BasePattern {
 
         // iterate over the length of the LED strips and derive the interpolated value
         for (let i = 0; i < NUM_LEDS_PER_STRIP; i++) {
-            interpolatedColors[i] = new RGB(
-                util.lerp(color1.r, color2.r, i / NUM_LEDS_PER_STRIP),
-                util.lerp(color1.g, color2.g, i / NUM_LEDS_PER_STRIP),
-                util.lerp(color1.b, color2.b, i / NUM_LEDS_PER_STRIP)
-            );
+            interpolatedColors[i] = RGB.lerp(color1, color2, i / NUM_LEDS_PER_STRIP);
         }
 
         return interpolatedColors;
@@ -154,7 +150,7 @@ export class GradientFlow extends BasePattern {
         });
     }
 
-    serializeExtra () {
+    serializeState () {
         return {
             ringColors: this.ringColors.map(color => color.serialize()),
             curPolarity: this.curPolarity,
@@ -162,7 +158,7 @@ export class GradientFlow extends BasePattern {
         }
     }
 
-    deserializeExtra (object) {
+    deserializeState (object) {
         this.ringColors = object.ringColors.map(color => RGB.fromObject(color));
         this.curPolarity = object.curPolarity;
         this.curPosition = object.curPosition;

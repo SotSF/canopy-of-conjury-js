@@ -2,7 +2,7 @@
 import * as _ from 'lodash';
 import { NUM_LEDS_PER_STRIP } from '../canopy';
 import { RGB, Color } from '../colors';
-import { MaybeOscillator, pattern } from '../types';
+import { pattern } from '../types';
 import * as util from '../util';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
@@ -16,7 +16,7 @@ interface IBeat {
 interface GradientPulseProps {
     color1: Color,
     color2: Color,
-    opacity: MaybeOscillator<number>
+    opacity: number
 }
 
 /**
@@ -39,6 +39,7 @@ export class GradientPulse extends BasePattern {
         };
     }
 
+    props: GradientPulseProps;
     beatList: IBeat[] = [];
     offset = 0;
     dir = 1;
@@ -53,12 +54,7 @@ export class GradientPulse extends BasePattern {
 
         // pattern-logic: randomly add new ring is <25 rings total
         if (Math.random() > 0.5 && this.beatList.length < 25) {
-            const color = new RGB(
-                util.lerp(color1.r, color2.r, this.offset),
-                util.lerp(color1.g, color2.g, this.offset),
-                util.lerp(color1.b, color2.b, this.offset)
-            );
-
+            const color = RGB.lerp(color1, color2, this.offset);
             this.beatList.push({ pos: 0, color });
             this.offset += 0.05 * this.dir;
 
@@ -91,7 +87,7 @@ export class GradientPulse extends BasePattern {
         });
     }
 
-    serializeExtra () {
+    serializeState () {
         return {
             offset: this.offset,
             dir: this.dir,
@@ -102,7 +98,7 @@ export class GradientPulse extends BasePattern {
         };
     }
 
-    deserializeExtra (object) {
+    deserializeState (object) {
         this.dir = object.dir;
         this.offset = object.offset;
         this.beatList = object.beatList.map(beat => ({

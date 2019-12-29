@@ -2,7 +2,7 @@
 import * as _ from 'lodash';
 import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
 import { RGB, Color } from '../colors';
-import { MaybeOscillator, pattern } from '../types';
+import { pattern } from '../types';
 import * as util from '../util';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
@@ -12,7 +12,7 @@ interface SwirlyProps {
     color1: Color
     color2: Color
     quantity: number
-    opacity: MaybeOscillator<number>
+    opacity: number
     fromApex: boolean
     clockwise: boolean
 }
@@ -40,6 +40,7 @@ export class Swirly extends BasePattern {
         };
     }
 
+    props: SwirlyProps;
     private readonly colorRate = 0.05;
 
     private f = 0.01;
@@ -47,12 +48,9 @@ export class Swirly extends BasePattern {
     private colorDir = 1;
     private swirls = [];
 
-    constructor (props: SwirlyProps) {
-        super(props);
-
-        // Initialize swirls
-        this.color = props.color1;
-        for (let i = 0; i <= props.quantity; i++) {
+    initializeState () {
+        this.color = this.props.color1;
+        for (let i = 0; i <= this.props.quantity; i++) {
             this.makeSwirl();
         }
     }
@@ -111,11 +109,7 @@ export class Swirly extends BasePattern {
         // Adapt the pattern color
         const color1 = this.values.color1;
         const color2 = this.values.color2;
-        this.color = new RGB(
-            util.lerp(color1.r, color2.r, this.f),
-            util.lerp(color1.g, color2.g, this.f),
-            util.lerp(color1.b, color2.b, this.f)
-        );
+        this.color = RGB.lerp(color1, color2, this.f);
 
         this.f += this.colorRate * this.colorDir;
         if (this.f >= 1) {
@@ -138,7 +132,7 @@ export class Swirly extends BasePattern {
         });
     }
 
-    serializeExtra () {
+    serializeState () {
         return {
             f: this.f,
             color: this.color.serialize(),
@@ -150,7 +144,7 @@ export class Swirly extends BasePattern {
         };
     }
 
-    deserializeExtra (object) {
+    deserializeState (object) {
         this.f = object.f;
         this.color = RGB.fromObject(object.color);
         this.colorDir = object.colorDir;

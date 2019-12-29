@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import { Color, RGB, HSV } from '../colors';
-import { MaybeOscillator, pattern } from '../types';
+import { pattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
@@ -16,16 +16,22 @@ enum ColorScheme {
     Rainbow
 }
 
+interface CircleBurstProps {
+    color: RGB
+    decay: number,
+    frequency: number,
+    colorScheme: ColorScheme
+}
+
 @pattern()
 export class CircleBurst extends BasePattern {
     static displayName = 'Circle Burst';
 
     static propTypes = {
         color: new PatternPropTypes.Color(),
-        decay: new PatternPropTypes.Range(0.5,0.85,0.05),
-        frequency: new PatternPropTypes.Range(20,100,10),
-        colorScheme : new PatternPropTypes.Enum(ColorScheme)
-
+        decay: new PatternPropTypes.Range(0.5, 0.85, 0.05),
+        frequency: new PatternPropTypes.Range(20, 100, 10),
+        colorScheme: new PatternPropTypes.Enum(ColorScheme)
     }
 
     static defaultProps () {
@@ -37,8 +43,9 @@ export class CircleBurst extends BasePattern {
         }
     }
 
+    props: CircleBurstProps;
     threshold = 10;
-    circles = [];
+    circles: ICircle[] = [];
     freshPoints = Array.apply(null, Array(NUM_STRIPS)).map(Number.prototype.valueOf, 0);
     currHue = 0;
 
@@ -100,7 +107,7 @@ export class CircleBurst extends BasePattern {
         }
     }
 
-    serializeExtra() {
+    serializeState() {
         return {
             circles: this.circles.map((circle) => ({
             ...circle,
@@ -109,7 +116,7 @@ export class CircleBurst extends BasePattern {
         })) }
     }
 
-    deserializeExtra(obj) {
+    deserializeState(obj) {
         this.circles = obj.circles.map((circle) => ({
             ...circle,
             color: RGB.fromObject(circle.color)

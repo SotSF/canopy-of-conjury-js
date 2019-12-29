@@ -1,7 +1,7 @@
 
 import * as _ from 'lodash';
 import { RGB, Color } from '../colors';
-import { MaybeOscillator, pattern } from '../types';
+import { pattern } from '../types';
 import * as util from '../util';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
@@ -9,14 +9,14 @@ import Memoizer from './memoizer';
 
 
 interface SineRingProps {
-    color: MaybeOscillator<Color>,
+    color: Color,
     width: number,
     frequency: number,
     amplitude: number,
     radius: number,
     velocity: number,
     rotate: number,
-    opacity: MaybeOscillator<number>
+    opacity: number
 }
 
 @pattern()
@@ -46,6 +46,7 @@ export class SineRing extends BasePattern {
         };
     }
 
+    props: SineRingProps;
     private readonly angleStep = 0.01;
     private readonly memoizer = new Memoizer();
 
@@ -87,14 +88,14 @@ export class SineRing extends BasePattern {
         }
     }
 
-    serializeExtra () {
+    serializeState () {
         return {
             amp: this.amp,
             dir: this.dir
         };
     }
 
-    deserializeExtra (object) {
+    deserializeState (object) {
         this.amp = object.amp;
         this.dir = object.dir;
     }

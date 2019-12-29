@@ -1,6 +1,6 @@
 
 import { Color, RGB } from '../colors';
-import { MaybeOscillator, pattern } from '../types';
+import { pattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 import Memoizer from './memoizer';
@@ -14,7 +14,7 @@ enum BeatPattern {
 
 interface HeartbeatProps {
     color: Color
-    opacity: MaybeOscillator<number>,
+    opacity: number,
     beatPattern: BeatPattern
 }
 
@@ -35,6 +35,7 @@ export class Heartbeat extends BasePattern {
         }; 
     }
 
+    props: HeartbeatProps;
     readonly dimension = 300;
     readonly maxPulse = 1.5;
     readonly minPulse = 0.05;
@@ -113,14 +114,14 @@ export class Heartbeat extends BasePattern {
         }
     }
 
-    serializeExtra () {
+    serializeState () {
         return {
             pulse: this.pulse,
             grow: this.grow
         };
     }
 
-    deserializeExtra (object) {
+    deserializeState (object) {
         this.pulse = object.pulse;
         this.grow = object.grow;
     }

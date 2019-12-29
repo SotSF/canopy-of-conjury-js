@@ -1,7 +1,7 @@
 
 import * as _ from 'lodash';
 import { Color, RGB } from '../colors';
-import { MaybeOscillator, pattern } from '../types';
+import { pattern } from '../types';
 import * as util from '../util';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
@@ -31,7 +31,7 @@ interface SerializedBubble {
 interface BubblesProps {
     color1: Color,
     color2: Color,
-    opacity: MaybeOscillator<number>
+    opacity: number
 }
 
 @pattern()
@@ -52,6 +52,7 @@ export class Bubbles extends BasePattern {
         };
     }
 
+    props: BubblesProps;
     bubbles: Bubble[] = [];
     rateOfColorChange = 0.01;
     rateOfOpacityChange = -0.01;
@@ -92,11 +93,7 @@ export class Bubbles extends BasePattern {
             const halfCanvas = this.dimension / 2;
             //const center = memoizedMap.mapCoords(Math.floor(bubble.x + halfCanvas), Math.floor(bubble.y + halfCanvas));
 
-            bubble.color = new RGB(
-                util.lerp(color1.r, color2.r, bubble.lerp),
-                util.lerp(color1.g, color2.g, bubble.lerp),
-                util.lerp(color1.b, color2.b, bubble.lerp)
-            );
+            bubble.color = RGB.lerp(color1, color2, bubble.lerp);
             const color = bubble.color.withAlpha(bubble.opacity * this.values.opacity);
 
             let t = 0;
@@ -155,14 +152,14 @@ export class Bubbles extends BasePattern {
         return [x,y];
     }
 
-    serializeExtra () {
+    serializeState () {
         return this.bubbles.map(bubble => ({
             ...bubble,
             color: bubble.color.serialize()
         }));
     }
 
-    deserializeExtra (bubbles: SerializedBubble[]) {
+    deserializeState (bubbles: SerializedBubble[]) {
         bubbles.map((bubble) =>
             this.bubbles.push({
                 ...bubble,

@@ -2,7 +2,7 @@
 import * as _ from 'lodash';
 import { NUM_LEDS_PER_STRIP } from '../canopy';
 import { Color, RGB } from '../colors';
-import { MaybeOscillator, pattern } from '../types';
+import { pattern } from '../types';
 import * as util from '../util';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
@@ -16,15 +16,13 @@ interface ICircle {
 }
 
 interface ConcentricCirclesProps {
-    color: MaybeOscillator<Color>
-    width: MaybeOscillator<number>
+    color: Color
+    width: number
     frequency: number
     trail: number
 }
 
-/**
- * Emits pulse rings from center - each ring is a different color, following a gradient color scheme
- */
+/** Emits pulse rings from center */
 @pattern()
 export class ConcentricCircles extends BasePattern {
     static displayName = 'Concentric Circles';
@@ -45,6 +43,7 @@ export class ConcentricCircles extends BasePattern {
         };
     }
 
+    props: ConcentricCirclesProps;
     circles: ICircle[] = [];
 
     progress () {
@@ -59,12 +58,11 @@ export class ConcentricCircles extends BasePattern {
             });
         }
 
-        // go through every position in beatList, and light up the corresponding LED in all strips
         this.circles.forEach((circle) => {
-            // increment the position of each beat for the next go-around
+            // Increment the position of each circle
             circle.pos++;
 
-            // remove if the position is too big
+            // Remove if the circle has already reached the edge of the canopy
             const circleEdge = circle.pos - (circle.width + circle.trail);
             if (circleEdge >= NUM_LEDS_PER_STRIP) {
                 this.circles = _.without(this.circles, circle);
@@ -95,7 +93,7 @@ export class ConcentricCircles extends BasePattern {
         });
     }
 
-    serializeExtra () {
+    serializeState () {
         return {
             circles: this.circles.map((circle) => ({
                 ...circle,
@@ -104,7 +102,7 @@ export class ConcentricCircles extends BasePattern {
         };
     }
 
-    deserializeExtra (obj) {
+    deserializeState (obj) {
         const { circles } = obj;
         this.circles = circles.map((circle) => ({
             ...circle,

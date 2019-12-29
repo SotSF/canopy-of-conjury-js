@@ -2,7 +2,7 @@
 import * as _ from 'lodash';
 import { NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
 import { RGB, Color } from '../colors';
-import { MaybeOscillator, pattern } from '../types';
+import { pattern } from '../types';
 import * as util from '../util';
 import BasePattern from './BasePattern';
 import Memoizer from './memoizer';
@@ -21,12 +21,12 @@ interface IFirefly {
     theta: number
 }
 
-interface FireFliesPropTypes {
+interface FireFliesProps {
     color: Color,
     opacity: number,
     quantity: number,
     rotation: number,
-    velocity: MaybeOscillator<number>
+    velocity: number
 }
 
 @pattern()
@@ -40,7 +40,7 @@ export class Fireflies extends BasePattern {
         velocity: new PatternPropTypes.Range(0, 10).enableOscillation()
     };
 
-    static defaultProps () : FireFliesPropTypes {
+    static defaultProps () : FireFliesProps {
         return {
             color: new RGB(255, 255, 0),
             quantity: 50,
@@ -50,14 +50,13 @@ export class Fireflies extends BasePattern {
         };
     }
 
+    props: FireFliesProps;
     fireflies: IFirefly[] = [];
     dimension = 200;
     lifespan = 75;
     memoizer = new Memoizer();
 
-    constructor (props) {
-        super(props);
-
+    initializeState () {
         for (let i = 0; i <= 10; i++) {
             this.addFirefly()
         }
@@ -103,10 +102,11 @@ export class Fireflies extends BasePattern {
     }
 
     renderFirefly (firefly, canopy, memoMap) {
+        const { r, g, b } = this.values.color.toRgb();
         const color = new RGB(
-            this.values.color.r + firefly.offset,
-            this.values.color.g + firefly.offset,
-            this.values.color.b + firefly.offset,
+            r + firefly.offset,
+            g + firefly.offset,
+            b + firefly.offset,
             this.values.opacity * firefly.brightness / 255
         );
 
@@ -162,13 +162,13 @@ export class Fireflies extends BasePattern {
         }
     };
 
-    serializeExtra () {
+    serializeState () {
         return {
             fireflies: this.fireflies
         };
     }
 
-    deserializeExtra (object) {
+    deserializeState (object) {
         this.fireflies = object.fireflies;
     }
 }

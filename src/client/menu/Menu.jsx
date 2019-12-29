@@ -17,12 +17,13 @@ import { MuiThemeProvider, withStyles } from '@material-ui/core/styles';
 
 import * as patterns from '../../patterns';
 import events from '../events';
-import * as messenger from '../messenger';
+import messenger from '../messenger';
 import { updatePatterns } from '../state';
 import theme from '../theme';
 
 import ActivePatterns from './ActiveLayers';
 import Patterns from './Patterns';
+import PatternSets from './PatternSets';
 
 
 const styles = theme => ({
@@ -30,7 +31,6 @@ const styles = theme => ({
         active: '33.33%',
     },
     drawerPaper: {
-        position: 'relative',
         width: 240
     },
     heading: {
@@ -72,24 +72,15 @@ class Menu extends React.Component {
         this.props.canopy.clear();
         this.setState({ patterns: [] });
         updatePatterns([]);
-        messenger.state.clearPatterns();
+        messenger.clearPatterns();
     };
 
-    addPattern = (pattern, params) => {
-        // Create a unique ID for the pattern instance
-        const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        const id = _.range(20).map(() => _.sample(characters)).join('');
-        const order = this.state.patterns.length;
+    addPattern = (pattern, props) => {
+        const instance = new pattern();
+        instance.initialize({ props });
+        const newPatterns = [instance, ...this.state.patterns];
 
-        const instance = new pattern(Object.assign({}, params));
-        const newPatterns = [{
-            id,
-            instance,
-            name: pattern.displayName,
-            order,
-        }, ...this.state.patterns];
-
-        messenger.state.addPattern(id, instance, params, order);
+        messenger.addPattern(instance);
 
         this.setState({ patterns: newPatterns }, () => updatePatterns(newPatterns));
     };
@@ -98,7 +89,7 @@ class Menu extends React.Component {
         const patternToRemove = _.find(this.state.patterns, { id: patternId });
         const newPatterns = _.without(this.state.patterns, patternToRemove);
 
-        messenger.state.removePattern(patternId);
+        messenger.removePattern(patternId);
         this.setState({ patterns: newPatterns }, () => updatePatterns(newPatterns));
     };
 
@@ -144,6 +135,10 @@ class Menu extends React.Component {
                     <ActivePatterns
                       patterns={this.state.patterns}
                       removePattern={this.removePattern}
+                    />
+
+                    <PatternSets
+                      patterns={this.state.patterns}
                     />
                 </Drawer>
             </MuiThemeProvider>

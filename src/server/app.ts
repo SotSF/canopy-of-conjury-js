@@ -4,18 +4,18 @@ import * as cookieParser  from 'cookie-parser';
 import * as express from 'express';
 import * as expressWs from 'express-ws';
 import * as fs from 'fs';
-import * as http from 'http';
 import * as logger from 'morgan';
 import * as path from 'path';
 
-import { Canopy } from '../canopy';
-import state, { patterns } from './state';
+import { Canopy, NUM_STRIPS, NUM_LEDS_PER_STRIP } from '../canopy';
+import handleRequest from './endpoints';
+import state from './state';
 import Transmitter from './transmitter';
 import { AppConfig } from './types'
 
 
 /** Set up the app object */
-const app = express();
+const app = expressWs(express()).app;
 
 // A reference to the directory that the `app.ts` source file is found in. When the server code is
 // compiled, the executable code is moved into the `dist` directory and `app.ts` is located under
@@ -53,12 +53,8 @@ const config: AppConfig = (() => {
     }
 })();
 
-/** Create HTTP server. */
-const server = http.createServer(app);
-
 /** Add web sockets to the express app */
-expressWs(app, server);
-app.ws('/state', state);
+app.ws('/', handleRequest);
 
 /** Error handling */
 // catch 404 and forward to error handler
@@ -92,19 +88,23 @@ const FPS = 30;
         return;
     }
 
-    const canopy = new Canopy(96, 75);
+    // Create the canopy object
+    const canopy = new Canopy(NUM_STRIPS, NUM_LEDS_PER_STRIP);
+
+    // With every frame...
     setInterval(() => {
+        // ...clean the slate...
         canopy.clear();
-        patterns.forEach((pattern) => {
-            pattern.instance.progress();
-            pattern.instance.render(canopy);
+
+        // ...update the patterns and render them to the canopy object...
+        state.patterns.forEach((pattern) => {
+            pattern.progress();
+            pattern.render(canopy);
         });
 
+        // ...and transmit to the API.
         transmitter.render(canopy);
     }, 1000 / FPS);
 })();
 
-export {
-    app,
-    server
-};
+export { app };

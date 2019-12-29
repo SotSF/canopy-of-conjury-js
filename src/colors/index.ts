@@ -9,15 +9,14 @@ export * from './util';
 
 
 export class RGB implements Color {
-    r = null;
-    g = null;
-    b = null;
-    a = null;
+    r: number;
+    g: number;
+    b: number;
+    a: number;
 
     // Randomly selects a hue for the color, but returns RGB
     static random () {
         return new HSV(Math.random(), 1, 1).toRgb();
-
     }
 
     static fromObject (obj: RGB): RGB {
@@ -29,7 +28,18 @@ export class RGB implements Color {
         );
     }
 
-    constructor (r, g, b, a = 1) {
+    static lerp (color1: Color, color2: Color, lerp: number) {
+        const rgb1 = color1.toRgb();
+        const rgb2 = color2.toRgb();
+
+        return new RGB(
+            util.lerp(rgb1.r, rgb2.r, lerp),
+            util.lerp(rgb1.g, rgb2.g, lerp),
+            util.lerp(rgb1.b, rgb2.b, lerp)
+        )
+    }
+
+    constructor (r: number, g: number, b: number, a: number = 1) {
         this.r = r;
         this.g = g;
         this.b = b;
@@ -58,7 +68,7 @@ export class RGB implements Color {
         return rgbToHexString(this);
     }
 
-    withAlpha (a) {
+    withAlpha (a: number) {
         return new RGB(this.r, this.g, this.b, a);
     }
 

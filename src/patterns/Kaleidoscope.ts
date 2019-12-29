@@ -1,7 +1,7 @@
 
 import * as _ from 'lodash';
 import { NUM_STRIPS } from '../canopy';
-import { MaybeOscillator, pattern } from '../types';
+import { pattern } from '../types';
 import BasePattern from './BasePattern';
 import { PatternPropTypes } from './utils';
 import { HSV } from '../colors';
@@ -60,9 +60,9 @@ class Wave {
     }
 }
 
-interface KaleidoscopePropTypes {
+interface KaleidoscopeProps {
     velocity: number
-    opacity: MaybeOscillator<number>
+    opacity: number
     rotate: number
 }
 
@@ -75,7 +75,7 @@ export class Kaleidoscope extends BasePattern {
         rotate: new PatternPropTypes.Range(0, 2)
     };
 
-    static defaultProps () : KaleidoscopePropTypes {
+    static defaultProps () : KaleidoscopeProps {
         return {
             velocity: 2,
             opacity: 1,
@@ -83,6 +83,7 @@ export class Kaleidoscope extends BasePattern {
         };
     }
 
+    props: KaleidoscopeProps;
     private readonly dimension: number = 400;
     private readonly frequencies: number[] = [3, 4, 6, 8, 12];
     readonly memoizer = new Memoizer();
@@ -136,14 +137,14 @@ export class Kaleidoscope extends BasePattern {
         });
     }
 
-    serializeExtra () {
+    serializeState () {
         return {
             frequency: this.frequency,
             waves: this.waves.map(wave => wave.serialize())
         };
     }
 
-    deserializeExtra (object) {
+    deserializeState (object) {
         this.frequency = object.frequency;
         this.waves = object.waves.map(waveProps => Wave.fromObject(waveProps));
     }

@@ -1,7 +1,7 @@
 
 import * as _ from 'lodash';
 import { Color } from '../colors';
-import { MaybeOscillator, pattern, PatternInstance } from '../types';
+import { pattern, PatternInstance } from '../types';
 import BasePattern from './BasePattern';
 import { Swirly } from './Swirly';
 import { PatternPropTypes } from './utils';
@@ -11,7 +11,7 @@ interface SwirlyZigProps {
     color1: Color
     color2: Color
     quantity: number
-    opacity: MaybeOscillator<number>
+    opacity: number
     velocity: number
     fromApex: boolean
 }
@@ -36,14 +36,17 @@ export class SwirlyZig extends BasePattern {
         };
     }
 
-    swirly: PatternInstance = null;
+    private clockwise: boolean = true;
+    props: SwirlyZigProps;
+    swirly: Swirly;
 
-    constructor(props) {
-        super(props);
-
-        this.swirly = new Swirly({
-            ...props,
-            clockwise: true
+    initializeState () {
+        this.swirly = new Swirly();
+        this.swirly.initialize({
+            props: {
+                ...this.props,
+                clockwise: this.clockwise
+            }
         });
     }
 
@@ -58,7 +61,8 @@ export class SwirlyZig extends BasePattern {
         this.swirly.progress();
 
         if (this.iteration % this.values.velocity === 0) {
-            this.swirly.updateProps({ clockwise: !this.swirly.props.clockwise });
+            this.clockwise = !this.clockwise;
+            this.swirly.updateProps({ clockwise: !this.clockwise });
         }
     }
 
@@ -66,11 +70,11 @@ export class SwirlyZig extends BasePattern {
         this.swirly.render(canopy);
     }
 
-    serializeExtra () {
-        return this.swirly.serializeExtra();
+    serializeState () {
+        return this.swirly.serializeState();
     }
 
-    deserializeExtra (object) {
-        this.swirly.deserializeExtra(object);
+    deserializeState (object) {
+        this.swirly.deserializeState(object);
     }
 }
