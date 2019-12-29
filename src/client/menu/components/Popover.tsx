@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import MuiPopover from '@material-ui/core/Popover';
-import { withStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { withStyles, createStyles, Theme, WithStyles } from '@material-ui/core/styles';
 
 
 const MenuPopoverStyles = (theme: Theme) => createStyles({
@@ -11,13 +11,13 @@ const MenuPopoverStyles = (theme: Theme) => createStyles({
   }
 });
 
-export interface PopoverProps {
+export interface PopoverProps extends WithStyles<typeof MenuPopoverStyles> {
   anchorEl: HTMLElement
   onClose: () => void
 }
 
 export default withStyles(MenuPopoverStyles)(
-  (props) => (
+  ((props) => (
     <MuiPopover
       open={!!props.anchorEl}
       anchorEl={props.anchorEl}
@@ -36,5 +36,5 @@ export default withStyles(MenuPopoverStyles)(
     >
       {props.children}
     </MuiPopover>
-  )
+  )) as React.FC<PopoverProps>
 );

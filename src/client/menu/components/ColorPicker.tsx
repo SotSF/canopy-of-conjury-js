@@ -63,7 +63,7 @@ class ColorPicker extends React.Component<IColorPickerProps, IColorPickerState> 
             });
 
             this.setColor(oscillator);
-            return oscillator;
+            return oscillator.oscillator;
         };
 
         return <OscillatorWidget createFn={createFn} oscillator={oscillator} />;

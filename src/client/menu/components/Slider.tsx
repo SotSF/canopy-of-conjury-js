@@ -26,14 +26,14 @@ const styles = ({ spacing }: Theme) => createStyles({
 });
 
 interface SliderProps extends WithStyles<typeof styles> {
-    defaults: Partial<WaveState>
+    defaults?: Partial<WaveState>
     label: string,
     value: MaybeOscillator<number>,
     min?: number,
     max?: number,
     step?: number,
     onChange (value: MaybeOscillator<number>): void,
-    oscillation: boolean
+    oscillation?: boolean
 }
 
 interface SliderState {
@@ -42,9 +42,11 @@ interface SliderState {
 
 class Slider extends React.Component<SliderProps, SliderState> {
     static defaultProps = {
+        defaults: {},
         min: 1,
         max: 10,
-        step: 1
+        step: 1,
+        oscillation: false
     };
 
     constructor (props) {
