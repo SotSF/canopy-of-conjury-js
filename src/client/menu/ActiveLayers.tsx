@@ -199,14 +199,6 @@ interface ActivePatternsProps extends WithStyles<typeof styles> {
 
 export default withStyles(styles)(
     class ActivePatterns extends React.Component<ActivePatternsProps> {
-        renderSaveButton () {
-            const { patterns } = this.props;
-
-            if (patterns.length === 0) return null;
-
-            return <SaveButton />;
-        }
-
         render () {
             const { classes, patterns } = this.props;
 
@@ -234,8 +226,6 @@ export default withStyles(styles)(
                                 />
                             )}
                         </List>
-
-                        {this.renderSaveButton()}
                     </ExpansionPanelDetails>
                 </ExpansionPanel>
             );
