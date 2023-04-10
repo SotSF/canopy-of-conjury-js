@@ -10,6 +10,12 @@
  *
  * @returns {float}
  */
-export default (value, istart, istop, ostart, ostop) => {
-    return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
-};
+export function scale(
+  value: number,
+  istart: number,
+  istop: number,
+  ostart: number,
+  ostop: number
+) {
+  return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
+}

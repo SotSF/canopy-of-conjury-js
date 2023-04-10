@@ -1,4 +1,3 @@
-
 /**
  * Basic linear interpolation. Calculates a number between two numbers at a specific increment. The
  * amt  parameter is the amount to interpolate between the two values where 0.0 equal to the first
@@ -13,4 +12,6 @@
  *
  * @returns {float}
  */
-export default (value1, value2, amt) => ((value2 - value1) * amt) + value1;
+export function lerp(value1: number, value2: number, amt: number) {
+  return (value2 - value1) * amt + value1;
+}

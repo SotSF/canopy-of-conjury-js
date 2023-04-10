@@ -1,57 +1,50 @@
-
-import { IPatternState } from '../types';
-
+import { IPatternState } from "../types";
 
 /** Constants */
-export const enum MESSAGE_TYPE {
-    addPattern,
-    clearPatterns,
-    removePattern,
-    updateProps,
-    syncState,
+export enum MESSAGE_TYPE {
+  addPattern,
+  clearPatterns,
+  removePattern,
+  updateProps,
+  syncState,
 }
-
 
 /** Basic message interface */
-interface IMessage {
-    type: MESSAGE_TYPE
-}
-
+export type Message = {
+  type: MESSAGE_TYPE;
+};
 
 /** Messages from the client */
 export namespace ClientMessage {
-    export type SyncState = IMessage;
-    export type ClearPatterns = IMessage;
+  export type SyncState = Message;
+  export type ClearPatterns = Message;
 
-    export interface AddPattern extends IMessage {
-        id: string
-        order: number
-        state: IPatternState
-    }
+  export type AddPattern = Message & {
+    id: string;
+    order: number;
+    state: IPatternState;
+  };
 
-    export interface RemovePattern extends IMessage {
-        patternId: string
-    }
+  export type RemovePattern = Message & {
+    patternId: string;
+  };
 
-    export interface UpdateProps extends IMessage {
-        patternId: string
-        props: any // TODO: make this type more precise...
-    }
+  export type UpdateProps = Message & {
+    patternId: string;
+    props: any; // TODO: make this type more precise...
+  };
 }
-
 
 /** Responses from the server */
 export type response = any;
 
 export namespace ServerMessage {
-    interface IPatternWrapper {
-        id: string
-        order: number
-        state: IPatternState
-        name: string
-    }
-
-    export interface SyncState extends IMessage {
-        patterns: IPatternWrapper[]
-    }
+  export type SyncState = Message & {
+    patterns: Array<{
+      id: string;
+      order: number;
+      state: IPatternState;
+      name: string;
+    }>;
+  };
 }

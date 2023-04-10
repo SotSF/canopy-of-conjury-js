@@ -1,3 +1,4 @@
-
-export { default as Canopy } from './Canopy';
-export * from './constants';
+export * from "./Canopy";
+export * from "./CanopySvg";
+export * from "./CanopyThreeJs";
+export * from "./constants";

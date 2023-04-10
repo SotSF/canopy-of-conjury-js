@@ -3,19 +3,19 @@
  * within the range [min, max)
  */
 
-export default (value: number, min: number, max: number) => {
-    const width = max - min;
+export function clampModular(value: number, min: number, max: number) {
+  const width = max - min;
 
-    if (value < min) {
-        const quotient = Math.ceil((min - value) / width);
-        return value + quotient * width;
-    }
+  if (value < min) {
+    const quotient = Math.ceil((min - value) / width);
+    return value + quotient * width;
+  }
 
-    let valInRange = value;
-    if (value > max) {
-        const quotient = Math.ceil((value - max) / width);
-        valInRange = value - quotient * width;
-    }
+  let valInRange = value;
+  if (value > max) {
+    const quotient = Math.ceil((value - max) / width);
+    valInRange = value - quotient * width;
+  }
 
-    return valInRange === max ? min : valInRange;
-};
+  return valInRange === max ? min : valInRange;
+}
